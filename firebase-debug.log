@@ -1,0 +1,62 @@
+[debug] [2019-12-17T09:15:45.311Z] ----------------------------------------------------------------------
+[debug] [2019-12-17T09:15:45.313Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\new26\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js login --no-localhost
+[debug] [2019-12-17T09:15:45.313Z] CLI Version:   7.10.0
+[debug] [2019-12-17T09:15:45.313Z] Platform:      win32
+[debug] [2019-12-17T09:15:45.313Z] Node Version:  v13.0.1
+[debug] [2019-12-17T09:15:45.314Z] Time:          Tue Dec 17 2019 16:15:45 GMT+0700 (Indochina Time)
+[debug] [2019-12-17T09:15:45.314Z] ----------------------------------------------------------------------
+[debug] [2019-12-17T09:15:45.314Z] 
+[info] i  Firebase optionally collects CLI usage and error reporting information to help improve our products. Data is collected in accordance with Google's privacy policy (https://policies.google.com/privacy) and is not used to identify you.
+
+[info] i  To change your data collection preference at any time, run `firebase logout` and log in again.
+[info] 
+[info] Visit this URL on any device to log in:
+[info] https://accounts.google.com/o/oauth2/auth?client_id=563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com&scope=email%20openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloudplatformprojects.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Ffirebase%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform&response_type=code&state=354876606&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob
+[info] 
+[debug] [2019-12-17T09:15:47.563Z] Error: spawn cmd ENOENT
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:264:19)
+    at onErrorNT (internal/child_process.js:456:16)
+    at processTicksAndRejections (internal/process/task_queues.js:80:21)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2019-12-17T09:24:54.299Z] ----------------------------------------------------------------------
+[debug] [2019-12-17T09:24:54.301Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\new26\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js login:ci
+[debug] [2019-12-17T09:24:54.301Z] CLI Version:   7.10.0
+[debug] [2019-12-17T09:24:54.301Z] Platform:      win32
+[debug] [2019-12-17T09:24:54.301Z] Node Version:  v13.0.1
+[debug] [2019-12-17T09:24:54.302Z] Time:          Tue Dec 17 2019 16:24:54 GMT+0700 (Indochina Time)
+[debug] [2019-12-17T09:24:54.302Z] ----------------------------------------------------------------------
+[debug] [2019-12-17T09:24:54.302Z] 
+[info] 
+[info] Visit this URL on this device to log in:
+[info] https://accounts.google.com/o/oauth2/auth?client_id=563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com&scope=email%20openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloudplatformprojects.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Ffirebase%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform&response_type=code&state=630615467&redirect_uri=http%3A%2F%2Flocalhost%3A9005
+[info] 
+[info] Waiting for authentication...
+[debug] [2019-12-17T09:24:54.336Z] Error: spawn cmd ENOENT
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:264:19)
+    at onErrorNT (internal/child_process.js:456:16)
+    at processTicksAndRejections (internal/process/task_queues.js:80:21)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2019-12-17T09:25:04.447Z] ----------------------------------------------------------------------
+[debug] [2019-12-17T09:25:04.449Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\new26\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js login
+[debug] [2019-12-17T09:25:04.449Z] CLI Version:   7.10.0
+[debug] [2019-12-17T09:25:04.449Z] Platform:      win32
+[debug] [2019-12-17T09:25:04.449Z] Node Version:  v13.0.1
+[debug] [2019-12-17T09:25:04.450Z] Time:          Tue Dec 17 2019 16:25:04 GMT+0700 (Indochina Time)
+[debug] [2019-12-17T09:25:04.450Z] ----------------------------------------------------------------------
+[debug] [2019-12-17T09:25:04.450Z] 
+[info] i  Firebase optionally collects CLI usage and error reporting information to help improve our products. Data is collected in accordance with Google's privacy policy (https://policies.google.com/privacy) and is not used to identify you.
+
+[info] i  To change your data collection preference at any time, run `firebase logout` and log in again.
+[info] 
+[info] Visit this URL on this device to log in:
+[info] https://accounts.google.com/o/oauth2/auth?client_id=563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com&scope=email%20openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloudplatformprojects.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Ffirebase%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform&response_type=code&state=605607676&redirect_uri=http%3A%2F%2Flocalhost%3A9005
+[info] 
+[info] Waiting for authentication...
+[debug] [2019-12-17T09:25:06.193Z] Error: spawn cmd ENOENT
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:264:19)
+    at onErrorNT (internal/child_process.js:456:16)
+    at processTicksAndRejections (internal/process/task_queues.js:80:21)
+[error] 
+[error] Error: An unexpected error has occurred.
