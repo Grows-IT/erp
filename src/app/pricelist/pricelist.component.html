@@ -1,0 +1,10 @@
+<h1 align="center">Price list</h1>
+<mat-grid-list cols="8">
+  <mat-grid-tile [colspan]="1" [rowspan]="5"></mat-grid-tile>
+  <mat-grid-tile [colspan]="2" [rowspan]="2">
+    <button mat-button style="margin-left: 2%;" *ngFor = "let collection of collections" [routerLink]="['/itemsprice']">
+      <img mat-card-image src="{{collection.img}}" />
+      <h3>{{collection.name}}</h3>
+    </button>
+  </mat-grid-tile>
+</mat-grid-list>

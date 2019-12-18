@@ -8,17 +8,38 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatTableModule} from '@angular/material/table';
+import {MatSortModule} from '@angular/material/sort';
+import { PricelistComponent } from './pricelist/pricelist.component';
+import { ItemspriceComponent } from './pricelist/itemsprice/itemsprice.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { SigninComponent } from './signin/signin.component';
+import {FormsModule} from '@angular/forms';
+import { InvoiceComponent } from './invoice/invoice.component';
+
 
 const materialComponent = [
   MatGridListModule,
-  MatButtonModule
+  MatButtonModule,
+  MatCardModule,
+  MatFormFieldModule,
+  MatTableModule,
+  MatSortModule,
+  Ng2SearchPipeModule,
+  FormsModule
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
     SalesComponent,
-    HomeComponent
+    HomeComponent,
+    PricelistComponent,
+    ItemspriceComponent,
+    SigninComponent,
+    InvoiceComponent,
   ],
   imports: [
     BrowserModule,
