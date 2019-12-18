@@ -12,10 +12,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { QuotationFormComponent } from './sales/quotation-form/quotation-form.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { PricelistComponent } from './pricelist/pricelist.component';
+import { ItemspriceComponent } from './pricelist/itemsprice/itemsprice.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { SigninComponent } from './signin/signin.component';
+import { InvoiceComponent } from './invoice/invoice.component';
 
 import {
   MatDialogModule, MatGridListModule, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatInputModule,
-  MatDatepickerModule, MatNativeDateModule, MatListModule, MatCardModule, MatTableDataSource, MatSort
+  MatDatepickerModule, MatNativeDateModule, MatListModule, MatCardModule, MatTableDataSource, MatSort, MatTableModule, MatSortModule
 } from '@angular/material';
 import { environment } from 'src/environments/environment';
 
@@ -30,6 +35,12 @@ const materialComponent = [
   MatNativeDateModule,
   MatListModule,
   MatCardModule,
+  MatCardModule,
+  MatFormFieldModule,
+  MatTableModule,
+  MatSortModule,
+  Ng2SearchPipeModule,
+  FormsModule
 ];
 
 @NgModule({
@@ -39,6 +50,10 @@ const materialComponent = [
     HomeComponent,
     QuotationDialogComponent,
     QuotationFormComponent,
+    PricelistComponent,
+    ItemspriceComponent,
+    SigninComponent,
+    InvoiceComponent,
   ],
   imports: [
     BrowserModule,
