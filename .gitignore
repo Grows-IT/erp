@@ -46,4 +46,4 @@ testem.log
 Thumbs.db
 
 # DB Files
-./firebase-adminsdk.json
+firebase-adminsdk.json
