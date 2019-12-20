@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SalesComponent } from './sales/sales.component';
@@ -17,6 +16,9 @@ import { ItemspriceComponent } from './pricelist/itemsprice/itemsprice.component
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { SigninComponent } from './signin/signin.component';
 import { InvoiceComponent } from './invoice/invoice.component';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+
 
 import {
   MatDialogModule, MatGridListModule, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatInputModule,
@@ -40,7 +42,10 @@ const materialComponent = [
   MatTableModule,
   MatSortModule,
   Ng2SearchPipeModule,
-  FormsModule
+  FormsModule,
+  MatIconModule,
+  MatMenuModule
+
 ];
 
 @NgModule({

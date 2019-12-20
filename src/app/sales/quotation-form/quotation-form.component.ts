@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { SalesService } from '../sales.service';
 import { QuotationDialogComponent } from '../quotation-dialog/quotation-dialog.component';
 import { MatDialogRef } from '@angular/material';
@@ -10,6 +10,7 @@ import { MatDialogRef } from '@angular/material';
   styleUrls: ['./quotation-form.component.scss']
 })
 export class QuotationFormComponent implements OnInit {
+
   quotation = new FormGroup({
     addressTo: new FormControl('', [
       Validators.required

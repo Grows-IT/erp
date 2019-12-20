@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { QuotationDialogComponent } from './quotation-dialog/quotation-dialog.component';
 import { SalesService } from './sales.service';
-import { LOADIPHLPAPI } from 'dns';
+// import { LOADIPHLPAPI } from 'dns';
 
 export interface DialogData {
   animal: string;
@@ -27,7 +27,7 @@ export class SalesComponent implements OnInit {
 
   }
 
-  openInvoice() {
+  openQuotation() {
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       width: '60vw',
       height: '70vh',
