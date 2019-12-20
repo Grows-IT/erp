@@ -18,19 +18,19 @@
     <mat-grid-tile colspan="4" rowspan="2">
       <mat-form-field appearance="outline">
         <mat-label>Expriation date</mat-label>
-        <input matInput [matDatepicker]="expriationDate" formControlName="expriationDate">
-        <mat-datepicker-toggle matSuffix [for]="expriationDate"></mat-datepicker-toggle>
-        <mat-datepicker #expriationDate></mat-datepicker>
+        <input matInput [matDatepicker]="expirationDate" formControlName="expirationDate">
+        <mat-datepicker-toggle matSuffix [for]="expirationDate"></mat-datepicker-toggle>
+        <mat-datepicker #expirationDate></mat-datepicker>
       </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
   </mat-grid-list>
-  <h1 align="center">Item</h1>
+  <h1 align="center">Items</h1>
   <mat-grid-list cols="12" rowHeight="50px">
     <mat-grid-tile colspan="4" rowspan="2">
       <mat-form-field appearance="outline">
-        <mat-label>Type</mat-label>
-        <input matInput formControlName="type">
+        <mat-label>Item</mat-label>
+        <input matInput formControlName="item">
       </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile colspan="4" rowspan="2">

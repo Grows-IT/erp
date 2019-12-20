@@ -4,8 +4,8 @@ import { HomeComponent } from './home/home.component';
 import { SalesComponent } from './sales/sales.component';
 import { PricelistComponent } from './pricelist/pricelist.component';
 import { ItemspriceComponent } from './pricelist/itemsprice/itemsprice.component';
-import { SigninComponent} from './signin/signin.component';
-import { InvoiceComponent} from './invoice/invoice.component';
+import { SigninComponent } from './signin/signin.component';
+import { InvoiceComponent } from './invoice/invoice.component';
 
 const routes: Routes = [
   {
@@ -14,7 +14,10 @@ const routes: Routes = [
   },
   {
     path: 'sales',
-    component: SalesComponent
+    children: [{
+      path: '',
+      component: SalesComponent
+    }]
   },
   {
     path: 'pricelist',
