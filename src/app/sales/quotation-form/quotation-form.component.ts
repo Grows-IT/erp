@@ -18,10 +18,10 @@ export class QuotationFormComponent implements OnInit {
     date: new FormControl('', [
       Validators.required,
     ]),
-    expriationDate: new FormControl('', [
+    expirationDate: new FormControl('', [
       Validators.required,
     ]),
-    type: new FormControl('', [
+    item: new FormControl('', [
       Validators.required,
     ]),
     quantity: new FormControl('', [
@@ -36,7 +36,7 @@ export class QuotationFormComponent implements OnInit {
   }
 
   onConfirmClick() {
-    this.salesService.submitQuotation(this.quotation.value).subscribe();
+    this.salesService.addQuotation(this.quotation.value).subscribe();
     this.dialogRef.close(true);
   }
 }
