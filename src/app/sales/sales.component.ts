@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { QuotationDialogComponent } from './quotation-dialog/quotation-dialog.component';
 import { SalesService } from './sales.service';
-import { MatTableDataSource, MatSort } from '@angular/material';
 import { Quotation } from './sales.model';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -13,9 +12,9 @@ export interface QuotationList {
   date: Date;
   expirationDate: Date;
   item: string;
+  isInvoice: boolean;
   quantity: number;
 }
-
 
 @Component({
   selector: 'app-sales',
@@ -24,14 +23,14 @@ export interface QuotationList {
 })
 export class SalesComponent implements OnInit {
   quotations: Quotation[];
-  quotationCol: string[] = ['addressTo', 'date', 'expirationDate', 'item', 'quantity', 'pdf', 'edit', 'delete'];
+  quotationCol: string[] = ['addressTo', 'date', 'expirationDate', 'item', 'quantity', 'edit', 'pdf', 'createInvoice', 'delete'];
   listItem = [];
   item;
   date: any;
   expirationDate: any;
 
-  // dataSource = new MatTableDataSource(this.quotation);
-  // @ViewChild(MatSort, {static: true}) sort: MatSort;
+  // @ViewChild(MatSort, { static: true }) sort: MatSort;
+  // dataSource = new MatTableDataSource(this.quotations);
 
   constructor(public dialog: MatDialog, private salesService: SalesService) {
   }
@@ -41,6 +40,7 @@ export class SalesComponent implements OnInit {
       this.quotations = quotations;
     });
     this.salesService.getQuotation().subscribe();
+    // this.dataSource.sort = this.sort;
   }
 
   openQuotation() {
@@ -53,6 +53,21 @@ export class SalesComponent implements OnInit {
     // dialogRef.afterClosed().subscribe(result => {
     //   console.log('The dialog was closed');
     // });
+  }
+
+  edit(item) {
+    const dialogRef = this.dialog.open(QuotationDialogComponent, {
+      width: '60vw',
+      height: '70vh',
+      disableClose: true,
+      autoFocus: false,
+      data: item
+    });
+  }
+
+  createInvoice(id) {
+    console.log(id);
+    this.salesService.addInvoice(id).subscribe();
   }
 
   getListItem(item) {

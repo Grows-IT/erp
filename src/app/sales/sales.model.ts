@@ -4,7 +4,8 @@ export class Quotation {
     public addressTo: string,
     public date: Date,
     public expirationDate: Date,
-    public items: Item[]
+    public items: Item[],
+    public isInvoice: boolean
   ) { }
 }
 
