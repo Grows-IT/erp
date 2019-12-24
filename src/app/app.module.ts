@@ -21,6 +21,9 @@ import { PricelistComponent } from './pricelist/pricelist.component';
 import { ItemspriceComponent } from './pricelist/itemsprice/itemsprice.component';
 import { SigninComponent } from './signin/signin.component';
 import { InvoiceComponent } from './invoice/invoice.component';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+
 
 import { environment } from 'src/environments/environment';
 
@@ -40,7 +43,10 @@ const materialComponent = [
   MatTableModule,
   MatSortModule,
   Ng2SearchPipeModule,
-  FormsModule
+  FormsModule,
+  MatIconModule,
+  MatMenuModule
+
 ];
 
 @NgModule({

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-
 import {Router} from '@angular/router';
-// import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-signin',
@@ -19,8 +17,12 @@ password: string;
   ngOnInit() {
   }
 
-  login(): void {
-
+  login() {
+    if (this.username === 'admin' && this.password === 'password') {
+      this.router.navigate([""]);
+    } else {
+      alert('incorrect username or password');
+    }
   }
 
 }

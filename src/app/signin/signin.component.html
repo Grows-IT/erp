@@ -1,16 +1,27 @@
-<h1 align="center">Sign in</h1>
-
-<div align="center">
-
-    <mat-form-field>
-      <h3>username</h3>
-      <input matInput placeholder="Username" [(ngModel)]="username" name="username" required/>
-    </mat-form-field>
-    <br>
-    <mat-form-field>
-      <h3>password</h3>
-      <input matInput placeholder="Password"[(ngModel)]="password" name="password" required/>
-    </mat-form-field>
-    <br>
-    <button mat-raised-button click="login()"style="background-color: darkcyan; color: white;">Sign in</button>
+<div class = "main-div">
+ <mat-card>
+  <mat-card-header>
+    <h1>Sign in</h1>
+  </mat-card-header>
+  <mat-card-content>
+    <form>
+      <table cellspacing="30">
+        <tr>
+          <td>
+            <mat-form-field>
+            <input matInput placeholder="Username" [(ngModel)]="username" name="username" required>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+        <td><mat-form-field >
+          <input matInput placeholder="Password" [(ngModel)]="password"type="password" name="password" required>
+        </mat-form-field></td>
+      </tr></table>
+    </form>
+  </mat-card-content>
+  <div mat-card-actions align="center">
+    <button mat-raised-button (click)="login()" style="background-color: darkcyan; color: white;">Login</button>
+  </div>
+</mat-card>
 </div>
