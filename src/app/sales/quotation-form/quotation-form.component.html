@@ -52,8 +52,10 @@
   </mat-grid-list>
 
   <mat-dialog-actions align="center">
-    <button mat-raised-button color="primary" (click)="onConfirmClick()" tabindex="1"
+    <button *ngIf="!data" mat-raised-button color="primary" (click)="onConfirmClick(0)" tabindex="1"
       [disabled]="!quotation.valid">Create</button>
+    <button *ngIf="data" mat-raised-button color="primary" (click)="onConfirmClick(1)" tabindex="1"
+      [disabled]="!quotation.valid">Update</button>
     <button mat-raised-button mat-dialog-close tabindex="-1">cancel</button>
   </mat-dialog-actions>
 </form>

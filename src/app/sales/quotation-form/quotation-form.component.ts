@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { SalesService } from '../sales.service';
 import { QuotationDialogComponent } from '../quotation-dialog/quotation-dialog.component';
 import { MatDialogRef } from '@angular/material';
+import { Quotation } from '../sales.model';
 
 @Component({
   selector: 'app-quotation-form',
@@ -10,6 +11,7 @@ import { MatDialogRef } from '@angular/material';
   styleUrls: ['./quotation-form.component.scss']
 })
 export class QuotationFormComponent implements OnInit {
+  data: Quotation;
 
   quotation = new FormGroup({
     addressTo: new FormControl('', [
@@ -32,11 +34,35 @@ export class QuotationFormComponent implements OnInit {
   constructor(private salesService: SalesService, private dialogRef: MatDialogRef<QuotationDialogComponent>) { }
 
   ngOnInit() {
+    this.data = this.dialogRef.componentInstance.data;
 
+    if (this.data !== null && this.data !== undefined) {
+      this.quotation = new FormGroup({
+        addressTo: new FormControl(this.data.addressTo, [
+          Validators.required
+        ]),
+        date: new FormControl(this.data.date, [
+          Validators.required,
+        ]),
+        expirationDate: new FormControl(this.data.expirationDate, [
+          Validators.required,
+        ]),
+        item: new FormControl(this.data.items[0].name, [
+          Validators.required,
+        ]),
+        quantity: new FormControl(this.data.items[0].quantity, [
+          Validators.required,
+        ]),
+      });
+    }
   }
 
-  onConfirmClick() {
-    this.salesService.addQuotation(this.quotation.value).subscribe();
+  onConfirmClick(status) {
+    if (status === 0) {
+      this.salesService.addQuotation(this.quotation.value).subscribe();
+    } else {
+      this.salesService.updateQuotation(this.quotation.value, this.data.id).subscribe();
+    }
     this.dialogRef.close(true);
   }
 }
