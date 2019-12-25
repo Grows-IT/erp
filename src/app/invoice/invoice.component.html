@@ -1,5 +1,10 @@
 <p>invoice works!</p>
 <table mat-table *ngIf="invoices" [dataSource]="invoices" matSort class="mat-elevation-z8">
+  <ng-container matColumnDef="no">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> NO. </th>
+    <td mat-cell *matCellDef="let element"> {{element.id | cutString}} </td>
+  </ng-container>
+
   <ng-container matColumnDef="addressTo">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Address To </th>
     <td mat-cell *matCellDef="let element"> {{element.addressTo}} </td>

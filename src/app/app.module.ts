@@ -26,6 +26,7 @@ import {MatMenuModule} from '@angular/material/menu';
 
 
 import { environment } from 'src/environments/environment';
+import { CutStringPipe } from './cut-string.pipe';
 
 const materialComponent = [
   MatGridListModule,
@@ -60,6 +61,7 @@ const materialComponent = [
     ItemspriceComponent,
     SigninComponent,
     InvoiceComponent,
+    CutStringPipe,
   ],
   imports: [
     BrowserModule,
