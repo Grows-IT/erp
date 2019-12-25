@@ -4,13 +4,13 @@
     <mat-grid-tile colspan="4" rowspan="4">
       <mat-form-field appearance="outline">
         <mat-label>To (Customer's address)</mat-label>
-        <textarea matInput rows="8" formControlName="addressTo"></textarea>
+        <textarea matInput rows="8" formControlName="addressTo" required></textarea>
       </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile colspan="4" rowspan="2">
       <mat-form-field appearance="outline">
         <mat-label>Date</mat-label>
-        <input matInput [matDatepicker]="date" placeholder="date" formControlName="date">
+        <input matInput [matDatepicker]="date" placeholder="date" formControlName="date" required>
         <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
         <mat-datepicker #date></mat-datepicker>
       </mat-form-field>
@@ -30,13 +30,13 @@
     <mat-grid-tile colspan="4" rowspan="2">
       <mat-form-field appearance="outline">
         <mat-label>Item</mat-label>
-        <input matInput formControlName="item">
+        <input matInput formControlName="item" required>
       </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile colspan="4" rowspan="2">
       <mat-form-field appearance="outline">
         <mat-label>Quantity</mat-label>
-        <input matInput formControlName="quantity">
+        <input matInput formControlName="quantity" type="number" required>
       </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile colspan="4" rowspan="2">

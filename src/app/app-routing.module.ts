@@ -6,26 +6,31 @@ import { PricelistComponent } from './pricelist/pricelist.component';
 import { ItemspriceComponent } from './pricelist/itemsprice/itemsprice.component';
 import { SigninComponent } from './signin/signin.component';
 import { InvoiceComponent } from './invoice/invoice.component';
+import { SigninGuard } from './signin/signin.guard';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
+    canActivate: [SigninGuard],
   },
   {
     path: 'sales',
     children: [{
       path: '',
-      component: SalesComponent
+      component: SalesComponent,
+      canActivate: [SigninGuard],
     }]
   },
   {
     path: 'pricelist',
-    component: PricelistComponent
+    component: PricelistComponent,
+    canActivate: [SigninGuard],
   },
   {
     path: 'itemsprice',
-    component: ItemspriceComponent
+    component: ItemspriceComponent,
+    canActivate: [SigninGuard],
   },
   {
     path: 'signin',
@@ -33,7 +38,8 @@ const routes: Routes = [
   },
   {
     path: 'invoice',
-    component: InvoiceComponent
+    component: InvoiceComponent,
+    canActivate: [SigninGuard],
   }
 ];
 
