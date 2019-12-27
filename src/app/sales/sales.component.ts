@@ -5,11 +5,8 @@ import { SalesService } from './sales.service';
 import { Quotation } from './sales.model';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-<<<<<<< HEAD
 import { Subscription } from 'rxjs';
-=======
 import { RouterModule, Router } from '@angular/router';
->>>>>>> c1add4e519a3188fcc0f04fe140a2b80ee1a36b5
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface QuotationList {
@@ -41,11 +38,8 @@ export class SalesComponent implements OnInit, OnDestroy {
   item;
   date: any;
   expirationDate: any;
-<<<<<<< HEAD
   subscription: Subscription;
-=======
   isViewing = false;
->>>>>>> c1add4e519a3188fcc0f04fe140a2b80ee1a36b5
 
   // @ViewChild(MatSort, { static: true }) sort: MatSort;
   // dataSource = new MatTableDataSource(this.quotations);

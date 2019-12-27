@@ -15,7 +15,6 @@ export class SigninGuard implements CanActivate {
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot)
     : Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-<<<<<<< HEAD
     return this.authService.isLoggedIn().pipe(
       tap(isLoggedIn => {
         if (!isLoggedIn) {
@@ -24,10 +23,5 @@ export class SigninGuard implements CanActivate {
         }
       })
     );
-=======
-      // this.router.navigate(['/signin']);
-      // return false;
-      return true;
->>>>>>> c1add4e519a3188fcc0f04fe140a2b80ee1a36b5
   }
 }
