@@ -10,7 +10,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import {
   MatDialogModule, MatGridListModule, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatInputModule,
   MatDatepickerModule, MatNativeDateModule, MatListModule, MatCardModule, MatTableDataSource, MatSort, MatTableModule, MatSortModule,
-  MatIconModule, MatMenuModule, MatExpansionModule, MatProgressSpinnerModule
+  MatIconModule, MatMenuModule, MatExpansionModule, MatProgressSpinnerModule, MatCheckboxModule
 } from '@angular/material';
 
 import { AppComponent } from './app.component';
@@ -26,6 +26,9 @@ import { InvoiceComponent } from './invoice/invoice.component';
 import { environment } from 'src/environments/environment';
 import { CutStringPipe } from './cut-string.pipe';
 import { InvoiceDetailComponent } from './invoice/invoice-detail/invoice-detail.component';
+import { RouterModule } from '@angular/router';
+
+import { QuotationdetailComponent } from './sales/quotationdetail/quotationdetail.component';
 
 const materialComponent = [
   MatGridListModule,
@@ -47,7 +50,11 @@ const materialComponent = [
   MatIconModule,
   MatMenuModule,
   MatExpansionModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatCheckboxModule,
+  MatProgressSpinnerModule,
+  RouterModule
+
 ];
 
 @NgModule({
@@ -63,6 +70,7 @@ const materialComponent = [
     InvoiceComponent,
     CutStringPipe,
     InvoiceDetailComponent,
+    QuotationdetailComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,25 @@
 <form [formGroup]="quotation" novalidate>
+  <mat-grid-list cols="8" rowHeight="40px">
+    <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
+    <mat-grid-tile colspan="2" rowspan="4">
+      <mat-form-field appearance="outline">
+        <mat-label>Customer Name</mat-label>
+        <textarea matInput rows="2" formControlName="customerName" required [readonly]="data.isViewing"></textarea>
+      </mat-form-field>
+     </mat-grid-tile>
+     <mat-grid-tile colspan="2" rowspan="4">
+      <mat-form-field appearance="outline">
+        <mat-label>By</mat-label>
+        <textarea matInput rows="2" formControlName="by" required></textarea>
+      </mat-form-field>
+      <!-- <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <textarea matInput rows="2" required></textarea>
+      </mat-form-field> -->
+   </mat-grid-tile>
+    <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
+
+  </mat-grid-list>
   <mat-grid-list cols="12" rowHeight="55px">
     <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
     <mat-grid-tile colspan="4" rowspan="4">

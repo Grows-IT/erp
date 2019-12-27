@@ -5,7 +5,11 @@ import { SalesService } from './sales.service';
 import { Quotation } from './sales.model';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+<<<<<<< HEAD
 import { Subscription } from 'rxjs';
+=======
+import { RouterModule, Router } from '@angular/router';
+>>>>>>> c1add4e519a3188fcc0f04fe140a2b80ee1a36b5
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface QuotationList {
@@ -15,6 +19,12 @@ export interface QuotationList {
   item: string;
   isInvoice: boolean;
   quantity: number;
+  // Name: string;
+  // date: Date;
+  // TotalPrice: number;
+  // By: string;
+  // Status: string;
+  // isInvoice: boolean;
 }
 
 @Component({
@@ -24,17 +34,23 @@ export interface QuotationList {
 })
 export class SalesComponent implements OnInit, OnDestroy {
   quotations: Quotation[];
-  quotationCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'item', 'quantity', 'edit', 'pdf', 'createInvoice', 'delete'];
+  quotationCol: string[] = ['no', 'customerName', 'date', 'totalPrice', 'status', 'by', 'edit', 'pdf', 'createInvoice', 'delete'];
+  // quotationCol: string[] = ['no', 'customerName', 'date', 'expirationDate', 'item', 'quantity', 'edit', 'pdf', 'createInvoice', 'delete'];
+  // quotationCol: string[] = ['no', 'CustomerName', 'date', 'TotalPrice', 'by', 'status', 'edit', 'pdf', 'createInvoice', 'delete'];
   listItem = [];
   item;
   date: any;
   expirationDate: any;
+<<<<<<< HEAD
   subscription: Subscription;
+=======
+  isViewing = false;
+>>>>>>> c1add4e519a3188fcc0f04fe140a2b80ee1a36b5
 
   // @ViewChild(MatSort, { static: true }) sort: MatSort;
   // dataSource = new MatTableDataSource(this.quotations);
 
-  constructor(public dialog: MatDialog, private salesService: SalesService) {
+  constructor(public dialog: MatDialog, private salesService: SalesService, private router: Router) {
   }
 
   ngOnInit() {
@@ -50,11 +66,13 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   openQuotation() {
+    const item = { isViewing: false };
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       width: '60vw',
       height: '70vh',
       disableClose: true,
-      autoFocus: false
+      autoFocus: false,
+      data: item
     });
     // dialogRef.afterClosed().subscribe(result => {
     //   console.log('The dialog was closed');
@@ -62,6 +80,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   edit(item) {
+    item.isViewing = false;
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       width: '60vw',
       height: '70vh',
@@ -70,6 +89,22 @@ export class SalesComponent implements OnInit, OnDestroy {
       data: item
     });
   }
+
+  view(item) {
+    item.isViewing = true;
+    const dialogRef = this.dialog.open(QuotationDialogComponent, {
+      width: '60vw',
+      height: '70vh',
+      disableClose: true,
+      autoFocus: false,
+      data: item,
+    });
+  }
+
+  showDetail(item) {
+    this.router.navigate(['/quotationdetail'], item);
+  }
+
 
   createInvoice(id) {
     console.log(id);

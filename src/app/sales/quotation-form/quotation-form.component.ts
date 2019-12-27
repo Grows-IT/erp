@@ -11,9 +11,15 @@ import { Quotation } from '../sales.model';
   styleUrls: ['./quotation-form.component.scss']
 })
 export class QuotationFormComponent implements OnInit {
-  data: Quotation;
+  data: any;
 
   quotation = new FormGroup({
+    customerName: new FormControl('', [
+      Validators.required
+    ]),
+    by: new FormControl('', [
+      Validators.required
+    ]),
     addressTo: new FormControl('', [
       Validators.required
     ]),
@@ -38,6 +44,12 @@ export class QuotationFormComponent implements OnInit {
 
     if (this.data !== null && this.data !== undefined) {
       this.quotation = new FormGroup({
+        customerName: new FormControl(this.data.customerName, [
+          Validators.required
+        ]),
+        by: new FormControl(this.data.by, [
+          Validators.required
+        ]),
         addressTo: new FormControl(this.data.addressTo, [
           Validators.required
         ]),
@@ -58,9 +70,10 @@ export class QuotationFormComponent implements OnInit {
   }
 
   onConfirmClick(status) {
+    console.log(this.quotation.value);
     if (status === 0) {
       this.salesService.addQuotation(this.quotation.value).subscribe();
-    } else {
+    } else if (status === 1) {
       this.salesService.updateQuotation(this.quotation.value, this.data.id).subscribe();
     }
     this.dialogRef.close(true);

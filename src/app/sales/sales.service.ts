@@ -25,6 +25,9 @@ export class SalesService {
   addQuotation(quotation: any) {
     // addQuotation(quotation: Quotation) {
     const data = {
+      totalPrice: quotation.totalPrice,
+      by: quotation.by,
+      customerName: quotation.customerName,
       addressTo: quotation.addressTo,
       date: quotation.date,
       expirationDate: quotation.expirationDate,
@@ -50,7 +53,7 @@ export class SalesService {
       return actions.map(action => {
         const item = new Item(action.payload.val().item, action.payload.val().quantity);
         const quotation = new Quotation(
-          action.key, action.payload.val().addressTo, action.payload.val().date, action.payload.val().expirationDate, [item], action.payload.val().isInvoice);
+          action.payload.val().totalPrice,action.payload.val().status,action.payload.val().customerName,action.payload.val().by,action.key, action.payload.val().addressTo, action.payload.val().date, action.payload.val().expirationDate, [item], action.payload.val().isInvoice);
         return quotation;
       });
     }).pipe(tap(data => {
