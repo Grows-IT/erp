@@ -1,8 +1,12 @@
 const siteUrl = 'https://erp-grows-it.firebaseio.com';
+const authLoginUtl = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
+const authSigninUtl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
 
 export const environment = {
   production: true,
   siteUrl,
+  authLoginUtl,
+  authSigninUtl,
   firebase: {
     apiKey: 'AIzaSyC-7g5A_6HW0LwMhve7jKajZGq93GTXRZE',
     authDomain: 'erp-grows-it.firebaseapp.com',
