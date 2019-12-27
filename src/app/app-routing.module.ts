@@ -7,7 +7,7 @@ import { ItemspriceComponent } from './pricelist/itemsprice/itemsprice.component
 import { SigninComponent } from './signin/signin.component';
 import { InvoiceComponent } from './invoice/invoice.component';
 import { SigninGuard } from './signin/signin.guard';
-
+import { QuotationdetailComponent } from './sales/quotationdetail/quotationdetail.component';
 const routes: Routes = [
   {
     path: '',
@@ -40,6 +40,11 @@ const routes: Routes = [
     path: 'invoice',
     component: InvoiceComponent,
     canActivate: [SigninGuard],
+  },
+  {
+    path: 'quotationdetail',
+    component: QuotationdetailComponent,
+    // canActivate: [SigninGuard],
   }
 ];
 

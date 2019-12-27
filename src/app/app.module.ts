@@ -23,10 +23,15 @@ import { SigninComponent } from './signin/signin.component';
 import { InvoiceComponent } from './invoice/invoice.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { RouterModule } from '@angular/router';
+
 
 
 import { environment } from 'src/environments/environment';
 import { CutStringPipe } from './cut-string.pipe';
+import { QuotationdetailComponent } from './sales/quotationdetail/quotationdetail.component';
 
 const materialComponent = [
   MatGridListModule,
@@ -46,7 +51,10 @@ const materialComponent = [
   Ng2SearchPipeModule,
   FormsModule,
   MatIconModule,
-  MatMenuModule
+  MatMenuModule,
+  MatCheckboxModule,
+  MatProgressSpinnerModule,
+  RouterModule
 
 ];
 
@@ -62,6 +70,7 @@ const materialComponent = [
     SigninComponent,
     InvoiceComponent,
     CutStringPipe,
+    QuotationdetailComponent,
   ],
   imports: [
     BrowserModule,
