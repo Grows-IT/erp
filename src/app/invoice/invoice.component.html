@@ -1,5 +1,6 @@
-<p>invoice works!</p>
-<table mat-table *ngIf="invoices" [dataSource]="invoices" matSort class="mat-elevation-z8">
+<mat-spinner *ngIf="!invoices"></mat-spinner>
+
+<table mat-table *ngIf="invoices" [dataSource]="invoices" multiTemplateDataRows matSort class="mat-elevation-z8">
   <ng-container matColumnDef="no">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> NO. </th>
     <td mat-cell *matCellDef="let element"> {{element.id | cutString}} </td>
@@ -42,13 +43,71 @@
   <ng-container matColumnDef="pdf">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> PDF </th>
     <td mat-cell *matCellDef="let element">
-      <!-- <button mat-button [routerLink]="['pdf', element.id]"> -->
       <button mat-button (click)="opnePdf(element)">
         <i class="material-icons"> attachment </i>
       </button>
     </td>
   </ng-container>
 
+  <!-- <ng-container matColumnDef="subInvoice">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="invoicesCol.length">
+      <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+        <mat-card>
+          <app-invoice-detail></app-invoice-detail>
+        </mat-card>
+
+        <button>aaa</button>
+        <div class="element-diagram">
+          <div> {{element.addressTo}} </div>
+          <div> {{element.date | date}} </div>
+          <div> {{element.item}} </div>
+          <div> {{element.quantity}} </div>
+        </div>
+        <div>
+          {{element.quantity}}
+          <span> -- Wikipedia </span>
+        </div>
+      </div>
+    </td>
+  </ng-container> -->
+
   <tr mat-header-row *matHeaderRowDef="invoicesCol"></tr>
-  <tr mat-row *matRowDef="let row; columns: invoicesCol;"></tr>
+  <tr mat-row *matRowDef="let row; columns: invoicesCol" class="detail-row" (click)="openDetail(row.id)"></tr>
+  <!-- <tr mat-row *matRowDef="let elem; columns: invoicesCol;" class="element-row"
+    [class.expanded-row]="expandedElement === elem" (click)="expandedElement = expandedElement === elem ? null : elem">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['subInvoice']" class="detail-row"></tr> -->
+
 </table>
+
+
+<!-- <table mat-table *ngIf="invoices" [dataSource]="invoices" multiTemplateDataRows class="mat-elevation-z8">
+  <ng-container matColumnDef="{{column}}" *ngFor="let column of invoicesCol">
+    <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+    <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="invoicesCol.length">
+      <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+        <div class="element-diagram">
+          <div class="element-position"> {{element.addressTo}} </div>
+          <div class="element-symbol"> {{element.date | date}} </div>
+          <div class="element-name"> {{element.item}} </div>
+          <div class="element-weight"> {{element.quantity}} </div>
+        </div>
+        <div class="element-description">
+          {{element.description}}
+          <span class="element-description-attribution"> -- Wikipedia </span>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="invoicesCol"></tr>
+  <tr mat-row *matRowDef="let element; columns: invoicesCol;" class="element-row"
+    [class.expanded-row]="expandedElement === element"
+    (click)="expandedElement = expandedElement === element ? null : element">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+</table> -->

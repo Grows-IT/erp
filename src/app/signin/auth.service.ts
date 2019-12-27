@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, of } from 'rxjs';
+import { tap, first, switchMap, catchError, map } from 'rxjs/operators';
 
 export class Auth {
   constructor(
@@ -15,10 +15,14 @@ export class Auth {
   providedIn: 'root'
 })
 export class AuthService {
-  private _auth = new BehaviorSubject<Auth>(null);
+  private _user = new BehaviorSubject<Auth>(null);
+  private _token = new BehaviorSubject<string>(null);
 
-  get auth() {
-    return this._auth.asObservable();
+  get user() {
+    return this._user.asObservable();
+  }
+  get token() {
+    return this._token.asObservable();
   }
 
   constructor(private http: HttpClient) { }
@@ -30,20 +34,49 @@ export class AuthService {
       returnSecureToken: true
     };
 
-    return this.http.post<{email: string, idToken: string}>(environment.authLoginUtl + environment.firebase.apiKey, data).pipe(
+    return this.http.post<{ email: string, idToken: string }>(environment.authLoginUtl + environment.firebase.apiKey, data).pipe(
       tap(val => {
+        console.log(val);
         const authen = new Auth(val.email, val.idToken);
-        this.saveTokenToStorage(authen);
-        this._auth.next(authen);
+        this.saveUserToStorage(authen);
+        // console.log(this.getTokenFormStorage());
+        this._token.next(authen.token);
+        this._user.next(authen);
       })
     );
   }
 
-  private saveTokenToStorage(val: Auth) {
-    localStorage.setItem('auth', JSON.stringify(val));
+  logout() {
+    this._user.next(null);
+    this._token.next(null);
+    localStorage.clear();
+  }
+
+  isLoggedIn() {
+    return this.token.pipe(
+      first(),
+      switchMap(token => {
+        if (!token) {
+          return this.getTokenFormStorage().pipe(
+            catchError(() => of(null)),
+            map(storedtoken => !!storedtoken)
+          );
+        }
+        return of(!!token);
+      })
+    );
+  }
+
+  private saveUserToStorage(val: Auth) {
+    localStorage.setItem('user', JSON.stringify(val));
+    localStorage.setItem('token', JSON.stringify(val.token));
   }
 
   private getTokenFormStorage() {
-    return localStorage.getItem('auth');
+    return of(localStorage.getItem('token'));
+  }
+
+  private getUserFormStorage() {
+    return of(localStorage.getItem('user'));
   }
 }

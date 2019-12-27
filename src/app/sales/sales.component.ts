@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { QuotationDialogComponent } from './quotation-dialog/quotation-dialog.component';
 import { SalesService } from './sales.service';
 import { Quotation } from './sales.model';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Subscription } from 'rxjs';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface QuotationList {
@@ -21,13 +22,14 @@ export interface QuotationList {
   templateUrl: './sales.component.html',
   styleUrls: ['./sales.component.scss']
 })
-export class SalesComponent implements OnInit {
+export class SalesComponent implements OnInit, OnDestroy {
   quotations: Quotation[];
   quotationCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'item', 'quantity', 'edit', 'pdf', 'createInvoice', 'delete'];
   listItem = [];
   item;
   date: any;
   expirationDate: any;
+  subscription: Subscription;
 
   // @ViewChild(MatSort, { static: true }) sort: MatSort;
   // dataSource = new MatTableDataSource(this.quotations);
@@ -36,11 +38,15 @@ export class SalesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.salesService.quotations.subscribe(quotations => {
+    this.subscription = this.salesService.quotations.subscribe(quotations => {
       this.quotations = quotations;
     });
     this.salesService.getQuotation().subscribe();
     // this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   openQuotation() {

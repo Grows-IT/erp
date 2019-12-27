@@ -7,6 +7,7 @@ import { ItemspriceComponent } from './pricelist/itemsprice/itemsprice.component
 import { SigninComponent } from './signin/signin.component';
 import { InvoiceComponent } from './invoice/invoice.component';
 import { SigninGuard } from './signin/signin.guard';
+import { InvoiceDetailComponent } from './invoice/invoice-detail/invoice-detail.component';
 
 const routes: Routes = [
   {
@@ -38,8 +39,14 @@ const routes: Routes = [
   },
   {
     path: 'invoice',
-    component: InvoiceComponent,
-    canActivate: [SigninGuard],
+    children: [{
+      path: '',
+      component: InvoiceComponent,
+      canActivate: [SigninGuard],
+    }, {
+      path: ':id',
+      component: InvoiceDetailComponent,
+    }]
   }
 ];
 

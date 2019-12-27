@@ -4,6 +4,8 @@ import { SalesService } from '../sales/sales.service';
 import { Quotation } from '../sales/sales.model';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { trigger, state, transition, style, animate } from '@angular/animations';
+import { Router } from '@angular/router';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface InvoiceList {
@@ -17,17 +19,28 @@ export interface InvoiceList {
 @Component({
   selector: 'app-invoice',
   templateUrl: './invoice.component.html',
-  styleUrls: ['./invoice.component.scss']
+  styleUrls: ['./invoice.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0', display: 'none' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class InvoiceComponent implements OnInit {
   invoices: Quotation[];
   invoicesCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'item', 'quantity', 'pdf', 'delete'];
+
+  // invoicesCol: string[] = ['no', 'addressTo', 'date', 'totalPrice', 'status', 'pdf'];
   listItem = [];
   item: any;
   date: any;
   expirationDate: any;
+  expandedElement;
+  expandedElement2;
 
-  constructor(private invoiceService: InvoiceService, private salesService: SalesService) { }
+  constructor(private invoiceService: InvoiceService, private salesService: SalesService, private router: Router) { }
 
   ngOnInit() {
     this.salesService.quotations.subscribe(invoices => {
@@ -39,11 +52,19 @@ export class InvoiceComponent implements OnInit {
         return val.isInvoice === true;
       });
     });
-    this.salesService.getQuotation().subscribe();
+    this.salesService.getQuotation().subscribe((val) => {
+      this.expandedElement = val;
+      // this.expandedElement2 = this.subInvoices[1];
+      // this.expandedElement2 = this.subInvoices[2];
+    });
   }
 
   delete(id) {
     this.invoiceService.deleteInvoice(id).subscribe();
+  }
+
+  openDetail(id) {
+    this.router.navigate(['/invoice/' + id]);
   }
 
   getListItem(item) {

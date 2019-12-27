@@ -9,7 +9,8 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import {
   MatDialogModule, MatGridListModule, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatInputModule,
-  MatDatepickerModule, MatNativeDateModule, MatListModule, MatCardModule, MatTableDataSource, MatSort, MatTableModule, MatSortModule
+  MatDatepickerModule, MatNativeDateModule, MatListModule, MatCardModule, MatTableDataSource, MatSort, MatTableModule, MatSortModule,
+  MatIconModule, MatMenuModule, MatExpansionModule, MatProgressSpinnerModule
 } from '@angular/material';
 
 import { AppComponent } from './app.component';
@@ -21,12 +22,10 @@ import { PricelistComponent } from './pricelist/pricelist.component';
 import { ItemspriceComponent } from './pricelist/itemsprice/itemsprice.component';
 import { SigninComponent } from './signin/signin.component';
 import { InvoiceComponent } from './invoice/invoice.component';
-import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
-
 
 import { environment } from 'src/environments/environment';
 import { CutStringPipe } from './cut-string.pipe';
+import { InvoiceDetailComponent } from './invoice/invoice-detail/invoice-detail.component';
 
 const materialComponent = [
   MatGridListModule,
@@ -46,8 +45,9 @@ const materialComponent = [
   Ng2SearchPipeModule,
   FormsModule,
   MatIconModule,
-  MatMenuModule
-
+  MatMenuModule,
+  MatExpansionModule,
+  MatProgressSpinnerModule
 ];
 
 @NgModule({
@@ -62,6 +62,7 @@ const materialComponent = [
     SigninComponent,
     InvoiceComponent,
     CutStringPipe,
+    InvoiceDetailComponent,
   ],
   imports: [
     BrowserModule,
