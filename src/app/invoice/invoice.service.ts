@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { SalesService } from '../sales/sales.service';
-import { map } from 'rxjs-compat/operator/map';
-import { first, switchMap, filter } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { Invoice } from './invoice.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +10,7 @@ import { of } from 'rxjs';
 export class InvoiceService {
   invoiceList: any[];
 
-  constructor(private http: HttpClient, private salesService: SalesService) {
+  constructor(private http: HttpClient, private activatedRoute: ActivatedRoute) {
   }
 
   deleteInvoice(id: string) {
@@ -22,4 +20,7 @@ export class InvoiceService {
     return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
   }
 
+  getSubInvioce(id) {
+    return this.http.get<Invoice>(environment.siteUrl + '/invoices/-LxZdDePB4WEbHuNNoeU' + '.json');
+  }
 }

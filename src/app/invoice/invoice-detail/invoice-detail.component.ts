@@ -3,6 +3,7 @@ import { InvoiceService } from '../invoice.service';
 import { SalesService } from 'src/app/sales/sales.service';
 import { Invoice, Customer } from '../invoice.model';
 import { Item } from 'src/app/sales/sales.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-invoice-detail',
@@ -11,37 +12,27 @@ import { Item } from 'src/app/sales/sales.model';
 })
 export class InvoiceDetailComponent implements OnInit {
   expandedElement;
-  groupId;
-  arr: any[];
-  invoiceCol: string[] = ['no', 'customerName'];
-  invoices: Invoice[] = [
-    new Invoice('1', null, null, '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('apple', 50)]),
-    new Invoice('2', 'a', '1', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('banana', 1)]),
-    new Invoice('3', 'a', '1', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('carrot', 1)]),
+  invoiceCol: string[] = ['item', 'quantity'];
+  mainInvoices: Invoice;
+  //  = new Invoice('1', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('apple', 50)],
+  //   [
+  //     [
+  //       new Invoice('2', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('banana', 1)]),
+  //       new Invoice('3', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('carrot', 1)]),
+  //     ],
+  //     [
+  //       new Invoice('4', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('banana', 11)]),
+  //       new Invoice('5', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('carrot', 12)]),
+  //     ]
+  //   ]);
 
-    new Invoice('4', 'b', '1', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('banana', 11)]),
-    new Invoice('5', 'b', '1', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('carrot', 12)]),
-  ];
-  groupBy;
-
-  constructor(private invoiceService: InvoiceService, private salesService: SalesService) { }
+  constructor(private invoiceService: InvoiceService, private salesService: SalesService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    // const key = 'filter';
-    this.groupId = this.invoices.reduce((obj, item) => {
-      obj[item.groupId] = obj[item.groupId] || [];
-      obj[item.groupId].push(item);
-      // console.log(obj[item.groupId]);
-
-      // obj[key].isArray(obj[item.groupId]);
-
-      // this.arr.push(item.groupId);
-      // === this.arr[this.arr.length] ? [] : item.groupId
-      return obj;
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
+    this.invoiceService.getSubInvioce(id).subscribe((val) => {
+      this.mainInvoices = val;
     });
-
-    console.log(this.groupId);
-    this.groupBy = this.groupId.a;
   }
 
   opnePdf(id) {

@@ -1,16 +1,24 @@
-<h1>Quotation : {{invoices[0].quotationId}}</h1>
-<h2>Name : {{invoices[0].customer.name}} , Addres : {{invoices[0].customer.address}}</h2>
-<table mat-table [dataSource]="groupBy" multiTemplateDataRows matSort class="mat-elevation-z8">
-  <ng-container matColumnDef="no">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> NO. </th>
-    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-  </ng-container>
+<mat-spinner *ngIf="!mainInvoices"></mat-spinner>
 
-  <ng-container matColumnDef="customerName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer Name </th>
-    <td mat-cell *matCellDef="let element"> {{element.customer.name}} </td>
-  </ng-container>
+<div *ngIf="mainInvoices">
+  <h1>Quotation : {{mainInvoices.quotationId}}</h1>
+  <h2>Name : {{mainInvoices.customer.name}} , Addres : {{mainInvoices.customer.address}}</h2>
+  <div *ngFor="let subInv of mainInvoices.subInvoices;">
+    <table mat-table [dataSource]="subInv" multiTemplateDataRows matSort class="mat-elevation-z8">
+      <ng-container matColumnDef="item">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
+        <!-- <td mat-cell *matCellDef="let element"> {{element.subInvoices[0][0].items[0].item}} </td> -->
+        <td mat-cell *matCellDef="let element"> {{element.item.name}}</td>
+      </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="invoiceCol"></tr>
-  <tr mat-row *matRowDef="let row; columns: invoiceCol" class="detail-row"></tr>
-</table>
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
+        <!-- <td mat-cell *matCellDef="let element"> {{element.subInvoices[0][0].items[0].quantity}} </td> -->
+        <td mat-cell *matCellDef="let element"> {{element.item.quantity}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="invoiceCol"></tr>
+      <tr mat-row *matRowDef="let row; columns: invoiceCol" class="detail-row"></tr>
+    </table>
+  </div>
+</div>
