@@ -6,7 +6,7 @@ import { Quotation } from './sales.model';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Subscription } from 'rxjs';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router} from '@angular/router';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface QuotationList {
@@ -39,7 +39,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   date: any;
   expirationDate: any;
   subscription: Subscription;
-  isViewing = false;
+  // isViewing = false;
 
   // @ViewChild(MatSort, { static: true }) sort: MatSort;
   // dataSource = new MatTableDataSource(this.quotations);
@@ -60,13 +60,13 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   openQuotation() {
-    const item = { isViewing: false };
+    // const item = { isViewing: false };
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       width: '60vw',
       height: '70vh',
       disableClose: true,
       autoFocus: false,
-      data: item
+      // data: item
     });
     // dialogRef.afterClosed().subscribe(result => {
     //   console.log('The dialog was closed');
@@ -74,7 +74,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   edit(item) {
-    item.isViewing = false;
+    // item.isViewing = false;
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       width: '60vw',
       height: '70vh',
@@ -85,7 +85,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   view(item) {
-    item.isViewing = true;
+    // item.isViewing = true;
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       width: '60vw',
       height: '70vh',
