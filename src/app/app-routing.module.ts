@@ -50,9 +50,9 @@ const routes: Routes = [
     }]
   },
   {
-    path: 'quotationdetail',
+    path: 'quotationdetail/:id',
     component: QuotationdetailComponent,
-    canActivate: [SigninGuard],
+    // canActivate: [SigninGuard],
   }
 ];
 

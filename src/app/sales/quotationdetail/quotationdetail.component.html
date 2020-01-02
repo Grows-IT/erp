@@ -1,12 +1,17 @@
-<h1 align = "center" style="padding-top: 50px;">Quotation</h1>
-<h4 align="center">Quote NO. xxxx</h4>
 
-<h3 align="center" style="padding-top: 50px;">Customer Name : {{data | json}}</h3>
-<h3 align="center" style="padding-top: 30px;">Staff Name :  </h3>
-<h3 align="center" style="padding-top: 30px;">To (Customer's address) :</h3>
-<h3 align="center" style="padding-top: 30px;">Date : </h3>
-<h3 align="center" style="padding-top: 30px;">Expiration date : </h3>
+
+<h1 align = "center" style="padding-top: 50px;">Quotation</h1>
+<h4 align="center">Quote NO. {{data}}</h4>
+<div align="center">
+<mat-spinner *ngIf="!quotation"></mat-spinner></div>
+<div *ngIf = "quotation">
+<h3 align="center" style="padding-top: 50px;">Customer Name : {{quotation.customerName}}</h3>
+<h3 align="center" style="padding-top: 30px;">Staff Name : {{quotation.by}}</h3>
+<h3 align="center" style="padding-top: 30px;">To (Customer's address) : {{quotation.addressTo}}</h3>
+<h3 align="center" style="padding-top: 30px;">Date : {{quotation.date}}</h3>
+<h3 align="center" style="padding-top: 30px;">Expiration date : {{quotation.expirationDate}}</h3>
 <h1 align="center" style="padding-top: 50px;">Items</h1>
+
 
 <mat-grid-list cols="6" rowHeight="20px">
   <mat-grid-tile colspan="3" rowspan="2">
@@ -15,9 +20,16 @@
   <mat-grid-tile colspan="3" rowspan="2"><h2>Quantity</h2></mat-grid-tile>
 </mat-grid-list>
 
+<div *ngFor="let quotation of quotation.items">
 <mat-grid-list cols="6" rowHeight="50px">
   <mat-grid-tile colspan="3" rowspan="2">
-    <h3>Item</h3>
+    <h3>{{quotation.name}}</h3>
   </mat-grid-tile>
-  <mat-grid-tile colspan="3" rowspan="2"><h3>Quantity</h3></mat-grid-tile>
-</mat-grid-list>
+  <mat-grid-tile colspan="3" rowspan="2"><h3>{{quotation.quantity}}</h3></mat-grid-tile>
+</mat-grid-list></div>
+</div>
+
+<div align = "center">
+<button mat-raised-button style="display: inline-block; margin: auto; margin-right: 30px; background-color: darkcyan; color: white;">Invoice</button>
+<button mat-raised-button style="display: inline-block; margin: auto; background-color: darkcyan; color: white;" (click)="delete(data)">delete</button>
+</div>
