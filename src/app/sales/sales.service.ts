@@ -53,7 +53,7 @@ export class SalesService {
       return actions.map(action => {
         const item = new Item(action.payload.val().item, action.payload.val().quantity);
         const quotation = new Quotation(
-          action.payload.val().totalPrice,action.payload.val().status,action.payload.val().customerName,action.payload.val().by,action.key, action.payload.val().addressTo, action.payload.val().date, action.payload.val().expirationDate, [item], action.payload.val().isInvoice);
+          action.payload.val().totalPrice, action.payload.val().status, action.payload.val().customerName, action.payload.val().by, action.key, action.payload.val().addressTo, action.payload.val().date, action.payload.val().expirationDate, [item], action.payload.val().isInvoice);
         return quotation;
       });
     }).pipe(tap(data => {
@@ -76,10 +76,28 @@ export class SalesService {
     return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
   }
 
-  addInvoice(id) {
+  createInvoice(quotation: any) {
+    const data = {
+      "id": "1",
+      "quotationId": "1",
+      "customer": {
+        "id": "c1",
+        "name": "Jeff",
+        "address": "BKK"
+      },
+      "item": {
+        "name": "apple",
+        "quantity": "50"
+      }
+    };
+    this.isInvoice(quotation.id);
+    return this.http.put(environment.siteUrl + '/invoices/' + quotation.id + '.json', data);
+  }
+
+  isInvoice(id) {
     const data = {
       isInvoice: true
     };
-    return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
+    return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data).subscribe();
   }
 }

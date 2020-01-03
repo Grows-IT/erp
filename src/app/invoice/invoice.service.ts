@@ -14,13 +14,21 @@ export class InvoiceService {
   }
 
   deleteInvoice(id: string) {
+    this.isInvoice(id);
+    return this.http.delete(environment.siteUrl + '/invoices/' + id + '.json');
+  }
+
+  isInvoice(id) {
     const data = {
       isInvoice: false
     };
-    return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
+
+    return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data).subscribe();
   }
 
   getSubInvioce(id) {
     return this.http.get<Invoice>(environment.siteUrl + '/invoices/-LxZdDePB4WEbHuNNoeU' + '.json');
   }
 }
+
+

@@ -74,7 +74,6 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   edit(item) {
-    // item.isViewing = false;
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       width: '60vw',
       height: '70vh',
@@ -85,7 +84,6 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   view(item) {
-    // item.isViewing = true;
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       width: '60vw',
       height: '70vh',
@@ -100,9 +98,9 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
 
-  createInvoice(id) {
-    console.log(id);
-    this.salesService.addInvoice(id).subscribe();
+  createInvoice(item) {
+    // console.log(item);
+    this.salesService.createInvoice(item).subscribe();
   }
 
   getListItem(item) {

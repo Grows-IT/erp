@@ -3,7 +3,7 @@
 <table mat-table *ngIf="invoices" [dataSource]="invoices" multiTemplateDataRows matSort class="mat-elevation-z8">
   <ng-container matColumnDef="no">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> NO. </th>
-    <td mat-cell *matCellDef="let element"> {{element.id | cutString}} </td>
+    <td mat-cell *matCellDef="let element"><button mat-button (click)="openDetail(element.id)"> {{element.id | cutString}} </button></td>
   </ng-container>
 
   <ng-container matColumnDef="addressTo">
@@ -72,7 +72,7 @@
   </ng-container> -->
 
   <tr mat-header-row *matHeaderRowDef="invoicesCol"></tr>
-  <tr mat-row *matRowDef="let row; columns: invoicesCol" class="detail-row" (click)="openDetail(row.id)"></tr>
+  <tr mat-row *matRowDef="let row; columns: invoicesCol" class="detail-row"></tr>
   <!-- <tr mat-row *matRowDef="let elem; columns: invoicesCol;" class="element-row"
     [class.expanded-row]="expandedElement === elem" (click)="expandedElement = expandedElement === elem ? null : elem">
   </tr>

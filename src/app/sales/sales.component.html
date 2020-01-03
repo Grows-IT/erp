@@ -94,7 +94,7 @@
   <ng-container matColumnDef="createInvoice">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Create Invoice </th>
     <td mat-cell *matCellDef="let element">
-      <button mat-button (click)="createInvoice(element.id)" [disabled]="element.isInvoice">
+      <button mat-button (click)="createInvoice(element)" [disabled]="element.isInvoice">
         <i class="material-icons"> add </i>
       </button>
     </td>
