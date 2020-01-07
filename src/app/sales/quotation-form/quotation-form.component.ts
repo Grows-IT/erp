@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@ang
 import { SalesService } from '../sales.service';
 import { QuotationDialogComponent } from '../quotation-dialog/quotation-dialog.component';
 import { MatDialogRef } from '@angular/material';
-import { Quotation } from '../sales.model';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-quotation-form',

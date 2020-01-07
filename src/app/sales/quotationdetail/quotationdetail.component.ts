@@ -70,6 +70,17 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
+  edit(quotation) {
+    const dialogRef = this.dialog.open(QuotationDialogComponent, {
+      width: '60vw',
+      height: '70vh',
+      disableClose: true,
+      autoFocus: false,
+      data: this.quotation,
+    });
+    this.dialogRef.close();
+  }
+
   getListItem(item) {
     for (let i = 0; i < item.length; i++) {
       this.product = [
