@@ -8,7 +8,7 @@ export class Invoice {
     public quotationId: string,
     public customer: Customer,
     public items: Item[],
-    public subInvoices?: any[]
+    public subInvoices: Item[]
   ) { }
 }
 

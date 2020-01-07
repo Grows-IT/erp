@@ -1,17 +1,27 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
 import { Invoice } from './invoice.model';
+import { BehaviorSubject } from 'rxjs';
+import { AngularFireList, AngularFireDatabase } from '@angular/fire/database';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InvoiceService {
-  invoiceList: any[];
+  // invoiceList: any[];
+  invoiceList: AngularFireList<any>;
+  private _invoice = new BehaviorSubject<Invoice>(null);
 
-  constructor(private http: HttpClient, private activatedRoute: ActivatedRoute) {
+  get invoices() {
+    return this._invoice.asObservable();
   }
+
+  constructor(private http: HttpClient, private db: AngularFireDatabase) {
+    this.invoiceList = db.list('invoice');
+  }
+
 
   deleteInvoice(id: string) {
     this.isInvoice(id);
@@ -27,8 +37,18 @@ export class InvoiceService {
   }
 
   getSubInvioce(id) {
-    return this.http.get<Invoice>(environment.siteUrl + '/invoices/-LxZdDePB4WEbHuNNoeU' + '.json');
+    return this.http.get<Invoice>(environment.siteUrl + '/invoices/' + id + '.json')
+      .pipe(tap(data => {
+        this._invoice.next(data);
+      }));
+    // return this.http.get<Invoice>(environment.siteUrl + '/invoices/-LxZdDePB4WEbHuNNoeU' + '.json');
   }
+
+  addSubInvoice(data, id) {
+    // return this.http.put(environment.siteUrl + '/invoices/' + id + '/subInvoices/.json', [data]);
+    return this.http.post(environment.siteUrl + '/invoices/' + id + '/subInvoices/.json', data);
+  }
+
 }
 
 

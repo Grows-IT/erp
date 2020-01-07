@@ -77,18 +77,21 @@ export class SalesService {
   }
 
   createInvoice(quotation: any) {
+    console.log(quotation);
+
     const data = {
-      "id": "1",
-      "quotationId": "1",
-      "customer": {
-        "id": "c1",
-        "name": "Jeff",
-        "address": "BKK"
+      'id': '1',
+      'quotationId': quotation.id,
+      'customer': {
+        'id': 'c1',
+        'name': quotation.customerName,
+        'address': quotation.addressTo
       },
-      "item": {
-        "name": "apple",
-        "quantity": "50"
-      }
+      'item': {
+        'name': 'apple',
+        'quantity': '50'
+      },
+      'subInvoices': ''
     };
     this.isInvoice(quotation.id);
     return this.http.put(environment.siteUrl + '/invoices/' + quotation.id + '.json', data);
