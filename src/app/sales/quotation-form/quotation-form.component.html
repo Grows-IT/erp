@@ -1,12 +1,11 @@
-<mat-toolbar style="background-color: white;">
-  <span></span>
+<mat-toolbar class="allbg">
+  <span style="color: white;">Quotation</span>
   <span class="space"></span>
-<button mat-button (click)="close()">
+<button mat-button (click)="close()" style="color: white;">
   <i class="material-icons"> close </i>
 </button>
 </mat-toolbar>
-
-<h1 align="center">Quotation</h1>
+<!-- <h1 align="center">Quotation</h1> -->
 <h4 align="center">Quote NO. xxxx</h4>
 
 <form [formGroup]="quotation" novalidate>
@@ -92,3 +91,4 @@
     <button mat-raised-button mat-dialog-close tabindex="-1">cancel</button>
   </mat-dialog-actions>
 </form>
+

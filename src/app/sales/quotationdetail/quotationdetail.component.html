@@ -1,9 +1,12 @@
 <!-- <div class="split left"> -->
-  <mat-toolbar class="sticky" style="background-color: darkcyan;">
+  <mat-toolbar class="sticky" class="allbg">
     <mat-toolbar-row>
       <span style="color: white;">Quotation</span>
       <span class="space"></span>
     <!-- <mat-icon class="icon" aria-hidden="false"  style="color: white;" (click)="delete(data)">delete</mat-icon> -->
+    <button mat-button (click)="edit(data)">
+      <i class="material-icons" style="color: white;"> edit </i>
+    </button>
     <button mat-button (click)="openPdf(quotation)"><img src = "/assets/icons/pdf-file.svg" style="width: 25px;"></button>
     <button mat-button><img src = "/assets/icons/invoicewhite.svg" style="width: 25px;" (click)="invoiceDetail(data)"></button>
     <button mat-button (click)="delete(data)" style="background-color: red;">
@@ -21,35 +24,49 @@
     <mat-spinner *ngIf="!quotation"></mat-spinner>
   </div>
   <div *ngIf="quotation">
-    <div align="center">
-      <img src = "/assets/icons/man-user.svg" style="width: 30px; margin-right: 20px;"><h4 style="display: inline-block; color: darkcyan;">customer name  {{ quotation.customerName }} </h4></div>
+    <div style="padding-left: 50px;">
+      <h3>Customer details</h3>
+    </div>
+    <div style="padding-left: 50px;">
+      <img src = "/assets/icons/man-user.svg" class="imgdetail"><h4 style="display: inline-block; color: darkcyan;">customer name  {{ quotation.customerName }} </h4></div>
     <!-- <h3 align="center" style="padding-top: 50px;">
       Customer Name : <h4 style="color: darkcyan; display: inline-block;">{{ quotation.customerName }}</h4>
     </h3> -->
-    <div align="center">
-      <img src = "/assets/icons/staff.svg" style="width: 30px; margin-right: 20px;"><h4 style="display: inline-block; color: darkcyan">staff name  {{ quotation.by }} </h4></div>
+    <div style="padding-left: 50px;">
+      <img src = "/assets/icons/map.svg"  class="imgdetail"><h4 style="display: inline-block; color: darkcyan">  {{ quotation.addressTo }} </h4></div>
+
+    <div style="padding-left: 50px;">
+      <h3>Staff details</h3>
+    </div>
+    <div style="padding-left: 50px;">
+      <img src = "/assets/icons/staff.svg"  class="imgdetail"><h4 style="display: inline-block; color: darkcyan">staff name  {{ quotation.by }} </h4></div>
     <!-- <h3 align="center" style="padding-top: 30px;">
       Staff Name : <h4 style="color: darkcyan; display: inline-block;">{{ quotation.by }}</h4>
     </h3> -->
-    <div align="center">
-    <img src = "/assets/icons/map.svg" style="width: 30px; margin-right: 20px;"><h4 style="display: inline-block; color: darkcyan">  {{ quotation.addressTo }} </h4></div>
+    <!-- <div style="padding-left: 50px;">
+    <img src = "/assets/icons/map.svg" style="width: 30px; margin-right: 20px;"><h4 style="display: inline-block; color: darkcyan">  {{ quotation.addressTo }} </h4></div> -->
     <!-- <h3 align="center" style="padding-top: 30px;">
       To (Customer's address) : <h4 style="color: darkcyan; display: inline-block;"> {{ quotation.addressTo }} </h4>
     </h3> -->
-    <div align="center">
-      <img src = "/assets/icons/date.svg" style="width: 30px; margin-right: 20px;"><h4 style="display: inline-block; color: darkcyan">  {{ quotation.date }} </h4></div>
+
+    <div style="padding-left: 50px;">
+      <h3>Date</h3>
+    </div>
+
+    <div style="padding-left: 50px;">
+      <img src = "/assets/icons/date.svg"  class="imgdetail"><h4 style="display: inline-block; color: darkcyan">  {{ quotation.date }} </h4></div>
     <!-- <h3 align="center" style="padding-top: 30px;">
       Date : <h4 style="color: darkcyan; display: inline-block;">{{ quotation.date }}</h4>
     </h3> -->
-    <div align="center">
-      <img src = "/assets/icons/expire.svg" style="width: 30px; margin-right: 20px;"><h4 style="display: inline-block; color: darkcyan">  {{ quotation.expirationDate }} </h4></div>
+    <div style="padding-left: 50px;">
+      <img src = "/assets/icons/expire.svg"  class="imgdetail"><h4 style="display: inline-block; color: darkcyan">  {{ quotation.expirationDate }} </h4></div>
     <!-- <h3 align="center" style="padding-top: 30px;">
       Expiration date : <h4 style="color: darkcyan; display: inline-block;">{{ quotation.expirationDate }}</h4>
     </h3> -->
   <!-- </div> -->
 <!-- </div> -->
   <!-- <div class="split right"> -->
-    <div style="text-align: center;padding-top: 20px;">
+    <div class="showhidebutton">
     <button mat-raised-button (click) = "showItem()" style="background-color: darkcyan; color: white; "> Show/Hide Items</button>
     </div>
 <div [hidden] = "!isShow">

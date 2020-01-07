@@ -63,7 +63,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   openQuotation() {
     // const item = { isViewing: false };
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
-      width: '60vw',
+      width: '50vw',
       height: '70vh',
       disableClose: true,
       autoFocus: false,
@@ -86,7 +86,7 @@ export class SalesComponent implements OnInit, OnDestroy {
 
   view(item) {
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
-      width: '60vw',
+      width: '70vw',
       height: '70vh',
       disableClose: true,
       autoFocus: false,
@@ -100,8 +100,9 @@ export class SalesComponent implements OnInit, OnDestroy {
 
   quotationDetail(item) {
     const dialogRef = this.dialog.open(QuotationdetailComponent, {
-      width: '80vw',
-      height: '70vh',
+      panelClass: 'custom-dialog-container',
+      width: '40vw',
+      height: '60vh',
       disableClose: true,
       autoFocus: false,
       data: item,
