@@ -6,6 +6,8 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { trigger, state, transition, style, animate } from '@angular/animations';
 import { Router } from '@angular/router';
+import { InvoiceDetailComponent } from './invoice-detail/invoice-detail.component';
+import { MatDialog } from '@angular/material';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface InvoiceList {
@@ -40,7 +42,7 @@ export class InvoiceComponent implements OnInit {
   expandedElement;
   expandedElement2;
 
-  constructor(private invoiceService: InvoiceService, private salesService: SalesService, private router: Router) { }
+  constructor(private invoiceService: InvoiceService, private salesService: SalesService, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.salesService.quotations.subscribe(invoices => {
@@ -64,7 +66,14 @@ export class InvoiceComponent implements OnInit {
   }
 
   openDetail(id) {
-    this.router.navigate(['/invoice/' + id]);
+    const dialogRef = this.dialog.open(InvoiceDetailComponent, {
+      width: '60vw',
+      height: '70vh',
+      disableClose: true,
+      autoFocus: false,
+      data: id
+    });
+    // this.router.navigate(['/invoice/' + id]);
   }
 
   getListItem(item) {

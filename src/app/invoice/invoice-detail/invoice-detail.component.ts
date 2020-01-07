@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { InvoiceService } from '../invoice.service';
 import { Invoice, Customer } from '../invoice.model';
 import { Item } from 'src/app/sales/sales.model';
 import { ActivatedRoute } from '@angular/router';
-import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.component';
-import { MatDialog } from '@angular/material';
+// import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.component';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { FormGroup, FormArray, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { TOUCH_BUFFER_MS } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-invoice-detail',
@@ -16,23 +18,27 @@ export class InvoiceDetailComponent implements OnInit {
   invoiceCol: string[] = ['item', 'quantity', 'price'];
   mainInvoices: any;
   subInvoice: any = [];
-  // mainInvoices: Invoice;
-  //  = new Invoice('1', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('apple', 50)],
-  //   [
-  //     [
-  //       new Invoice('2', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('banana', 1)]),
-  //       new Invoice('3', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('carrot', 1)]),
-  //     ],
-  //     [
-  //       new Invoice('4', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('banana', 11)]),
-  //       new Invoice('5', '1', new Customer('c1', 'Jeff', 'BKK'), [new Item('carrot', 12)]),
-  //     ]
-  //   ]);
+  addForm: FormGroup;
+  rows: FormArray;
+  isShowing: boolean;
 
-  constructor(private invoiceService: InvoiceService, private activatedRoute: ActivatedRoute, public dialog: MatDialog) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private dialogRef: MatDialogRef<InvoiceDetailComponent>, private invoiceService: InvoiceService, private activatedRoute: ActivatedRoute, private fb: FormBuilder) {
+    this.addForm = this.fb.group({
+      items: [null, Validators.required],
+      items_value: ['no', Validators.required]
+    });
+    this.rows = this.fb.array([]);
+    this.isShowing = false;
+  }
 
   ngOnInit() {
-    const id = this.activatedRoute.snapshot.paramMap.get('id');
+    console.log(this.data);
+
+    // const id = this.activatedRoute.snapshot.paramMap.get('id');
+
+    const id = this.data;
+
+    this.addForm.addControl('rows', this.rows);
     this.invoiceService.getSubInvioce(id).subscribe((res) => {
       console.log(res);
 
@@ -42,38 +48,46 @@ export class InvoiceDetailComponent implements OnInit {
         });
       }
       console.log(this.subInvoice);
-
       this.mainInvoices = res;
     });
   }
 
-  opnePdf(id) {
+  toggleShoing() {
+    this.isShowing = !this.isShowing;
+    this.rows.clear();
+  }
+
+  openPdf(id) {
 
   }
 
-  openAddDialog() {
-    const dialogRef = this.dialog.open(InvoiceDialogComponent, {
-      width: '60vw',
-      height: '70vh',
-      disableClose: true,
-      autoFocus: false,
-      // data: item
+  onAddRow() {
+    this.rows.push(this.createItemFormGroup());
+  }
+
+  onRemoveRow(rowIndex: number) {
+    this.rows.removeAt(rowIndex);
+  }
+
+  createItemFormGroup(): FormGroup {
+    return this.fb.group({
+      name: new FormControl(null, [Validators.required]),
+      quantity: new FormControl(null, [Validators.required]),
+      price: new FormControl(null, [Validators.required])
     });
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result.length === 0) {
-        return;
-      }
+  onConfirmClick() {
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
 
-      const id = this.activatedRoute.snapshot.paramMap.get('id');
-
-      if (this.mainInvoices.subInvoices === undefined || this.mainInvoices.subInvoices === null) {
-        this.invoiceService.addSubInvoice(result, id).subscribe();
-      } else {
-        this.invoiceService.addSubInvoice(result, id).subscribe(() => {
-          this.subInvoice.push(result);
-        });
-      }
-    });
+    if (this.mainInvoices.subInvoices === undefined || this.mainInvoices.subInvoices === null) {
+      this.invoiceService.addSubInvoice(this.rows.value, id).subscribe();
+    } else {
+      this.invoiceService.addSubInvoice(this.rows.value, id).subscribe(() => {
+        this.subInvoice.push(this.rows.value);
+        this.toggleShoing();
+        this.rows.clear();
+      });
+    }
   }
 }
