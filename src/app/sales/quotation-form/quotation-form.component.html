@@ -1,3 +1,14 @@
+<mat-toolbar style="background-color: white;">
+  <span></span>
+  <span class="space"></span>
+<button mat-button (click)="close()">
+  <i class="material-icons"> close </i>
+</button>
+</mat-toolbar>
+
+<h1 align="center">Quotation</h1>
+<h4 align="center">Quote NO. xxxx</h4>
+
 <form [formGroup]="quotation" novalidate>
   <mat-grid-list cols="8" rowHeight="40px">
     <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>

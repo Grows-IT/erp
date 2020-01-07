@@ -7,6 +7,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatToolbarModule} from '@angular/material/toolbar';
 import {
   MatDialogModule, MatGridListModule, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatInputModule,
   MatDatepickerModule, MatNativeDateModule, MatListModule, MatCardModule, MatTableDataSource, MatSort, MatTableModule, MatSortModule,
@@ -54,7 +56,9 @@ const materialComponent = [
   MatProgressSpinnerModule,
   MatCheckboxModule,
   MatProgressSpinnerModule,
-  RouterModule
+  RouterModule,
+  MatToolbarModule,
+  MatSlideToggleModule
 
 ];
 
