@@ -1,10 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { SalesService } from '../sales.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Quotation } from '../sales.model';
 import { Router } from '@angular/router';
 import pdfMake from 'pdfmake/build/pdfmake';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { QuotationDialogComponent } from '../quotation-dialog/quotation-dialog.component';
+import { InvoiceDetailComponent } from 'src/app/invoice/invoice-detail/invoice-detail.component';
 // import { Router } from '@angular/router';
 
 @Component({
@@ -13,24 +17,28 @@ import pdfMake from 'pdfmake/build/pdfmake';
   styleUrls: ['./quotationdetail.component.scss']
 })
 export class QuotationdetailComponent implements OnInit, OnDestroy {
-  data;
+  // data: any;
   subscription: Subscription;
   quotation: Quotation;
   listItem = [];
   product;
+  isShow = false;
 
-
-  constructor( private salesService: SalesService, private route: ActivatedRoute, private router: Router) {}
+  // tslint:disable-next-line: max-line-length
+  constructor( public dialog: MatDialog, private salesService: SalesService, private route: ActivatedRoute, private router: Router, private dialogRef: MatDialogRef<QuotationdetailComponent>, @Inject(MAT_DIALOG_DATA) public data) {}
 
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.data = id;
+    this.data = this.dialogRef.componentInstance.data;
+
+
+    // const id = this.route.snapshot.paramMap.get('id');
+    // this.data = id;
     this.subscription = this.salesService.quotations.subscribe(quotations => {
       if (quotations === null) {
         return;
       }
-      this.quotation = quotations.find(q => q.id === id);
+      this.quotation = quotations.find(q => q.id === this.data);
     });
     this.salesService.getQuotation().subscribe();
   }
@@ -39,9 +47,27 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  invoiceDetail(data) {
+    const dialogRef = this.dialog.open(InvoiceDetailComponent, {
+      width: '80vw',
+      height: '70vh',
+      disableClose: true,
+      autoFocus: false,
+    });
+  }
+
   delete(id: string) {
     this.salesService.deleteQuotation(id).subscribe();
     this.router.navigate(['/sales']);
+    this.dialogRef.close();
+  }
+
+  showItem() {
+    this.isShow = !this.isShow;
+  }
+
+  close(): void {
+    this.dialogRef.close();
   }
 
   getListItem(item) {

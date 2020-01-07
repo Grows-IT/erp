@@ -68,6 +68,9 @@ export class QuotationFormComponent implements OnInit {
       });
     }
   }
+  close(): void {
+    this.dialogRef.close();
+  }
 
   onConfirmClick(status) {
     console.log(this.quotation.value);

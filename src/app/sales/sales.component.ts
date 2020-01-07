@@ -7,6 +7,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Subscription } from 'rxjs';
 import { RouterModule, Router} from '@angular/router';
+import { QuotationdetailComponent } from './quotationdetail/quotationdetail.component';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface QuotationList {
@@ -95,6 +96,16 @@ export class SalesComponent implements OnInit, OnDestroy {
 
   showDetail(item) {
     this.router.navigate(['/quotationdetail'], item);
+  }
+
+  quotationDetail(item) {
+    const dialogRef = this.dialog.open(QuotationdetailComponent, {
+      width: '80vw',
+      height: '70vh',
+      disableClose: true,
+      autoFocus: false,
+      data: item,
+    });
   }
 
 
