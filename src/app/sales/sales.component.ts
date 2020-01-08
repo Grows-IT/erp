@@ -63,6 +63,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   openQuotation() {
     // const item = { isViewing: false };
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
+      panelClass: 'removespace',
       width: '50vw',
       height: '70vh',
       disableClose: true,
@@ -76,6 +77,7 @@ export class SalesComponent implements OnInit, OnDestroy {
 
   edit(item) {
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
+      panelClass: 'removespace',
       width: '60vw',
       height: '70vh',
       disableClose: true,
@@ -84,15 +86,15 @@ export class SalesComponent implements OnInit, OnDestroy {
     });
   }
 
-  view(item) {
-    const dialogRef = this.dialog.open(QuotationDialogComponent, {
-      width: '70vw',
-      height: '70vh',
-      disableClose: true,
-      autoFocus: false,
-      data: item,
-    });
-  }
+  // view(item) {
+  //   const dialogRef = this.dialog.open(QuotationDialogComponent, {
+  //     width: '70vw',
+  //     height: '70vh',
+  //     disableClose: true,
+  //     autoFocus: false,
+  //     data: item,
+  //   });
+  // }
 
   showDetail(item) {
     this.router.navigate(['/quotationdetail'], item);
@@ -100,15 +102,14 @@ export class SalesComponent implements OnInit, OnDestroy {
 
   quotationDetail(item) {
     const dialogRef = this.dialog.open(QuotationdetailComponent, {
-      panelClass: 'custom-dialog-container',
+      panelClass: 'nopadding-dialog',
       width: '40vw',
       height: '60vh',
-      disableClose: true,
+      disableClose: false,
       autoFocus: false,
       data: item,
     });
   }
-
 
   createInvoice(item) {
     // console.log(item);
