@@ -53,6 +53,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
       height: '70vh',
       disableClose: true,
       autoFocus: false,
+      data: this.data,
     });
   }
 
@@ -72,13 +73,13 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
 
   edit(quotation) {
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
+      panelClass: 'removespace',
       width: '60vw',
       height: '70vh',
       disableClose: true,
       autoFocus: false,
       data: this.quotation,
     });
-    this.dialogRef.close();
   }
 
   getListItem(item) {
