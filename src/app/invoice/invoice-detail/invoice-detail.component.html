@@ -2,15 +2,20 @@
   <mat-spinner *ngIf="!mainInvoices"></mat-spinner>
 
   <div *ngIf="mainInvoices">
-    <!-- <div>{{mainInvoices | json}}</div> -->
     <h1>Quotation : {{mainInvoices.quotationId}}</h1>
     <h2>Name : {{mainInvoices.customer.name}} , Addres : {{mainInvoices.customer.address}}</h2>
-    <button mat-raised-button color="primary" (click)="toggleShoing()">Add group</button>
-
-    <mat-card *ngIf="isShowing" style="margin-top: 15px;">
+    <button mat-raised-button color="primary" (click)="toggleShoing()" style="margin-bottom: 10px;">Add group</button>
+    <br />
+    <mat-card *ngIf="isShowing" style="margin-bottom: 10px;">
+      <div [formGroup]="addForm">
+        <mat-form-field appearance="outline">
+          <mat-label>Group Name : </mat-label>
+          <input matInput formControlName="groupName" required>
+        </mat-form-field>
+      </div>
       <div class="col-md-2" [formGroup]="rows">
         <div class="form-group">
-          <table>
+          <table id="addGroupTable">
             <tbody>
               <tr *ngFor="let row of addForm.get('rows').controls; let i = index;">
                 <td>
@@ -39,15 +44,16 @@
           </table>
         </div>
       </div>
-      <button mat-raised-button color="primary" (click)="onAddRow()">add row</button>
-      <button *ngIf="!data" mat-raised-button color="primary" (click)="onConfirmClick(0)" tabindex="1"
-        [disabled]="!rows.valid">Create</button>
-      <button mat-raised-button (click)="toggleShoing()">cancel</button>
+      <button mat-raised-button class="btn" color="primary" (click)="onAddRow()">add row</button>
+      <button mat-raised-button class="btn" color="primary" (click)="onConfirmClick()" tabindex="1"
+        [disabled]="!rows.valid || !addForm.valid">Create</button>
+      <button mat-raised-button class="btn" color="warn" (click)="toggleShoing()">cancel</button>
     </mat-card>
-
+    <br />
 
     <div *ngFor="let subInv of subInvoice;">
-      <table mat-table [dataSource]="subInv" multiTemplateDataRows matSort class="mat-elevation-z8">
+      <h4>Group Name : {{subInv.groupName}}</h4>
+      <table mat-table [dataSource]="subInv.row" multiTemplateDataRows matSort class="mat-elevation-z8">
         <ng-container matColumnDef="item">
           <th mat-header-cell *matHeaderCellDef> Item </th>
           <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -66,7 +72,7 @@
         <tr mat-header-row *matHeaderRowDef="invoiceCol"></tr>
         <tr mat-row *matRowDef="let row; columns: invoiceCol" class="detail-row"></tr>
       </table>
-    </div><br/>
+    </div>
     <button mat-raised-button mat-dialog-close tabindex="-1">cancel</button>
   </div>
 

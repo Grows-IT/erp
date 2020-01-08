@@ -45,6 +45,8 @@ export class InvoiceService {
   }
 
   addSubInvoice(data, id) {
+    console.log(data);
+
     // return this.http.put(environment.siteUrl + '/invoices/' + id + '/subInvoices/.json', [data]);
     return this.http.post(environment.siteUrl + '/invoices/' + id + '/subInvoices/.json', data);
   }

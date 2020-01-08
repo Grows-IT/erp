@@ -67,6 +67,7 @@ export class InvoiceComponent implements OnInit {
 
   openDetail(id) {
     const dialogRef = this.dialog.open(InvoiceDetailComponent, {
+      panelClass: 'subInvoice-dialog-container',
       width: '60vw',
       height: '70vh',
       disableClose: true,

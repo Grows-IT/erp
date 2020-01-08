@@ -2,3 +2,26 @@ table {
   margin-bottom: 30px;
   width: 100%;
 }
+#addGroupTable {
+  margin-bottom: 0;
+}
+mat-spinner {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+.mat-dialog-container {
+  overflow: hidden !important;
+}
+.mat-dialog-content {
+  display: unset !important;
+}
+.cancel {
+  margin-top: 5px;
+}
+.btn {
+  margin: 0 15px;
+}
