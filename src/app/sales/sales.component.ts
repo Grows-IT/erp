@@ -6,24 +6,30 @@ import { Quotation } from './sales.model';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Subscription } from 'rxjs';
-import { RouterModule, Router} from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { QuotationdetailComponent } from './quotationdetail/quotationdetail.component';
+import { CustomerService } from '../customer/customer.service';
+import { Customer } from '../customer/customer.model';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-export interface QuotationList {
-  addressTo: string;
-  date: Date;
-  expirationDate: Date;
-  item: string;
-  isInvoice: boolean;
-  quantity: number;
-  // Name: string;
-  // date: Date;
-  // TotalPrice: number;
-  // By: string;
-  // Status: string;
-  // isInvoice: boolean;
-}
+// export interface QuotationList {
+//   addressTo: string;
+//   date: Date;
+//   expirationDate: Date;
+//   item: string;
+//   isInvoice: boolean;
+//   quantity: number;
+//   customer: {
+//     name: string,
+//     address: string
+//   };
+//   // Name: string;
+//   // date: Date;
+//   // TotalPrice: number;
+//   // By: string;
+//   // Status: string;
+//   // isInvoice: boolean;
+// }
 
 @Component({
   selector: 'app-sales',
@@ -40,12 +46,9 @@ export class SalesComponent implements OnInit, OnDestroy {
   date: any;
   expirationDate: any;
   subscription: Subscription;
-  // isViewing = false;
+  customers: Customer[];
 
-  // @ViewChild(MatSort, { static: true }) sort: MatSort;
-  // dataSource = new MatTableDataSource(this.quotations);
-
-  constructor(public dialog: MatDialog, private salesService: SalesService, private router: Router) {
+  constructor(public dialog: MatDialog, private salesService: SalesService, private router: Router, private cService: CustomerService) {
   }
 
   ngOnInit() {
@@ -54,10 +57,22 @@ export class SalesComponent implements OnInit, OnDestroy {
     });
     this.salesService.getQuotation().subscribe();
     // this.dataSource.sort = this.sort;
+    this.cService.getAllCustomer().subscribe(res => {
+      this.customers = res;
+    });
+
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  getCustomerName(customerId: string) {
+    const customer = this.customers.find(cus => cus.id === customerId);
+    if (!customer) {
+      return null;
+    }
+    return customer.name;
   }
 
   openQuotation() {

@@ -25,20 +25,12 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
   isShow = false;
 
   // tslint:disable-next-line: max-line-length
-  constructor(
-    public dialog: MatDialog,
-    private salesService: SalesService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dialogRef: MatDialogRef<QuotationdetailComponent>,
-    @Inject(MAT_DIALOG_DATA) public data
-  ) {}
+  constructor(public dialog: MatDialog, private salesService: SalesService, private route: ActivatedRoute, private router: Router, private dialogRef: MatDialogRef<QuotationdetailComponent>, @Inject(MAT_DIALOG_DATA) public data) { }
+
 
   ngOnInit() {
     this.data = this.dialogRef.componentInstance.data;
 
-    // const id = this.route.snapshot.paramMap.get('id');
-    // this.data = id;
     this.subscription = this.salesService.quotations.subscribe(quotations => {
       if (quotations === null) {
         return;

@@ -115,10 +115,10 @@ export class QuotationFormComponent implements OnInit {
   }
 
   onConfirmClick(status) {
-    console.log(this.quotation.value);
+    // console.log(this.quotation.value);
     if (status === 0) {
-      this.salesService.addQuotation(this.quotation.value).subscribe();
-
+      this.salesService.addQuotation(this.quotation.value);
+      // this.salesService.addQuotation(this.quotation.value).subscribe();
     } else if (status === 1) {
       this.salesService.updateQuotation(this.quotation.value, this.data.id).subscribe();
     }
