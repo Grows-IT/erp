@@ -1,9 +1,16 @@
-<mat-dialog-content>
   <mat-spinner *ngIf="!mainInvoices"></mat-spinner>
+<div *ngIf="mainInvoices">
+  <mat-toolbar class="allbg">
+    <span style="color: white;">Quotation : {{mainInvoices.quotationId}}</span>
+    <span class="space"></span>
+  <button mat-button mat-dialog-close tabindex="-1" style="color: white;">
+    <i class="material-icons"> close </i>
+  </button>
+  </mat-toolbar></div>
 
-  <div *ngIf="mainInvoices">
-    <h1>Quotation : {{mainInvoices.quotationId}}</h1>
-    <h2>Name : {{mainInvoices.customer.name}} , Addres : {{mainInvoices.customer.address}}</h2>
+<div *ngIf="mainInvoices" class="content">
+    <!-- <h1>Quotation : {{mainInvoices.quotationId}}</h1> -->
+    <h2>Name : {{mainInvoices.customer.name}} , Address : {{mainInvoices.customer.address}}</h2>
     <button mat-raised-button color="primary" (click)="toggleShoing()" style="margin-bottom: 10px;">Add group</button>
     <br />
     <mat-card *ngIf="isShowing" style="margin-bottom: 10px;">
@@ -44,10 +51,12 @@
           </table>
         </div>
       </div>
-      <button mat-raised-button class="btn" color="primary" (click)="onAddRow()">add row</button>
-      <button mat-raised-button class="btn" color="primary" (click)="onConfirmClick()" tabindex="1"
+      <div align="center">
+      <button mat-raised-button color="primary" (click)="onAddRow()">add item</button></div>
+       <div><button mat-raised-button class="btn" color="accent" (click)="onConfirmClick()" tabindex="1"
         [disabled]="!rows.valid || !addForm.valid">Create</button>
-      <button mat-raised-button class="btn" color="warn" (click)="toggleShoing()">cancel</button>
+        <button mat-raised-button class="btn" color="warn" (click)="toggleShoing()">cancel</button>
+      </div>
     </mat-card>
     <br />
 
@@ -73,7 +82,6 @@
         <tr mat-row *matRowDef="let row; columns: invoiceCol" class="detail-row"></tr>
       </table>
     </div>
-    <button mat-raised-button mat-dialog-close tabindex="-1">cancel</button>
+    <button mat-raised-button mat-dialog-close tabindex="-1" style="margin-bottom: 20px;" color="warn">cancel</button>
   </div>
 
-</mat-dialog-content>

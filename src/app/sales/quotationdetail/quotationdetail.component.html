@@ -1,5 +1,5 @@
 <!-- <div class="split left"> -->
-  <mat-toolbar class="sticky" class="allbg">
+  <mat-toolbar class="allbg">
     <mat-toolbar-row>
       <span style="color: white;">Quotation</span>
       <span class="space"></span>
@@ -28,18 +28,20 @@
       <h3>Customer details</h3>
     </div>
     <div style="padding-left: 50px;">
-      <img src = "/assets/icons/man-user.svg" class="imgdetail"><h4 style="display: inline-block; color: darkcyan;">customer name  {{ quotation.customerName }} </h4></div>
+      <img src = "/assets/icons/man-user.svg" class="imgdetail"><h4 style="display: inline-block; color: darkcyan;">{{ quotation.customerName }} </h4></div>
     <!-- <h3 align="center" style="padding-top: 50px;">
       Customer Name : <h4 style="color: darkcyan; display: inline-block;">{{ quotation.customerName }}</h4>
     </h3> -->
     <div style="padding-left: 50px;">
       <img src = "/assets/icons/map.svg"  class="imgdetail"><h4 style="display: inline-block; color: darkcyan">  {{ quotation.addressTo }} </h4></div>
 
+      <mat-divider></mat-divider>
+
     <div style="padding-left: 50px;">
       <h3>Staff details</h3>
     </div>
     <div style="padding-left: 50px;">
-      <img src = "/assets/icons/staff.svg"  class="imgdetail"><h4 style="display: inline-block; color: darkcyan">staff name  {{ quotation.by }} </h4></div>
+      <img src = "/assets/icons/staff.svg"  class="imgdetail"><h4 style="display: inline-block; color: darkcyan">{{ quotation.by }} </h4></div>
     <!-- <h3 align="center" style="padding-top: 30px;">
       Staff Name : <h4 style="color: darkcyan; display: inline-block;">{{ quotation.by }}</h4>
     </h3> -->
@@ -48,6 +50,8 @@
     <!-- <h3 align="center" style="padding-top: 30px;">
       To (Customer's address) : <h4 style="color: darkcyan; display: inline-block;"> {{ quotation.addressTo }} </h4>
     </h3> -->
+
+    <mat-divider></mat-divider>
 
     <div style="padding-left: 50px;">
       <h3>Date</h3>
@@ -83,13 +87,14 @@
     </div>
     <div *ngIf="quotation">
       <div *ngFor="let quotation of quotation.items">
-        <mat-grid-list cols="6" rowHeight="50px">
+        <mat-grid-list cols="6" rowHeight="30px">
           <mat-grid-tile colspan="3" rowspan="2">
-            <h4 style="color: darkcyan; display: inline-block;">{{ quotation.name }}</h4>
+            <h4 style="color: darkcyan; display: inline-block;">{{ quotation.item }}</h4>
           </mat-grid-tile>
           <mat-grid-tile colspan="3" rowspan="2">
             <h4 style="color: darkcyan; display: inline-block;">{{ quotation.quantity }}</h4></mat-grid-tile
           >
+
         </mat-grid-list>
       </div>
     </div>

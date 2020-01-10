@@ -1,7 +1,5 @@
-
-
 <h1 align="center">Invoice <img src = "/assets/icons/invoice.svg" style="width: 50px; padding-top: 30px;"></h1>
-<div align="center">
+<div align="center" class="space">
   <mat-spinner *ngIf="!invoices"></mat-spinner></div>
 <table mat-table *ngIf="invoices" [dataSource]="invoices" multiTemplateDataRows matSort class="mat-elevation-z8" style="width: 80%;" align="center">
   <ng-container matColumnDef="no">

@@ -31,8 +31,8 @@ export class SalesService {
       addressTo: quotation.addressTo,
       date: quotation.date,
       expirationDate: quotation.expirationDate,
-      item: quotation.item,
-      quantity: quotation.quantity,
+      item: quotation.allItem,
+      // quantity: quotation.quantity,
       isInvoice: false
     };
     return this.http.post(environment.siteUrl + '/quotation.json', data);
@@ -51,9 +51,11 @@ export class SalesService {
 
     return this.quotationList.snapshotChanges().map(actions => {
       return actions.map(action => {
-        const item = new Item(action.payload.val().item, action.payload.val().quantity);
+        // const item = new Item(action.payload.val().item, action.payload.val().quantity);
         const quotation = new Quotation(
-          action.payload.val().totalPrice, action.payload.val().status, action.payload.val().customerName, action.payload.val().by, action.key, action.payload.val().addressTo, action.payload.val().date, action.payload.val().expirationDate, [item], action.payload.val().isInvoice);
+          action.payload.val().totalPrice, action.payload.val().status, action.payload.val().customerName, action.payload.val().by,
+          action.key, action.payload.val().addressTo, action.payload.val().date,
+          action.payload.val().expirationDate, action.payload.val().item, action.payload.val().isInvoice);
         return quotation;
       });
     }).pipe(tap(data => {

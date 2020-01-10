@@ -4,6 +4,8 @@ import { SalesService } from '../sales.service';
 import { QuotationDialogComponent } from '../quotation-dialog/quotation-dialog.component';
 import { MatDialogRef } from '@angular/material';
 import { element } from 'protractor';
+import { VariableAst } from '@angular/compiler';
+import { Item } from '../sales.model';
 
 @Component({
   selector: 'app-quotation-form',
@@ -12,71 +14,111 @@ import { element } from 'protractor';
 })
 export class QuotationFormComponent implements OnInit {
   data: any;
+  quotation: FormGroup;
+  // rows: FormArray;
 
-  quotation = new FormGroup({
-    customerName: new FormControl('', [
-      Validators.required
-    ]),
-    by: new FormControl('', [
-      Validators.required
-    ]),
-    addressTo: new FormControl('', [
-      Validators.required
-    ]),
-    date: new FormControl('', [
-      Validators.required,
-    ]),
-    expirationDate: new FormControl('', [
-      Validators.required,
-    ]),
-    item: new FormControl('', [
-      Validators.required,
-    ]),
-    quantity: new FormControl('', [
-      Validators.required,
-    ]),
-  });
+  // quotation = new FormGroup({
+  //   customerName: new FormControl('', [
+  //     Validators.required
+  //   ]),
+  //   by: new FormControl('', [
+  //     Validators.required
+  //   ]),
+  //   addressTo: new FormControl('', [
+  //     Validators.required
+  //   ]),
+  //   date: new FormControl('', [
+  //     Validators.required,
+  //   ]),
+  //   expirationDate: new FormControl('', [
+  //     Validators.required,
+  //   ]),
+  //   item: new FormControl('', [
+  //     Validators.required,
+  //   ]),
+  //   quantity: new FormControl('', [
+  //     Validators.required,
+  //   ]),
+  // });
 
-  constructor(private salesService: SalesService, private dialogRef: MatDialogRef<QuotationDialogComponent>) { }
+  constructor(private salesService: SalesService, private dialogRef: MatDialogRef<QuotationDialogComponent>, private fb: FormBuilder) {
+    // this.rows = this.fb.array([]);
+  }
 
   ngOnInit() {
-    this.data = this.dialogRef.componentInstance.data;
 
-    if (this.data !== null && this.data !== undefined) {
-      this.quotation = new FormGroup({
-        customerName: new FormControl(this.data.customerName, [
-          Validators.required
-        ]),
-        by: new FormControl(this.data.by, [
-          Validators.required
-        ]),
-        addressTo: new FormControl(this.data.addressTo, [
-          Validators.required
-        ]),
-        date: new FormControl(this.data.date, [
-          Validators.required,
-        ]),
-        expirationDate: new FormControl(this.data.expirationDate, [
-          Validators.required,
-        ]),
-        item: new FormControl(this.data.items[0].name, [
-          Validators.required,
-        ]),
-        quantity: new FormControl(this.data.items[0].quantity, [
-          Validators.required,
-        ]),
-      });
-    }
+    this.quotation = this.fb.group({
+      customerName: ['', [Validators.required]],
+      by: ['', [Validators.required]],
+      addressTo: ['', [Validators.required]],
+      date: ['', [Validators.required]],
+      expirationDate: ['', [Validators.required]],
+      allItem: this.fb.array([
+        this.createItemFormGroup()
+      ])
+    });
+
+
   }
+
+  private createItemFormGroup() {
+    return this.fb.group({
+          item: ['', [Validators.required]],
+          quantity: ['', [Validators.required]],
+        });
+  }
+
+    // this.data = this.dialogRef.componentInstance.data;
+
+  //   if (this.data !== null && this.data !== undefined) {
+  //     this.quotation = new FormGroup({
+  //       customerName: new FormControl(this.data.customerName, [
+  //         Validators.required
+  //       ]),
+  //       by: new FormControl(this.data.by, [
+  //         Validators.required
+  //       ]),
+  //       addressTo: new FormControl(this.data.addressTo, [
+  //         Validators.required
+  //       ]),
+  //       date: new FormControl(this.data.date, [
+  //         Validators.required,
+  //       ]),
+  //       expirationDate: new FormControl(this.data.expirationDate, [
+  //         Validators.required,
+  //       ]),
+  //       // item: new FormControl(this.data.items[0].name, [
+  //       //   Validators.required,
+  //       // ]),
+  //       // quantity: new FormControl(this.data.items[0].quantity, [
+  //       //   Validators.required,
+  //       // ])
+  //       item: new FormControl(
+  //         this.createItemFormGroup()
+  //       )
+  //     });
+  //   }
+  // }
   close(): void {
     this.dialogRef.close();
   }
 
+  onAddRow() {
+    // this.rows.push(this.createItemFormGroup());
+    const control = <FormArray> this.quotation.controls['allItem'];
+    control.push(this.createItemFormGroup());
+  }
+
+  removeUnit(i: number) {
+    const control = <FormArray> this.quotation.controls['allItem'];
+    control.removeAt(i);
+  }
 
   onConfirmClick(status) {
     console.log(this.quotation.value);
     if (status === 0) {
       this.salesService.addQuotation(this.quotation.value).subscribe();
+
     } else if (status === 1) {
       this.salesService.updateQuotation(this.quotation.value, this.data.id).subscribe();
     }
