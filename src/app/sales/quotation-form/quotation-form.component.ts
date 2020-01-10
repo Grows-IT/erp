@@ -3,9 +3,6 @@ import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@ang
 import { SalesService } from '../sales.service';
 import { QuotationDialogComponent } from '../quotation-dialog/quotation-dialog.component';
 import { MatDialogRef } from '@angular/material';
-import { element } from 'protractor';
-import { VariableAst } from '@angular/compiler';
-import { Item } from '../sales.model';
 
 @Component({
   selector: 'app-quotation-form',
@@ -118,7 +115,6 @@ export class QuotationFormComponent implements OnInit {
     // console.log(this.quotation.value);
     if (status === 0) {
       this.salesService.addQuotation(this.quotation.value);
-      // this.salesService.addQuotation(this.quotation.value).subscribe();
     } else if (status === 1) {
       this.salesService.updateQuotation(this.quotation.value, this.data.id).subscribe();
     }

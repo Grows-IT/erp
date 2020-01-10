@@ -1,11 +1,10 @@
 <mat-toolbar class="sticky" class="allbg">
   <span style="color: white;">Quotation</span>
   <span class="space"></span>
-<button mat-button (click)="close()" style="color: white;">
-  <i class="material-icons"> close </i>
-</button>
+  <button mat-button (click)="close()" style="color: white;">
+    <i class="material-icons"> close </i>
+  </button>
 </mat-toolbar>
-<!-- <h1 align="center">Quotation</h1> -->
 <h4 align="center">Quote NO. xxxx</h4>
 
 <form [formGroup]="quotation" novalidate>
@@ -16,17 +15,13 @@
         <mat-label>Customer Name</mat-label>
         <textarea matInput rows="2" formControlName="customerName" required></textarea>
       </mat-form-field>
-     </mat-grid-tile>
-     <mat-grid-tile colspan="2" rowspan="4">
+    </mat-grid-tile>
+    <!-- <mat-grid-tile colspan="2" rowspan="4">
       <mat-form-field appearance="outline">
         <mat-label>By</mat-label>
         <textarea matInput rows="2" formControlName="by" required></textarea>
       </mat-form-field>
-      <!-- <mat-form-field appearance="outline">
-        <mat-label>Status</mat-label>
-        <textarea matInput rows="2" required></textarea>
-      </mat-form-field> -->
-   </mat-grid-tile>
+    </mat-grid-tile> -->
     <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
 
   </mat-grid-list>
@@ -95,4 +90,3 @@
     <button mat-raised-button mat-dialog-close tabindex="-1" color="warn">cancel</button>
   </mat-dialog-actions>
 </form>
-

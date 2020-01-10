@@ -6,7 +6,7 @@ import { Quotation } from './sales.model';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Subscription } from 'rxjs';
-import { RouterModule, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { QuotationdetailComponent } from './quotationdetail/quotationdetail.component';
 import { CustomerService } from '../customer/customer.service';
 import { Customer } from '../customer/customer.model';
@@ -38,14 +38,14 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 })
 export class SalesComponent implements OnInit, OnDestroy {
   quotations: Quotation[];
-  quotationCol: string[] = ['no', 'customerName', 'date', 'totalPrice', 'status', 'by', 'edit', 'pdf', 'createInvoice', 'delete'];
-  // quotationCol: string[] = ['no', 'customerName', 'date', 'expirationDate', 'item', 'quantity', 'edit', 'pdf', 'createInvoice', 'delete'];
-  // quotationCol: string[] = ['no', 'CustomerName', 'date', 'TotalPrice', 'by', 'status', 'edit', 'pdf', 'createInvoice', 'delete'];
+  // quotationCol: string[] = ['no', 'customerName', 'date', 'totalPrice', 'status', 'by', 'edit', 'pdf', 'createInvoice', 'delete'];
+  quotationCol: string[] = ['no', 'customerName', 'edit', 'pdf', 'createInvoice', 'delete'];
   listItem = [];
   item;
   date: any;
   expirationDate: any;
   subscription: Subscription;
+  customerSubscription: Subscription;
   customers: Customer[];
 
   constructor(public dialog: MatDialog, private salesService: SalesService, private router: Router, private cService: CustomerService) {
@@ -55,16 +55,16 @@ export class SalesComponent implements OnInit, OnDestroy {
     this.subscription = this.salesService.quotations.subscribe(quotations => {
       this.quotations = quotations;
     });
-    this.salesService.getQuotation().subscribe();
-    // this.dataSource.sort = this.sort;
-    this.cService.getAllCustomer().subscribe(res => {
-      this.customers = res;
+    this.customerSubscription = this.cService.customers.subscribe(customers => {
+      this.customers = customers;
     });
-
+    this.salesService.getQuotation().subscribe();
+    this.cService.getAllCustomer().subscribe();
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.customerSubscription.unsubscribe();
   }
 
   getCustomerName(customerId: string) {
@@ -76,14 +76,12 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   openQuotation() {
-    // const item = { isViewing: false };
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       panelClass: 'removespace',
       width: '50vw',
       height: '70vh',
       disableClose: true,
       autoFocus: false,
-      // data: item
     });
     // dialogRef.afterClosed().subscribe(result => {
     //   console.log('The dialog was closed');
@@ -101,16 +99,6 @@ export class SalesComponent implements OnInit, OnDestroy {
     });
   }
 
-  // view(item) {
-  //   const dialogRef = this.dialog.open(QuotationDialogComponent, {
-  //     width: '70vw',
-  //     height: '70vh',
-  //     disableClose: true,
-  //     autoFocus: false,
-  //     data: item,
-  //   });
-  // }
-
   showDetail(item) {
     this.router.navigate(['/quotationdetail'], item);
   }
@@ -127,7 +115,6 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   createInvoice(item) {
-    // console.log(item);
     this.salesService.createInvoice(item).subscribe();
   }
 
@@ -182,9 +169,9 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   opnePdf(item: any) {
-    console.log(item);
     this.formatDate(new Date(item.date), new Date(item.expirationDate));
     this.getListItem(item.items);
+    console.log(this.listItem);
 
     const documentDefinition = {
       // header: {
