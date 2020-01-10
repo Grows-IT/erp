@@ -1,4 +1,5 @@
 import { Item } from '../sales/sales.model';
+import { Customer } from '../customer/customer.model';
 
 export class Invoice {
   constructor(
@@ -12,10 +13,10 @@ export class Invoice {
   ) { }
 }
 
-export class Customer {
-  constructor(
-    public id: string,
-    public name: string,
-    public address: string,
-  ) { }
-}
+// export class Customer {
+//   constructor(
+//     public id: string,
+//     public name: string,
+//     public address: string,
+//   ) { }
+// }

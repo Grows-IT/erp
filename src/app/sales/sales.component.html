@@ -4,23 +4,25 @@
   </li>
 </ul> -->
 
-<h1 align="center">Quotation <img src = "/assets/icons/quotation.svg" style="width: 50px; padding-top: 30px;"></h1>
+<h1 align="center">Quotation <img src="/assets/icons/quotation.svg" style="width: 50px; padding-top: 30px;"></h1>
 <button mat-button (click)="openQuotation()" style="margin-left: 80%; padding-bottom: 20px;">
   <!-- <i class="material-icons"> attachment </i> -->
-  <img src = "/assets/icons/add.svg">
+  <img src="/assets/icons/add.svg">
 </button>
 <!-- <button mat-raised-button (click)="openQuotation()">Create Quotation</button> -->
-<table mat-table *ngIf="quotations" [dataSource]="quotations" matSort class="mat-elevation-z8" style="width: 80%;" align="center">
+<table mat-table *ngIf="quotations" [dataSource]="quotations" matSort class="mat-elevation-z8" style="width: 80%;"
+  align="center">
 
   <ng-container matColumnDef="no">
     <th mat-header-cell *matHeaderCellDef> NO. </th>
-    <td mat-cell *matCellDef="let element"><button mat-button (click)="quotationDetail(element.id)"> {{element.id | cutString}} </button></td>
+    <td mat-cell *matCellDef="let element"><button mat-button (click)="quotationDetail(element.id)">
+        {{element.id}} </button></td>
     <!-- <td mat-cell *matCellDef="let element"><button mat-button (click)="view(element)"> {{element.id | cutString}} </button></td> -->
   </ng-container>
 
   <ng-container matColumnDef="customerName">
     <th mat-header-cell *matHeaderCellDef> Customer name</th>
-    <td mat-cell *matCellDef="let element"> {{element.customerName }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.customer }} </td>
   </ng-container>
 
   <!-- <ng-container matColumnDef="addressTo">
@@ -86,13 +88,13 @@
       <!-- <button mat-button [routerLink]="['pdf', element.id]"> -->
       <button mat-button (click)="opnePdf(element)">
         <!-- <i class="material-icons"> attachment </i> -->
-        <img src = "/assets/icons/pdfbw.svg">
+        <img src="/assets/icons/pdfbw.svg">
       </button>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="createInvoice">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Create Invoice </th>
+    <th mat-header-cell *matHeaderCellDef> Create Invoice </th>
     <td mat-cell *matCellDef="let element">
       <button mat-button (click)="createInvoice(element)" [disabled]="element.isInvoice">
         <i class="material-icons"> add </i>

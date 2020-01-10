@@ -1,22 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
-.nopadding-dialog .mat-dialog-container{
+.nopadding-dialog .mat-dialog-container {
   padding: 0px !important;
 }
 
-.removespace{
+.removespace {
   .mat-dialog-content {
-  padding: 0 !important;
-}
-  .mat-dialog-container{
+    padding: 0 !important;
+  }
+  .mat-dialog-container {
     padding-top: 0 !important;
   }
 }
 
-
-.allbg{
+.allbg {
   background-color: darkcyan;
+}
+
+td.mat-cell,
+td.mat-footer-cell,
+th.mat-header-cell {
+  text-align: center !important;
 }
