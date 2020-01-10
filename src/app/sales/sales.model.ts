@@ -4,7 +4,7 @@ export class Quotation {
   constructor(
     public totalPrice: number,
     public status: string,
-    public customer: Customer,
+    public customerId: string,
     public by: string,
     public id: string,
     public date: Date,

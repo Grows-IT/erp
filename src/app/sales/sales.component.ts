@@ -67,6 +67,14 @@ export class SalesComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  getCustomerName(customerId: string) {
+    const customer = this.customers.find(cus => cus.id === customerId);
+    if (!customer) {
+      return null;
+    }
+    return customer.name;
+  }
+
   openQuotation() {
     // const item = { isViewing: false };
     const dialogRef = this.dialog.open(QuotationDialogComponent, {

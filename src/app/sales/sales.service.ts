@@ -1,13 +1,22 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import 'rxjs/add/operator/map';
-import { map, tap, concatMap, toArray, switchMap, first } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject, from, of } from 'rxjs';
 import { Quotation, Item } from './sales.model';
 import { CustomerService } from '../customer/customer.service';
-import { Customer } from '../customer/customer.model';
+
+interface QutotationResData {
+  addressTo: string;
+  customerId: string;
+  date: Date;
+  expirationDate: Date;
+  isInvoice: boolean;
+  item: string;
+  quantity: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -66,29 +75,53 @@ export class SalesService {
   }
 
   getQuotation() {
-    return this.http.get(environment.siteUrl + '/quotation.json').pipe(
-      map((val, index) => {
-        console.log(val);
-        let customer;
-        const quotation = Object.keys(val).map((id, i) => {
-          const item = new Item(val[id].item, val[id].quantity);
-          this.cService.getCustomer(val[id].customerId).subscribe(cus => {
-            customer = cus;
-          });
-
-          return new Quotation(
-            val[id].totalPrice, val[id].status, val[id].customer, val[id].by,
-            customer, val[id].date, val[id].expirationDate, [item], val[id].isInvoice);
-          // console.log(customer);
-
-
-        });
-        console.log(quotation);
-        return quotation;
+    return this.http.get<{ [key: string]: QutotationResData }>(environment.siteUrl + '/quotation.json').pipe(
+      map(resData => {
+        const quotations: Quotation[] = [];
+        for (const key in resData) {
+          if (resData.hasOwnProperty(key)) {
+              const item = new Item(resData[key].item, resData[key].quantity);
+              const quotation = new Quotation(
+                null,
+                null,
+                resData[key].customerId,
+                null,
+                key,
+                resData[key].date,
+                resData[key].expirationDate,
+                [item],
+                resData[key].isInvoice
+              );
+              quotations.push(quotation);
+          }
+        }
+        return quotations;
       }),
-      tap(data => {
-        this._quotations.next(data);
+      tap(quotations => {
+        this._quotations.next(quotations);
       })
+      // map((val, index) => {
+      //   console.log(val);
+      //   let customer;
+      //   const quotation = Object.keys(val).map((id, i) => {
+      //     const item = new Item(val[id].item, val[id].quantity);
+      //     this.cService.getCustomer(val[id].customerId).subscribe(cus => {
+      //       customer = cus;
+      //     });
+
+      //     return new Quotation(
+      //       val[id].totalPrice, val[id].status, val[id].customer, val[id].by,
+      //       customer, val[id].date, val[id].expirationDate, [item], val[id].isInvoice);
+      //     // console.log(customer);
+
+
+      //   });
+      //   console.log(quotation);
+      //   return quotation;
+      // }),
+      // tap(data => {
+      //   this._quotations.next(data);
+      // })
 
     );
 

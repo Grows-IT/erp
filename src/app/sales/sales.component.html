@@ -10,7 +10,7 @@
   <img src="/assets/icons/add.svg">
 </button>
 <!-- <button mat-raised-button (click)="openQuotation()">Create Quotation</button> -->
-<table mat-table *ngIf="quotations" [dataSource]="quotations" matSort class="mat-elevation-z8" style="width: 80%;"
+<table mat-table *ngIf="quotations && customers" [dataSource]="quotations" matSort class="mat-elevation-z8" style="width: 80%;"
   align="center">
 
   <ng-container matColumnDef="no">
@@ -22,7 +22,7 @@
 
   <ng-container matColumnDef="customerName">
     <th mat-header-cell *matHeaderCellDef> Customer name</th>
-    <td mat-cell *matCellDef="let element"> {{ element.customer }} </td>
+    <td mat-cell *matCellDef="let element"> {{ getCustomerName(element.customerId) }} </td>
   </ng-container>
 
   <!-- <ng-container matColumnDef="addressTo">
