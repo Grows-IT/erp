@@ -3,7 +3,6 @@ import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@ang
 import { SalesService } from '../sales.service';
 import { QuotationDialogComponent } from '../quotation-dialog/quotation-dialog.component';
 import { MatDialogRef } from '@angular/material';
-import { element } from 'protractor';
 
 @Component({
   selector: 'app-quotation-form',
@@ -17,9 +16,9 @@ export class QuotationFormComponent implements OnInit {
     customerName: new FormControl('', [
       Validators.required
     ]),
-    by: new FormControl('', [
-      Validators.required
-    ]),
+    // by: new FormControl('', [
+    //   Validators.required
+    // ]),
     addressTo: new FormControl('', [
       Validators.required
     ]),
@@ -47,9 +46,9 @@ export class QuotationFormComponent implements OnInit {
         customerName: new FormControl(this.data.customerName, [
           Validators.required
         ]),
-        by: new FormControl(this.data.by, [
-          Validators.required
-        ]),
+        // by: new FormControl(this.data.by, [
+        //   Validators.required
+        // ]),
         addressTo: new FormControl(this.data.addressTo, [
           Validators.required
         ]),
@@ -77,7 +76,6 @@ export class QuotationFormComponent implements OnInit {
     // console.log(this.quotation.value);
     if (status === 0) {
       this.salesService.addQuotation(this.quotation.value);
-      // this.salesService.addQuotation(this.quotation.value).subscribe();
     } else if (status === 1) {
       this.salesService.updateQuotation(this.quotation.value, this.data.id).subscribe();
     }

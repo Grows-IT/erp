@@ -1,5 +1,3 @@
-import { Customer } from '../customer/customer.model';
-
 export class Quotation {
   constructor(
     public totalPrice: number,
@@ -17,7 +15,8 @@ export class Quotation {
 export class Item {
   constructor(
     public name: string,
-    public quantity: number
+    public quantity: number,
+    public price: number
   ) { }
 }
 

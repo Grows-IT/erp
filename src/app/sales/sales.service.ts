@@ -23,16 +23,14 @@ interface QutotationResData {
 })
 export class SalesService {
   quotationList: AngularFireList<any>;
-  customerDetail: AngularFireList<any>;
   private _quotations = new BehaviorSubject<Quotation[]>(null);
 
   get quotations() {
     return this._quotations.asObservable();
   }
 
-  constructor(private http: HttpClient, private db: AngularFireDatabase, private cService: CustomerService) {
+  constructor(private http: HttpClient, private db: AngularFireDatabase) {
     this.quotationList = db.list('quotation');
-    this.customerDetail = db.list('quotation');
   }
 
   addQuotation(quotation: any) {
@@ -58,20 +56,6 @@ export class SalesService {
         };
         return this.http.post(environment.siteUrl + '/quotation.json', data).subscribe();
       });
-
-    // this.http.post(environment.siteUrl + '/customer.json', customer).subscribe(val => {
-    //   data = {
-    //     totalPrice: quotation.totalPrice,
-    //     by: quotation.by,
-    //     customerId: val,
-    //     date: quotation.date,
-    //     expirationDate: quotation.expirationDate,
-    //     item: quotation.item,
-    //     quantity: quotation.quantity,
-    //     isInvoice: false
-    //   };
-    // });
-    // return this.http.post(environment.siteUrl + '/quotation.json', data);
   }
 
   getQuotation() {
@@ -80,19 +64,19 @@ export class SalesService {
         const quotations: Quotation[] = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
-              const item = new Item(resData[key].item, resData[key].quantity);
-              const quotation = new Quotation(
-                null,
-                null,
-                resData[key].customerId,
-                null,
-                key,
-                resData[key].date,
-                resData[key].expirationDate,
-                [item],
-                resData[key].isInvoice
-              );
-              quotations.push(quotation);
+            const item = new Item(resData[key].item, resData[key].quantity, 200);
+            const quotation = new Quotation(
+              null,
+              null,
+              resData[key].customerId,
+              null,
+              key,
+              resData[key].date,
+              resData[key].expirationDate,
+              [item],
+              resData[key].isInvoice
+            );
+            quotations.push(quotation);
           }
         }
         return quotations;
@@ -100,52 +84,7 @@ export class SalesService {
       tap(quotations => {
         this._quotations.next(quotations);
       })
-      // map((val, index) => {
-      //   console.log(val);
-      //   let customer;
-      //   const quotation = Object.keys(val).map((id, i) => {
-      //     const item = new Item(val[id].item, val[id].quantity);
-      //     this.cService.getCustomer(val[id].customerId).subscribe(cus => {
-      //       customer = cus;
-      //     });
-
-      //     return new Quotation(
-      //       val[id].totalPrice, val[id].status, val[id].customer, val[id].by,
-      //       customer, val[id].date, val[id].expirationDate, [item], val[id].isInvoice);
-      //     // console.log(customer);
-
-
-      //   });
-      //   console.log(quotation);
-      //   return quotation;
-      // }),
-      // tap(data => {
-      //   this._quotations.next(data);
-      // })
-
     );
-
-
-    // return this.quotationList.snapshotChanges().map(actions => {
-    //   return actions.map(action => {
-    //     const item = new Item(action.payload.val().item, action.payload.val().quantity);
-    //     console.log(action.payload.val().customerId);
-
-    //     return this.cService.getCustomer(action.payload.val().customerId).pipe(
-    //       map((cus) => {
-    //         console.log(cus);
-
-    //         const quotation = new Quotation(
-    //           action.payload.val().totalPrice, action.payload.val().status, cus, action.payload.val().by, action.key,
-    //           action.payload.val().date, action.payload.val().expirationDate, [item], action.payload.val().isInvoice);
-    //         return quotation;
-    //       })
-    //     );
-    //   });
-    // }).pipe(tap(data => {
-    //   console.log(data);
-    //   this._quotations.next(data);
-    // }));
   }
 
   deleteQuotation(id: string) {

@@ -1,16 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { environment } from 'src/environments/environment';
 import { map, tap } from 'rxjs/operators';
 import { Customer } from './customer.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
+  customerDetail: AngularFireList<any>;
+  private _customers = new BehaviorSubject<Customer[]>(null);
 
-  constructor(private http: HttpClient, private db: AngularFireDatabase) { }
+  get customers() {
+    return this._customers.asObservable();
+  }
+
+  constructor(private http: HttpClient, private db: AngularFireDatabase) {
+    this.customerDetail = db.list('quotation');
+  }
 
   getAllCustomer() {
     return this.http.get<Customer[]>(environment.siteUrl + '/customer.json').pipe(
@@ -20,6 +29,9 @@ export class CustomerService {
           return new Customer(id, res[Object.keys(res)[i]].name, res[Object.keys(res)[i]].address);
         });
         return customers;
+      }),
+      tap(customers => {
+        this._customers.next(customers);
       })
     );
   }
