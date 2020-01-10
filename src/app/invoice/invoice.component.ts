@@ -8,6 +8,9 @@ import { trigger, state, transition, style, animate } from '@angular/animations'
 import { Router } from '@angular/router';
 import { InvoiceDetailComponent } from './invoice-detail/invoice-detail.component';
 import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { Customer } from '../customer/customer.model';
+import { CustomerService } from '../customer/customer.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface InvoiceList {
@@ -34,7 +37,8 @@ export class InvoiceComponent implements OnInit {
   invoices: Quotation[];
   invoicesCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'pdf', 'delete'];
   // invoicesCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'item', 'quantity', 'pdf', 'delete'];
-
+  customerSubscription: Subscription;
+  customers: Customer[];
   listItem = [];
   item: any;
   date: any;
@@ -42,7 +46,8 @@ export class InvoiceComponent implements OnInit {
   expandedElement;
   expandedElement2;
 
-  constructor(private invoiceService: InvoiceService, private salesService: SalesService, private router: Router, public dialog: MatDialog) { }
+  constructor(private invoiceService: InvoiceService, private salesService: SalesService, private cService: CustomerService,
+    private router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.salesService.quotations.subscribe(invoices => {
@@ -59,7 +64,22 @@ export class InvoiceComponent implements OnInit {
       // this.expandedElement2 = this.subInvoices[1];
       // this.expandedElement2 = this.subInvoices[2];
     });
+
+    this.customerSubscription = this.cService.customers.subscribe(customers => {
+      this.customers = customers;
+    });
+    this.cService.getAllCustomer().subscribe();
+
   }
+
+  getCustomer(customerId: string) {
+    const customer = this.customers.find(cus => cus.id === customerId);
+    if (!customer) {
+      return null;
+    }
+    return customer;
+  }
+
 
   delete(id) {
     this.invoiceService.deleteInvoice(id).subscribe();

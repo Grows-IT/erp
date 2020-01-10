@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { InvoiceService } from '../invoice.service';
 import { MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormArray, FormControl, Validators, FormBuilder } from '@angular/forms';
@@ -12,7 +12,7 @@ import { Customer } from 'src/app/customer/customer.model';
   templateUrl: './invoice-detail.component.html',
   styleUrls: ['./invoice-detail.component.scss']
 })
-export class InvoiceDetailComponent implements OnInit {
+export class InvoiceDetailComponent implements OnInit, OnDestroy {
   expandedElement;
   invoiceCol: string[] = ['item', 'quantity', 'price'];
   customerSubscription: Subscription;
@@ -25,7 +25,7 @@ export class InvoiceDetailComponent implements OnInit {
   // this.data is id
   id = this.data;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any,private cService: CustomerService, private invoiceService: InvoiceService, private fb: FormBuilder) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private cService: CustomerService, private invoiceService: InvoiceService, private fb: FormBuilder) {
     this.addForm = new FormGroup({
       groupName: new FormControl(null, [Validators.required])
     });
@@ -50,6 +50,11 @@ export class InvoiceDetailComponent implements OnInit {
     });
     this.cService.getAllCustomer().subscribe();
   }
+
+  ngOnDestroy(): void {
+    this.customerSubscription.unsubscribe();
+  }
+
 
   getCustomer(customerId: string) {
     const customer = this.customers.find(cus => cus.id === customerId);

@@ -43,7 +43,6 @@ export class QuotationFormComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.quotation = this.fb.group({
       customerName: ['', [Validators.required]],
       // by: ['', [Validators.required]],
@@ -60,12 +59,12 @@ export class QuotationFormComponent implements OnInit {
 
   private createItemFormGroup() {
     return this.fb.group({
-          item: ['', [Validators.required]],
-          quantity: ['', [Validators.required]],
-        });
+      item: ['', [Validators.required]],
+      quantity: ['', [Validators.required]],
+    });
   }
 
-    // this.data = this.dialogRef.componentInstance.data;
+  // this.data = this.dialogRef.componentInstance.data;
 
   //   if (this.data !== null && this.data !== undefined) {
   //     this.quotation = new FormGroup({
@@ -102,12 +101,12 @@ export class QuotationFormComponent implements OnInit {
 
   onAddRow() {
     // this.rows.push(this.createItemFormGroup());
-    const control = <FormArray> this.quotation.controls['allItem'];
+    const control = <FormArray>this.quotation.controls['allItem'];
     control.push(this.createItemFormGroup());
   }
 
   removeUnit(i: number) {
-    const control = <FormArray> this.quotation.controls['allItem'];
+    const control = <FormArray>this.quotation.controls['allItem'];
     control.removeAt(i);
   }
 
