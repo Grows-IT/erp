@@ -9,7 +9,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { QuotationDialogComponent } from "../quotation-dialog/quotation-dialog.component";
 import { InvoiceDetailComponent } from "src/app/invoice/invoice-detail/invoice-detail.component";
-// import { Router } from '@angular/router';
+import { CustomerService } from './../../customer/customer.service';
+import { Customer } from 'src/app/customer/customer.model';
 
 @Component({
   selector: "app-quotationdetail",
@@ -19,17 +20,23 @@ import { InvoiceDetailComponent } from "src/app/invoice/invoice-detail/invoice-d
 export class QuotationdetailComponent implements OnInit, OnDestroy {
   // data: any;
   subscription: Subscription;
+  customerSubscription: Subscription;
+  customers: Customer[];
   quotation: Quotation;
   listItem = [];
   product;
   isShow = false;
 
   // tslint:disable-next-line: max-line-length
-  constructor(public dialog: MatDialog, private salesService: SalesService, private route: ActivatedRoute, private router: Router, private dialogRef: MatDialogRef<QuotationdetailComponent>, @Inject(MAT_DIALOG_DATA) public data) { }
+  constructor(public dialog: MatDialog, private cService: CustomerService, private salesService: SalesService, private router: Router, private dialogRef: MatDialogRef<QuotationdetailComponent>, @Inject(MAT_DIALOG_DATA) public data) { }
 
 
   ngOnInit() {
     this.data = this.dialogRef.componentInstance.data;
+
+    this.customerSubscription = this.cService.customers.subscribe(customers => {
+      this.customers = customers;
+    });
 
     this.subscription = this.salesService.quotations.subscribe(quotations => {
       if (quotations === null) {
@@ -38,10 +45,19 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
       this.quotation = quotations.find(q => q.id === this.data);
     });
     this.salesService.getQuotation().subscribe();
+    this.cService.getAllCustomer().subscribe();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  getCustomer(customerId: string) {
+    const customer = this.customers.find(cus => cus.id === customerId);
+    if (!customer) {
+      return null;
+    }
+    return customer;
   }
 
   invoiceDetail(data) {

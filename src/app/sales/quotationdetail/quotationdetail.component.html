@@ -5,9 +5,17 @@
     <button mat-button (click)="edit(data)">
       <i class="material-icons" style="color: white;"> edit </i>
     </button>
-    <button mat-button (click)="openPdf(quotation)"><img src="/assets/icons/pdf-file.svg" style="width: 25px;"></button>
-    <button mat-button><img src="/assets/icons/invoicewhite.svg" style="width: 25px;"
-        (click)="invoiceDetail(data)"></button>
+    <button mat-button (click)="openPdf(quotation)">
+      <img src="/assets/icons/pdf-file.svg" style="width: 25px;" />
+    </button>
+    <button mat-button>
+      <img
+        src="/assets/icons/invoicewhite.svg"
+        style="width: 25px;"
+        (click)="invoiceDetail(data)"
+      />
+    </button>
+
     <button mat-button (click)="delete(data)" style="background-color: red;">
       <i class="material-icons" style="color: white;"> delete </i>
     </button>
@@ -17,7 +25,9 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<h4 align="center">Quote NO. <h4 style="color: darkcyan; display: inline-block;"> {{ data }} </h4>
+<h4 align="center">
+  Quote NO.
+  <h4 style="color: darkcyan; display: inline-block;">{{ data }}</h4>
 </h4>
 <div align="center">
   <mat-spinner *ngIf="!quotation"></mat-spinner>
@@ -27,57 +37,61 @@
     <h3>Customer details</h3>
   </div>
   <div style="padding-left: 50px;">
-    <img src="/assets/icons/man-user.svg" class="imgdetail">
-    <h4 style="display: inline-block; color: darkcyan;">customer name {{ quotation.customerName }} </h4>
+    <img src="/assets/icons/man-user.svg" class="imgdetail" />
+    <h4 style="display: inline-block; color: darkcyan;">
+      {{ getCustomer(quotation.customerId).name }}
+    </h4>
   </div>
   <div style="padding-left: 50px;">
-    <img src="/assets/icons/map.svg" class="imgdetail">
-    <h4 style="display: inline-block; color: darkcyan"> {{ quotation.addressTo }} </h4>
+    <img src="/assets/icons/map.svg" class="imgdetail" />
+    <h4 style="display: inline-block; color: darkcyan">
+      {{ getCustomer(quotation.customerId).address }}
+    </h4>
   </div>
-  <div *ngIf="quotation">
-    <div style="padding-left: 50px;">
-      <h3>Customer details</h3>
-    </div>
-    <div style="padding-left: 50px;">
-      <img src = "/assets/icons/man-user.svg" class="imgdetail"><h4 style="display: inline-block; color: darkcyan;">{{ quotation.customerName }} </h4></div>
-    <!-- <h3 align="center" style="padding-top: 50px;">
-      Customer Name : <h4 style="color: darkcyan; display: inline-block;">{{ quotation.customerName }}</h4>
-    </h3> -->
-    <div style="padding-left: 50px;">
-      <img src = "/assets/icons/map.svg"  class="imgdetail"><h4 style="display: inline-block; color: darkcyan">  {{ quotation.addressTo }} </h4></div>
 
-      <mat-divider></mat-divider>
+  <mat-divider></mat-divider>
 
-    <div style="padding-left: 50px;">
-      <h3>Staff details</h3>
-    </div>
-    <div style="padding-left: 50px;">
-      <img src = "/assets/icons/staff.svg"  class="imgdetail"><h4 style="display: inline-block; color: darkcyan">{{ quotation.by }} </h4></div>
-    <!-- <h3 align="center" style="padding-top: 30px;">
+  <div style="padding-left: 50px;">
+    <h3>Staff details</h3>
+  </div>
+  <div style="padding-left: 50px;">
+    <img src="/assets/icons/staff.svg" class="imgdetail" />
+    <h4 style="display: inline-block; color: darkcyan">{{ quotation.by }}</h4>
+  </div>
+  <!-- <h3 align="center" style="padding-top: 30px;">
       Staff Name : <h4 style="color: darkcyan; display: inline-block;">{{ quotation.by }}</h4>
     </h3> -->
-    <!-- <div style="padding-left: 50px;">
+  <!-- <div style="padding-left: 50px;">
     <img src = "/assets/icons/map.svg" style="width: 30px; margin-right: 20px;"><h4 style="display: inline-block; color: darkcyan">  {{ quotation.addressTo }} </h4></div> -->
-    <!-- <h3 align="center" style="padding-top: 30px;">
+  <!-- <h3 align="center" style="padding-top: 30px;">
       To (Customer's address) : <h4 style="color: darkcyan; display: inline-block;"> {{ quotation.addressTo }} </h4>
     </h3> -->
 
-    <mat-divider></mat-divider>
-
-    <div style="padding-left: 50px;">
-      <h3>Date</h3>
-    </div>
+  <mat-divider></mat-divider>
 
   <div style="padding-left: 50px;">
-    <img src="/assets/icons/expire.svg" class="imgdetail">
-    <h4 style="display: inline-block; color: darkcyan"> {{ quotation.expirationDate }} </h4>
+    <h3>Date</h3>
+  </div>
+
+  <div style="padding-left: 50px;">
+    <img src="/assets/icons/expire.svg" class="imgdetail" />
+    <h4 style="display: inline-block; color: darkcyan">
+      {{ quotation.expirationDate }}
+    </h4>
   </div>
   <div class="showhidebutton">
-    <button mat-raised-button (click)="showItem()" style="background-color: darkcyan; color: white; "> Show/Hide
-      Items</button>
+    <button
+      mat-raised-button
+      (click)="showItem()"
+      style="background-color: darkcyan; color: white; "
+    >
+      Show/Hide Items
+    </button>
   </div>
   <div [hidden]="!isShow">
-    <h1 align="center" style="padding-top: 30px; padding-bottom: 20px;">Items</h1>
+    <h1 align="center" style="padding-top: 30px; padding-bottom: 20px;">
+      Items
+    </h1>
 
     <mat-grid-list cols="6" rowHeight="20px">
       <mat-grid-tile colspan="3" rowspan="2">
@@ -94,13 +108,17 @@
       <div *ngFor="let quotation of quotation.items">
         <mat-grid-list cols="6" rowHeight="30px">
           <mat-grid-tile colspan="3" rowspan="2">
-            <h4 style="color: darkcyan; display: inline-block;">{{ quotation.item }}</h4>
+            <h4 style="color: darkcyan; display: inline-block;">
+              {{ quotation.item}}
+            </h4>
           </mat-grid-tile>
           <mat-grid-tile colspan="3" rowspan="2">
-            <h4 style="color: darkcyan; display: inline-block;">{{ quotation.quantity }}</h4></mat-grid-tile
+            <h4 style="color: darkcyan; display: inline-block;">
+              {{ quotation.quantity }}
+            </h4></mat-grid-tile
           >
-
         </mat-grid-list>
       </div>
     </div>
   </div>
+</div>

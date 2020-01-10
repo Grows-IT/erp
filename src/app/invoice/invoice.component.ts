@@ -32,9 +32,9 @@ export interface InvoiceList {
 })
 export class InvoiceComponent implements OnInit {
   invoices: Quotation[];
-  invoicesCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'item', 'quantity', 'pdf', 'delete'];
+  invoicesCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'pdf', 'delete'];
+  // invoicesCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'item', 'quantity', 'pdf', 'delete'];
 
-  // invoicesCol: string[] = ['no', 'addressTo', 'date', 'totalPrice', 'status', 'pdf'];
   listItem = [];
   item: any;
   date: any;

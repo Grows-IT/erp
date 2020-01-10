@@ -46,7 +46,7 @@ export class QuotationFormComponent implements OnInit {
 
     this.quotation = this.fb.group({
       customerName: ['', [Validators.required]],
-      by: ['', [Validators.required]],
+      // by: ['', [Validators.required]],
       addressTo: ['', [Validators.required]],
       date: ['', [Validators.required]],
       expirationDate: ['', [Validators.required]],
@@ -114,6 +114,8 @@ export class QuotationFormComponent implements OnInit {
   onConfirmClick(status) {
     // console.log(this.quotation.value);
     if (status === 0) {
+      console.log(this.quotation.value);
+
       this.salesService.addQuotation(this.quotation.value);
     } else if (status === 1) {
       this.salesService.updateQuotation(this.quotation.value, this.data.id).subscribe();

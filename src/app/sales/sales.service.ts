@@ -6,7 +6,6 @@ import 'rxjs/add/operator/map';
 import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject, from, of } from 'rxjs';
 import { Quotation, Item } from './sales.model';
-import { CustomerService } from '../customer/customer.service';
 
 interface QutotationResData {
   addressTo: string;
@@ -46,12 +45,11 @@ export class SalesService {
         console.log(res);
         data = {
           totalPrice: quotation.totalPrice,
-          by: quotation.by,
+          // by: quotation.by,
           customerId: res.name,
           date: quotation.date,
           expirationDate: quotation.expirationDate,
-          item: quotation.item,
-          quantity: quotation.quantity,
+          item: quotation.allItem,
           isInvoice: false
         };
         return this.http.post(environment.siteUrl + '/quotation.json', data).subscribe();
@@ -73,12 +71,14 @@ export class SalesService {
               key,
               resData[key].date,
               resData[key].expirationDate,
-              [item],
+              resData[key].item,
               resData[key].isInvoice
             );
             quotations.push(quotation);
           }
         }
+        console.log(quotations);
+
         return quotations;
       }),
       tap(quotations => {

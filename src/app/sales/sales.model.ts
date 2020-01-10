@@ -7,7 +7,7 @@ export class Quotation {
     public id: string,
     public date: Date,
     public expirationDate: Date,
-    public items: Item[],
+    public items: string,
     public isInvoice: boolean,
   ) { }
 }

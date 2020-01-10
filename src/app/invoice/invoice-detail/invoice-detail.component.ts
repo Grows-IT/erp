@@ -2,6 +2,10 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { InvoiceService } from '../invoice.service';
 import { MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormArray, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { CustomerService } from 'src/app/customer/customer.service';
+import { Subscription } from 'rxjs';
+import { Customer } from 'src/app/customer/customer.model';
+
 
 @Component({
   selector: 'app-invoice-detail',
@@ -11,6 +15,8 @@ import { FormGroup, FormArray, FormControl, Validators, FormBuilder } from '@ang
 export class InvoiceDetailComponent implements OnInit {
   expandedElement;
   invoiceCol: string[] = ['item', 'quantity', 'price'];
+  customerSubscription: Subscription;
+  customers: Customer[];
   mainInvoices: any;
   subInvoice: any = [];
   addForm: FormGroup;
@@ -19,7 +25,7 @@ export class InvoiceDetailComponent implements OnInit {
   // this.data is id
   id = this.data;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private invoiceService: InvoiceService, private fb: FormBuilder) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any,private cService: CustomerService, private invoiceService: InvoiceService, private fb: FormBuilder) {
     this.addForm = new FormGroup({
       groupName: new FormControl(null, [Validators.required])
     });
@@ -29,9 +35,11 @@ export class InvoiceDetailComponent implements OnInit {
 
   ngOnInit() {
     this.addForm.addControl('rows', this.rows);
-    this.invoiceService.getSubInvioce(this.id).subscribe((res) => {
-      // console.log(res);
 
+    this.customerSubscription = this.cService.customers.subscribe(customers => {
+      this.customers = customers;
+    });
+    this.invoiceService.getSubInvioce(this.id).subscribe((res) => {
       if (res.subInvoices !== null && res.subInvoices !== undefined) {
         Object.keys(res.subInvoices).map(key => {
           this.subInvoice.push(res.subInvoices[key]);
@@ -40,6 +48,15 @@ export class InvoiceDetailComponent implements OnInit {
       // console.log(this.subInvoice);
       this.mainInvoices = res;
     });
+    this.cService.getAllCustomer().subscribe();
+  }
+
+  getCustomer(customerId: string) {
+    const customer = this.customers.find(cus => cus.id === customerId);
+    if (!customer) {
+      return null;
+    }
+    return customer;
   }
 
   toggleShoing() {
