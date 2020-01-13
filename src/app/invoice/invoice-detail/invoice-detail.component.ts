@@ -25,7 +25,8 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   // this.data is id
   id = this.data;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private cService: CustomerService, private invoiceService: InvoiceService, private fb: FormBuilder) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private cService: CustomerService,
+    private invoiceService: InvoiceService, private fb: FormBuilder) {
     this.addForm = new FormGroup({
       groupName: new FormControl(null, [Validators.required])
     });

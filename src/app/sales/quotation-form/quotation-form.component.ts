@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@ang
 import { SalesService } from '../sales.service';
 import { QuotationDialogComponent } from '../quotation-dialog/quotation-dialog.component';
 import { MatDialogRef } from '@angular/material';
+import { tap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-quotation-form',
@@ -53,8 +54,6 @@ export class QuotationFormComponent implements OnInit {
         this.createItemFormGroup()
       ])
     });
-
-
   }
 
   private createItemFormGroup() {
@@ -111,14 +110,15 @@ export class QuotationFormComponent implements OnInit {
   }
 
   onConfirmClick(status) {
-    // console.log(this.quotation.value);
     if (status === 0) {
-      console.log(this.quotation.value);
-
-      this.salesService.addQuotation(this.quotation.value);
+      // console.log(this.quotation.value);
+      this.salesService.addQuotation(this.quotation.value).subscribe(() => {
+        this.dialogRef.close();
+      });
     } else if (status === 1) {
-      this.salesService.updateQuotation(this.quotation.value, this.data.id).subscribe();
+      this.salesService.updateQuotation(this.quotation.value, this.data.id).subscribe(() => {
+        this.dialogRef.close();
+      });
     }
-    this.dialogRef.close(true);
   }
 }
