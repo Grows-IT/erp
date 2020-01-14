@@ -15,7 +15,7 @@ interface QutotationResData {
   date: Date;
   expirationDate: Date;
   invoiceId: string;
-  item: string;
+  items: SellItem[];
   quantity: number;
 }
 
@@ -72,11 +72,19 @@ export class SalesService {
 
   getQuotation() {
     return this.http.get<{ [key: string]: QutotationResData }>(environment.siteUrl + '/quotation.json').pipe(
-      map(resData => {
+      withLatestFrom(this.itemsService.items),
+      map(([resData, items]) => {
         const quotations: Quotation[] = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
-            const item = new SellItem(resData[key].item, resData[key].quantity);
+            const allItem: SellItem[] = [];
+            const resItems = resData[key].items;
+            for (let i = 0; i < resData[key].items.length; i++) {
+              const findItem = items.find(it => it.id === resItems[i].itemId);
+              const item = new SellItem(findItem.name, resData[key].items[i].quantity);
+              allItem.push(item);
+            }
+
             const quotation = new Quotation(
               null,
               null,
@@ -85,7 +93,7 @@ export class SalesService {
               key,
               resData[key].date,
               resData[key].expirationDate,
-              resData[key].item,
+              allItem,
               resData[key].invoiceId
             );
             quotations.push(quotation);
@@ -94,6 +102,8 @@ export class SalesService {
         return quotations;
       }),
       tap(quotations => {
+        console.log(quotations);
+
         this._quotations.next(quotations);
       })
     );

@@ -1,3 +1,5 @@
+import { SellItem } from '../invoice/invoice.model';
+
 export class Quotation {
   constructor(
     public totalPrice: number,
@@ -7,7 +9,7 @@ export class Quotation {
     public id: string,
     public date: Date,
     public expirationDate: Date,
-    public items: string,
+    public items: SellItem[],
     public invoiceId: string,
   ) { }
 }

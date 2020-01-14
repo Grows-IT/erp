@@ -62,7 +62,7 @@ export class InvoiceService {
     const data = {
       'quotationId': quotation.id,
       'customerId': quotation.customerId,
-      // 'items': quotation.items,
+      'items': quotation.items,
       'type': type,
     };
     // const item = {
