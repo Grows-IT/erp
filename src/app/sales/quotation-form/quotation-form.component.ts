@@ -57,6 +57,11 @@ export class QuotationFormComponent implements OnInit {
     });
     this.cService.getAllCustomer().subscribe();
 
+    this.itemsService.items.subscribe(items => {
+      this.items = items;
+    });
+    this.itemsService.getAllItems().subscribe();
+
     this.data = this.dialogRef.componentInstance.data;
     if (this.data !== null && this.data !== undefined) {
       this.quotation = this.fb.group({
@@ -69,12 +74,6 @@ export class QuotationFormComponent implements OnInit {
           // this.createItemFormGroup()
         ])
       });
-
-      this.itemsService.items.subscribe(items => {
-        this.items = items;
-      });
-      this.itemsService.getAllItems().subscribe();
-
 
       for (let a = 0; a < this.data.items.length; a++) {
         const control = <FormArray>this.quotation.controls['allItem'];
@@ -173,7 +172,7 @@ export class QuotationFormComponent implements OnInit {
   onConfirmClick(status) {
     if (status === 0) {
       console.log(this.quotation.value);
-      this.salesService.addQuotation(this.quotation.value);
+      this.salesService.addQuotation(this.quotation.value).subscribe();
     } else if (status === 1) {
       this.salesService.updateQuotation(this.quotation.value, this.data.id).subscribe();
       console.log(this.quotation.value);

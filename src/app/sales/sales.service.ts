@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import 'rxjs/add/operator/map';
-import { map, tap, switchMap } from 'rxjs/operators';
+import { map, tap, switchMap, withLatestFrom } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { Quotation } from './sales.model';
 import { SellItem } from '../invoice/invoice.model';
+import { Item } from '../items/items.model';
+import { ItemsService } from '../items/items.service';
 
 interface QutotationResData {
   addressTo: string;
@@ -35,7 +37,7 @@ export class SalesService {
     return this._quotations.asObservable();
   }
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private itemsService: ItemsService) {
   }
 
   addQuotation(quotation: any) {
@@ -46,15 +48,21 @@ export class SalesService {
       address: quotation.addressTo
     };
     return this.http.post<any>(environment.siteUrl + '/customer.json', customer).pipe(
-      switchMap(res => {
-        console.log(res);
+      withLatestFrom(this.itemsService.items),
+      switchMap(([res, items]) => {
+        const sellItems: SellItem[] = [];
+        quotation.allItem.forEach(itemInput => {
+          const item = items.find(it => it.name === itemInput.item);
+          const sellItem = new SellItem(item.id, itemInput.quantity);
+          sellItems.push(sellItem);
+        });
         data = {
           totalPrice: quotation.totalPrice,
           // by: quotation.by,
           customerId: res.name,
           date: quotation.date,
           expirationDate: quotation.expirationDate,
-          item: quotation.allItem,
+          items: sellItems,
           invoiceId: ''
         };
         return this.http.post(environment.siteUrl + '/quotation.json', data);
