@@ -97,12 +97,12 @@ export class InvoiceComponent implements OnInit {
     // this.router.navigate(['/invoice/' + id]);
   }
 
-  getListItem(item) {
-    for (let i = 0; i < item.length; i++) {
-      this.item = [
+  getListItem(items) {
+    for (let i = 0; i < items.length; i++) {
+      const product = [
         [
           {
-            text: item[i].name,
+            text: items[i].item,
             style: 'itemTitle'
           },
           {
@@ -111,7 +111,7 @@ export class InvoiceComponent implements OnInit {
           }
         ],
         {
-          text: item[i].quantity,
+          text: items[i].quantity,
           style: 'itemNumber'
         },
         {
@@ -132,7 +132,7 @@ export class InvoiceComponent implements OnInit {
         }
       ];
 
-      this.listItem = this.item;
+      this.listItem.push(product);
       // this.listItem.push(this.item);
       // if (i === item.length - 1) {
       //   this.listItem = [...this.listItem];
@@ -326,7 +326,7 @@ export class InvoiceComponent implements OnInit {
               ],
               // Items
               // Item 1
-              this.listItem,
+              ...this.listItem,
 
               // [
               //   [

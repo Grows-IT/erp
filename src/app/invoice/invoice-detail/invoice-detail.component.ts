@@ -24,6 +24,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   isShowing: boolean;
   // this.data is id
   id = this.data;
+  isShow = false;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private cService: CustomerService, private invoiceService: InvoiceService, private fb: FormBuilder) {
     this.addForm = new FormGroup({
@@ -72,6 +73,17 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
 
   openPdf(id) {
 
+  }
+
+  showItem() {
+    this.isShow = !this.isShow;
+  }
+
+  allShow(){
+    this.addForm.reset();
+    this.rows.clear();
+    this.isShowing = !this.isShowing;
+    this.isShow = !this.isShow;
   }
 
   onAddRow() {

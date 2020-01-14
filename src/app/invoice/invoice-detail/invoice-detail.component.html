@@ -13,7 +13,11 @@
   <!-- <h1>Quotation : {{mainInvoices.quotationId}}</h1> -->
   <h2>Name : {{getCustomer(mainInvoices.customer.id).name}} ,
     Address : {{getCustomer(mainInvoices.customer.id).address}}</h2>
-  <button mat-raised-button color="primary" (click)="toggleShoing()" style="margin-bottom: 10px;">Add group</button>
+  <!-- <button mat-raised-button color="primary" style="margin-bottom: 10px;" (click)="showItem()">Add group</button> -->
+  <div>
+  <div align="center">
+  <button mat-raised-button color="primary" (click)="toggleShoing()" >Add invoice</button>
+  </div>
   <br />
   <mat-card *ngIf="isShowing" style="margin-bottom: 10px;">
     <div [formGroup]="addForm">

@@ -3,6 +3,9 @@ import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@ang
 import { SalesService } from '../sales.service';
 import { QuotationDialogComponent } from '../quotation-dialog/quotation-dialog.component';
 import { MatDialogRef } from '@angular/material';
+import { CustomerService } from 'src/app/customer/customer.service';
+import { Subscription } from 'rxjs';
+import { Customer } from 'src/app/customer/customer.model';
 
 @Component({
   selector: 'app-quotation-form',
@@ -10,9 +13,10 @@ import { MatDialogRef } from '@angular/material';
   styleUrls: ['./quotation-form.component.scss']
 })
 export class QuotationFormComponent implements OnInit {
+  customerSubscription: Subscription;
+  customers: Customer[];
   data: any;
   quotation: FormGroup;
-  // rows: FormArray;
 
   // quotation = new FormGroup({
   //   customerName: new FormControl('', [
@@ -38,26 +42,72 @@ export class QuotationFormComponent implements OnInit {
   //   ]),
   // });
 
-  constructor(private salesService: SalesService, private dialogRef: MatDialogRef<QuotationDialogComponent>, private fb: FormBuilder) {
-    // this.rows = this.fb.array([]);
+  constructor(private salesService: SalesService, private dialogRef: MatDialogRef<QuotationDialogComponent>, private fb: FormBuilder, private cService: CustomerService) {
   }
 
   ngOnInit() {
+    this.customerSubscription = this.cService.customers.subscribe(customers => {
+      this.customers = customers;
+    });
+    this.cService.getAllCustomer().subscribe();
+
+    this.data = this.dialogRef.componentInstance.data;
+    if (this.data !== null && this.data !== undefined) {
     this.quotation = this.fb.group({
-      customerName: ['', [Validators.required]],
+      customerName: [this.getCustomerName(this.data.customerId).name, [Validators.required]],
       // by: ['', [Validators.required]],
-      addressTo: ['', [Validators.required]],
-      date: ['', [Validators.required]],
-      expirationDate: ['', [Validators.required]],
+      addressTo: [this.getCustomerName(this.data.customerId).address, [Validators.required]],
+      date: [this.data.date, [Validators.required]],
+      expirationDate: [this.data.expirationDate, [Validators.required]],
       allItem: this.fb.array([
-        this.createItemFormGroup()
+        // this.createItemFormGroup()
       ])
     });
-
-
+    for (let a = 0; a < this.data.items.length; a++) {
+    const control = <FormArray>this.quotation.controls['allItem'];
+    control.push(this.viewItemFormGroup(a));
   }
 
-  private createItemFormGroup() {
+
+  } else {
+      this.quotation = this.fb.group({
+        customerName: ['', [Validators.required]],
+        // by: ['', [Validators.required]],
+        addressTo: ['', [Validators.required]],
+        date: ['', [Validators.required]],
+        expirationDate: ['', [Validators.required]],
+        allItem: this.fb.array([
+          this.createItemFormGroup()
+        ])
+      });
+    }
+  }
+
+  getCustomerName(customerId: string) {
+    const customer = this.customers.find(cus => cus.id === customerId);
+    if (!customer) {
+      return null;
+    }
+    return customer;
+  }
+
+  private viewItemFormGroup(a) {
+    this.data = this.dialogRef.componentInstance.data;
+    // if (this.data !== null && this.data !== undefined) {
+    return this.fb.group({
+        item: [this.data.items[a].item, [Validators.required]],
+        quantity: [this.data.items[a].quantity, [Validators.required]],
+      });
+
+    // } else {
+    //   return this.fb.group({
+    //   item: ['', [Validators.required]],
+    //   quantity: ['', [Validators.required]],
+    // });
+    // }
+  }
+
+  private createItemFormGroup(){
     return this.fb.group({
       item: ['', [Validators.required]],
       quantity: ['', [Validators.required]],
@@ -66,15 +116,15 @@ export class QuotationFormComponent implements OnInit {
 
   // this.data = this.dialogRef.componentInstance.data;
 
-  //   if (this.data !== null && this.data !== undefined) {
-  //     this.quotation = new FormGroup({
-  //       customerName: new FormControl(this.data.customerName, [
-  //         Validators.required
-  //       ]),
-  //       by: new FormControl(this.data.by, [
-  //         Validators.required
-  //       ]),
-  //       addressTo: new FormControl(this.data.addressTo, [
+    // if (this.data !== null && this.data !== undefined) {
+    //   this.quotation = new FormGroup({
+    //     customerName: new FormControl(this.data.customerName, [
+    //       Validators.required
+    //     ]),
+    //     by: new FormControl(this.data.by, [
+    //       Validators.required
+    //     ]),
+    //     addressTo: new FormControl(this.data.addressTo, [
   //         Validators.required
   //       ]),
   //       date: new FormControl(this.data.date, [
@@ -100,9 +150,8 @@ export class QuotationFormComponent implements OnInit {
   }
 
   onAddRow() {
-    // this.rows.push(this.createItemFormGroup());
-    const control = <FormArray>this.quotation.controls['allItem'];
-    control.push(this.createItemFormGroup());
+      const control = <FormArray>this.quotation.controls['allItem'];
+      control.push(this.createItemFormGroup());
   }
 
   removeUnit(i: number) {
@@ -114,10 +163,11 @@ export class QuotationFormComponent implements OnInit {
     // console.log(this.quotation.value);
     if (status === 0) {
       console.log(this.quotation.value);
-
       this.salesService.addQuotation(this.quotation.value);
     } else if (status === 1) {
       this.salesService.updateQuotation(this.quotation.value, this.data.id).subscribe();
+      console.log(this.quotation.value);
+
     }
     this.dialogRef.close(true);
   }
