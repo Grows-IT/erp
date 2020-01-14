@@ -83,9 +83,10 @@ export class SalesComponent implements OnInit, OnDestroy {
       disableClose: true,
       autoFocus: false,
     });
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log('The dialog was closed');
-    // });
+    dialogRef.afterClosed().subscribe(() => {
+      this.salesService.getQuotation().subscribe();
+      this.cService.getAllCustomer().subscribe();
+    });
   }
 
   edit(item) {
@@ -96,6 +97,10 @@ export class SalesComponent implements OnInit, OnDestroy {
       disableClose: true,
       autoFocus: false,
       data: item
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.salesService.getQuotation().subscribe();
+      this.cService.getAllCustomer().subscribe();
     });
   }
 
@@ -115,7 +120,9 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   createInvoice(item) {
-    this.salesService.createInvoice(item).subscribe();
+    this.salesService.createInvoice(item).subscribe(() => {
+      this.salesService.getQuotation().subscribe();
+    });
   }
 
   getListItem(items) {
@@ -646,6 +653,8 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   delete(id: string) {
-    this.salesService.deleteQuotation(id).subscribe();
+    this.salesService.deleteQuotation(id).subscribe(() => {
+      this.salesService.getQuotation().subscribe();
+    });
   }
 }

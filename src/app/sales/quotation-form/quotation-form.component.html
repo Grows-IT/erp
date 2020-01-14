@@ -54,8 +54,8 @@
   </mat-grid-list>
   <h1 align="center">Items</h1>
 
- <mat-card formArrayName="allItem">
-   <table>
+  <mat-card formArrayName="allItem">
+    <table>
       <tr *ngFor="let allItem of quotation.controls.allItem.controls; let i = index">
         <td>
           <mat-form-field appearance="outline">
@@ -75,12 +75,12 @@
           </button>
         </td>
       </tr>
-   </table>
-   <div align="center">
-   <button mat-button>
-    <i class="material-icons md-48" (click)="onAddRow()" >add_circle_outline</i>
-  </button></div>
- </mat-card>
+    </table>
+    <div align="center">
+      <button mat-button>
+        <i class="material-icons md-48" (click)="onAddRow()">add_circle_outline</i>
+      </button></div>
+  </mat-card>
 
   <mat-dialog-actions align="center">
     <button *ngIf="!data" mat-raised-button color="primary" (click)="onConfirmClick(0)" tabindex="1"

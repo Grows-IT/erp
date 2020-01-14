@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import 'rxjs/add/operator/map';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, from, of } from 'rxjs';
 import { Quotation, Item } from './sales.model';
 
@@ -39,9 +39,8 @@ export class SalesService {
       name: quotation.customerName,
       address: quotation.addressTo
     };
-    this.http.post<any>(environment.siteUrl + '/customer.json', customer)
-      .toPromise()
-      .then(res => {
+    return this.http.post<any>(environment.siteUrl + '/customer.json', customer).pipe(
+      switchMap(res => {
         console.log(res);
         data = {
           totalPrice: quotation.totalPrice,
@@ -52,8 +51,23 @@ export class SalesService {
           item: quotation.allItem,
           isInvoice: false
         };
-        return this.http.post(environment.siteUrl + '/quotation.json', data).subscribe();
-      });
+        return this.http.post(environment.siteUrl + '/quotation.json', data);
+      })
+    );
+    // .toPromise()
+    // .then(res => {
+    //   console.log(res);
+    //   data = {
+    //     totalPrice: quotation.totalPrice,
+    //     // by: quotation.by,
+    //     customerId: res.name,
+    //     date: quotation.date,
+    //     expirationDate: quotation.expirationDate,
+    //     item: quotation.allItem,
+    //     isInvoice: false
+    //   };
+    //   return this.http.post(environment.siteUrl + '/quotation.json', data).subscribe();
+    // });
   }
 
   getQuotation() {
@@ -103,21 +117,13 @@ export class SalesService {
   }
 
   createInvoice(quotation: any) {
-    console.log(quotation);
-
     const data = {
       'id': '1',
       'quotationId': quotation.id,
       'customer': {
         'id': quotation.customerId,
-        // 'name': quotation.customerName,
-        // 'address': quotation.addressTo
       },
       'item': quotation.items,
-      // {
-      // 'name': 'apple',
-      // 'quantity': '50'
-      // },
       'subInvoices': ''
     };
     this.isInvoice(quotation.id);

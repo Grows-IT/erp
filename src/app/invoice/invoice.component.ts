@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { Customer } from '../customer/customer.model';
 import { CustomerService } from '../customer/customer.service';
+import { tap } from 'rxjs/operators';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface InvoiceList {
@@ -82,7 +83,9 @@ export class InvoiceComponent implements OnInit {
 
 
   delete(id) {
-    this.invoiceService.deleteInvoice(id).subscribe();
+    this.invoiceService.deleteInvoice(id).pipe(
+      tap(() => this.salesService.getQuotation().subscribe())
+    ).subscribe();
   }
 
   openDetail(id) {

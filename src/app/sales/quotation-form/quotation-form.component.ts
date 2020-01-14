@@ -6,6 +6,7 @@ import { MatDialogRef } from '@angular/material';
 import { CustomerService } from 'src/app/customer/customer.service';
 import { Subscription } from 'rxjs';
 import { Customer } from 'src/app/customer/customer.model';
+import { tap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-quotation-form',
@@ -160,7 +161,6 @@ export class QuotationFormComponent implements OnInit {
   }
 
   onConfirmClick(status) {
-    // console.log(this.quotation.value);
     if (status === 0) {
       console.log(this.quotation.value);
       this.salesService.addQuotation(this.quotation.value);
@@ -169,6 +169,5 @@ export class QuotationFormComponent implements OnInit {
       console.log(this.quotation.value);
 
     }
-    this.dialogRef.close(true);
   }
 }
