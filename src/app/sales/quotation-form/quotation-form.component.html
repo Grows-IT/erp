@@ -56,11 +56,20 @@
 
   <mat-card formArrayName="allItem">
     <table>
+
       <tr *ngFor="let allItem of quotation.controls.allItem.controls; let i = index">
         <td>
           <mat-form-field appearance="outline">
             <mat-label>Item</mat-label>
-            <input matInput [formControl]="allItem.get('item')" required>
+            <input type="text" matInput [(ngModel)]="itemName" [formControl]="allItem.get('item')"
+              [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let item of items; let i = index" [value]="item.name">
+                {{item.name}}
+                {{i}}
+              </mat-option>
+            </mat-autocomplete>
+            <!-- <input matInput [formControl]="allItem.get('item')" required> -->
           </mat-form-field>
         </td>
         <td>

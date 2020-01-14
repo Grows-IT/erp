@@ -1,48 +1,93 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Invoice } from './invoice.model';
+import { Invoice, SellItem } from './invoice.model';
 import { BehaviorSubject } from 'rxjs';
-import { AngularFireList, AngularFireDatabase } from '@angular/fire/database';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
+
+interface InvoiceResData {
+  customerId: string;
+  id: string;
+  item: SellItem;
+  quotationId: string;
+  subInvoice: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class InvoiceService {
   // invoiceList: any[];
-  invoiceList: AngularFireList<any>;
-  private _invoice = new BehaviorSubject<Invoice>(null);
+  private _invoice = new BehaviorSubject<Invoice[]>(null);
 
   get invoices() {
     return this._invoice.asObservable();
   }
 
-  constructor(private http: HttpClient, private db: AngularFireDatabase) {
-    this.invoiceList = db.list('invoice');
+  constructor(private http: HttpClient) {
   }
 
+  // get all แล้วก็ส่ง id sub invoice ให้ถูก
 
-  deleteInvoice(id: string) {
-    this.isInvoice(id);
-    return this.http.delete(environment.siteUrl + '/invoices/' + id + '.json');
+  getAllInvoice() {
+    return this.http.get<{ [key: string]: InvoiceResData }>(environment.siteUrl + '/invoices.json').pipe(
+      map(resData => {
+        console.log(resData);
+
+        // const invoices: Invoice[] = [];
+        // for (const key in resData) {
+        //   if (resData.hasOwnProperty(key)) {
+        //     const item = new SellItem(resData[key].item, resData[key].quantity);
+        //     const invoice = new Invoice(
+        //       key,
+        //       resData[key].quotationId,
+        //       resData[key].customerId,
+        //       resData[key].item,
+        //     );
+        //     invoices.push(invoice);
+        //   }
+        // }
+        // console.log(invoices);
+        // return invoices;
+      }),
+      tap(invoices => {
+        console.log(invoices);
+
+        // this._invoice.next(invoices);
+      })
+    );
   }
 
-  isInvoice(id) {
+  createInvoice(quotation: any, type: string) {
     const data = {
-      isInvoice: false
+      'quotationId': quotation.id,
+      'customerId': quotation.customerId,
+      // 'items': quotation.items,
+      'type': type,
     };
-
-    return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data).subscribe();
+    // const item = {
+    //   items: new SellItem(quotation.items)
+    // }
+    // return this.http.post(environment.siteUrl + 'items.json', )
+    // return this.http.put(environment.siteUrl + '/invoices.json', data);
+    return this.http.post<{ [key: string]: InvoiceResData }>(environment.siteUrl + '/invoices.json', data);
   }
 
-  getSubInvioce(id) {
-    return this.http.get<Invoice>(environment.siteUrl + '/invoices/' + id + '.json')
-      .pipe(tap(data => {
-        this._invoice.next(data);
-      }));
-    // return this.http.get<Invoice>(environment.siteUrl + '/invoices/-LxZdDePB4WEbHuNNoeU' + '.json');
+  deleteInvoice(invoiceId: string, quotationId: string) {
+    return this.http.delete(environment.siteUrl + '/invoices/' + invoiceId + '.json').pipe(
+      map(() => {
+        return this.http.patch(environment.siteUrl + '/quotation/' + quotationId + '.json', { invoiceId: '' }).subscribe();
+      })
+    );
   }
+
+  // getSubInvioce(id) {
+  //   return this.http.get<Invoice>(environment.siteUrl + '/invoices/' + id + '.json')
+  //     .pipe(tap(data => {
+  //       this._subInvoice.next(data);
+  //     }));
+  //   // return this.http.get<Invoice>(environment.siteUrl + '/invoices/-LxZdDePB4WEbHuNNoeU' + '.json');
+  // }
 
   addSubInvoice(data, id) {
     console.log(data);

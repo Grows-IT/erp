@@ -40,15 +40,17 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     this.customerSubscription = this.cService.customers.subscribe(customers => {
       this.customers = customers;
     });
-    this.invoiceService.getSubInvioce(this.id).subscribe((res) => {
-      if (res.subInvoices !== null && res.subInvoices !== undefined) {
-        Object.keys(res.subInvoices).map(key => {
-          this.subInvoice.push(res.subInvoices[key]);
-        });
-      }
-      // console.log(this.subInvoice);
-      this.mainInvoices = res;
-    });
+    // this.invoiceService.getSubInvioce(this.id).subscribe((res) => {
+    //   if (res.subInvoices !== null && res.subInvoices !== undefined) {
+    //     Object.keys(res.subInvoices).map(key => {
+    //       this.subInvoice.push(res.subInvoices[key]);
+    //     });
+    //   } else {
+    //     return;
+    //   }
+    //   // console.log(this.subInvoice);
+    //   this.mainInvoices = res;
+    // });
     this.cService.getAllCustomer().subscribe();
   }
 

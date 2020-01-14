@@ -3,7 +3,8 @@ import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@ang
 import { SalesService } from '../sales.service';
 import { QuotationDialogComponent } from '../quotation-dialog/quotation-dialog.component';
 import { MatDialogRef } from '@angular/material';
-import { tap, map } from 'rxjs/operators';
+import { ItemsService } from 'src/app/items/items.service';
+import { Item } from 'src/app/items/items.model';
 
 @Component({
   selector: 'app-quotation-form',
@@ -13,6 +14,8 @@ import { tap, map } from 'rxjs/operators';
 export class QuotationFormComponent implements OnInit {
   data: any;
   quotation: FormGroup;
+  items: Item[];
+  itemName: string;
   // rows: FormArray;
 
   // quotation = new FormGroup({
@@ -39,7 +42,7 @@ export class QuotationFormComponent implements OnInit {
   //   ]),
   // });
 
-  constructor(private salesService: SalesService, private dialogRef: MatDialogRef<QuotationDialogComponent>, private fb: FormBuilder) {
+  constructor(private salesService: SalesService, private dialogRef: MatDialogRef<QuotationDialogComponent>, private fb: FormBuilder, private itemsService: ItemsService) {
     // this.rows = this.fb.array([]);
   }
 
@@ -54,6 +57,11 @@ export class QuotationFormComponent implements OnInit {
         this.createItemFormGroup()
       ])
     });
+
+    this.itemsService.items.subscribe(items => {
+      this.items = items;
+    });
+    this.itemsService.getAllItems().subscribe();
   }
 
   private createItemFormGroup() {

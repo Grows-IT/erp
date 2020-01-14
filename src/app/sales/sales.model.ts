@@ -8,17 +8,17 @@ export class Quotation {
     public date: Date,
     public expirationDate: Date,
     public items: string,
-    public isInvoice: boolean,
+    public invoiceId: string,
   ) { }
 }
 
-export class Item {
-  constructor(
-    public name: string,
-    public quantity: number,
-    public price: number
-  ) { }
-}
+// export class Item {
+//   constructor(
+//     public name: string,
+//     public quantity: number,
+//     public price: number
+//   ) { }
+// }
 
 // export class Item {
 //   constructor(

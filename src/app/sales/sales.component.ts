@@ -10,6 +10,12 @@ import { Router } from '@angular/router';
 import { QuotationdetailComponent } from './quotationdetail/quotationdetail.component';
 import { CustomerService } from '../customer/customer.service';
 import { Customer } from '../customer/customer.model';
+import { InvoiceService } from '../invoice/invoice.service';
+import { Invoice } from '../invoice/invoice.model';
+import { map } from 'rxjs-compat/operator/map';
+import { tap } from 'rxjs/operators';
+import { ItemsService } from '../items/items.service';
+import { Item } from '../items/items.model';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 // export interface QuotationList {
@@ -41,14 +47,14 @@ export class SalesComponent implements OnInit, OnDestroy {
   // quotationCol: string[] = ['no', 'customerName', 'date', 'totalPrice', 'status', 'by', 'edit', 'pdf', 'createInvoice', 'delete'];
   quotationCol: string[] = ['no', 'customerName', 'edit', 'pdf', 'createInvoice', 'delete'];
   listItem = [];
-  item;
+  items: Item[];
   date: any;
   expirationDate: any;
   subscription: Subscription;
   customerSubscription: Subscription;
   customers: Customer[];
 
-  constructor(public dialog: MatDialog, private salesService: SalesService, private router: Router, private cService: CustomerService) {
+  constructor(public dialog: MatDialog, private salesService: SalesService, private router: Router, private cService: CustomerService, private invService: InvoiceService, private itemsService: ItemsService) {
   }
 
   ngOnInit() {
@@ -58,6 +64,10 @@ export class SalesComponent implements OnInit, OnDestroy {
     this.customerSubscription = this.cService.customers.subscribe(customers => {
       this.customers = customers;
     });
+    this.customerSubscription = this.itemsService.items.subscribe(items => {
+      this.items = items;
+    });
+    this.itemsService.getAllItems().subscribe();
     this.salesService.getQuotation().subscribe();
     this.cService.getAllCustomer().subscribe();
   }
@@ -120,9 +130,11 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   createInvoice(item) {
-    this.salesService.createInvoice(item).subscribe(() => {
-      this.salesService.getQuotation().subscribe();
-    });
+    this.invService.createInvoice(item, 'mainInvoice').pipe(
+      tap(() => {
+        this.salesService.getQuotation();
+      })
+    ).subscribe();
   }
 
   getListItem(item) {

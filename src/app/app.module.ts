@@ -12,7 +12,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {
   MatDialogModule, MatGridListModule, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatInputModule,
   MatDatepickerModule, MatNativeDateModule, MatListModule, MatCardModule, MatTableDataSource, MatSort, MatTableModule, MatSortModule,
-  MatIconModule, MatMenuModule, MatExpansionModule, MatProgressSpinnerModule, MatCheckboxModule
+  MatIconModule, MatMenuModule, MatExpansionModule, MatProgressSpinnerModule, MatCheckboxModule, MatAutocompleteModule
 } from '@angular/material';
 
 import { AppComponent } from './app.component';
@@ -57,8 +57,8 @@ const materialComponent = [
   MatProgressSpinnerModule,
   RouterModule,
   MatToolbarModule,
-  MatSlideToggleModule
-
+  MatSlideToggleModule,
+  MatAutocompleteModule
 ];
 
 @NgModule({

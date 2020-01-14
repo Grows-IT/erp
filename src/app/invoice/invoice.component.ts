@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { InvoiceService } from './invoice.service';
 import { SalesService } from '../sales/sales.service';
 import { Quotation } from '../sales/sales.model';
@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { Customer } from '../customer/customer.model';
 import { CustomerService } from '../customer/customer.service';
 import { tap } from 'rxjs/operators';
+import { Invoice } from './invoice.model';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface InvoiceList {
@@ -34,12 +35,14 @@ export interface InvoiceList {
     ]),
   ],
 })
-export class InvoiceComponent implements OnInit {
-  invoices: Quotation[];
+export class InvoiceComponent implements OnInit, OnDestroy {
+  // invoices: Quotation[];
   invoicesCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'pdf', 'delete'];
   // invoicesCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'item', 'quantity', 'pdf', 'delete'];
   customerSubscription: Subscription;
+  invoiceSubscription: Subscription;
   customers: Customer[];
+  invoices: Invoice[];
   listItem = [];
   item: any;
   date: any;
@@ -47,30 +50,37 @@ export class InvoiceComponent implements OnInit {
   expandedElement;
   expandedElement2;
 
-  constructor(private invoiceService: InvoiceService, private salesService: SalesService, private cService: CustomerService,
-    private router: Router, public dialog: MatDialog) { }
+  constructor(private invoiceService: InvoiceService, private salesService: SalesService, private cService: CustomerService, public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.salesService.quotations.subscribe(invoices => {
-      if (invoices === null) {
-        return;
-      }
+    // this.salesService.quotations.subscribe(invoices => {
+    //   if (invoices === null) {
+    //     return;
+    //   }
 
-      this.invoices = invoices.filter(val => {
-        return val.isInvoice === true;
-      });
-    });
-    this.salesService.getQuotation().subscribe((val) => {
-      this.expandedElement = val;
-      // this.expandedElement2 = this.subInvoices[1];
-      // this.expandedElement2 = this.subInvoices[2];
-    });
+    //   this.invoices = invoices.filter(val => {
+    //     return val.invoiceId;
+    //   });
+    // });
+    // this.salesService.getQuotation().subscribe();
 
     this.customerSubscription = this.cService.customers.subscribe(customers => {
       this.customers = customers;
     });
-    this.cService.getAllCustomer().subscribe();
 
+    // this.customerSubscription = this.invoiceService.invoices.subscribe(invoices => {
+    //   this.invoices = invoices;
+    // });
+    // this.invoiceSubscription = this.invoiceService.invoices.subscribe(invoices => {
+    //   this.invoices = invoices;
+    // });
+
+    this.cService.getAllCustomer().subscribe();
+    this.invoiceService.getAllInvoice().subscribe();
+  }
+
+  ngOnDestroy() {
+    this.customerSubscription.unsubscribe();
   }
 
   getCustomer(customerId: string) {
@@ -82,9 +92,11 @@ export class InvoiceComponent implements OnInit {
   }
 
 
-  delete(id) {
-    this.invoiceService.deleteInvoice(id).pipe(
-      tap(() => this.salesService.getQuotation().subscribe())
+  delete(invoiceId, quotationId) {
+    this.invoiceService.deleteInvoice(invoiceId, quotationId).pipe(
+      tap(() => {
+        this.salesService.getQuotation().subscribe();
+      })
     ).subscribe();
   }
 

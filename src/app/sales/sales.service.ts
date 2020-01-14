@@ -1,35 +1,41 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import 'rxjs/add/operator/map';
 import { map, tap, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, from, of } from 'rxjs';
-import { Quotation, Item } from './sales.model';
+import { BehaviorSubject } from 'rxjs';
+import { Quotation } from './sales.model';
+import { SellItem } from '../invoice/invoice.model';
 
 interface QutotationResData {
   addressTo: string;
   customerId: string;
   date: Date;
   expirationDate: Date;
-  isInvoice: boolean;
+  invoiceId: string;
   item: string;
   quantity: number;
+}
+
+interface InvoiceResData {
+  customerId: string;
+  id: string;
+  item: SellItem;
+  quotationId: string;
+  subInvoice: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class SalesService {
-  quotationList: AngularFireList<any>;
   private _quotations = new BehaviorSubject<Quotation[]>(null);
 
   get quotations() {
     return this._quotations.asObservable();
   }
 
-  constructor(private http: HttpClient, private db: AngularFireDatabase) {
-    this.quotationList = db.list('quotation');
+  constructor(private http: HttpClient) {
   }
 
   addQuotation(quotation: any) {
@@ -49,25 +55,11 @@ export class SalesService {
           date: quotation.date,
           expirationDate: quotation.expirationDate,
           item: quotation.allItem,
-          isInvoice: false
+          invoiceId: ''
         };
         return this.http.post(environment.siteUrl + '/quotation.json', data);
       })
     );
-    // .toPromise()
-    // .then(res => {
-    //   console.log(res);
-    //   data = {
-    //     totalPrice: quotation.totalPrice,
-    //     // by: quotation.by,
-    //     customerId: res.name,
-    //     date: quotation.date,
-    //     expirationDate: quotation.expirationDate,
-    //     item: quotation.allItem,
-    //     isInvoice: false
-    //   };
-    //   return this.http.post(environment.siteUrl + '/quotation.json', data).subscribe();
-    // });
   }
 
   getQuotation() {
@@ -76,7 +68,7 @@ export class SalesService {
         const quotations: Quotation[] = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
-            const item = new Item(resData[key].item, resData[key].quantity, 200);
+            const item = new SellItem(resData[key].item, resData[key].quantity);
             const quotation = new Quotation(
               null,
               null,
@@ -86,13 +78,11 @@ export class SalesService {
               resData[key].date,
               resData[key].expirationDate,
               resData[key].item,
-              resData[key].isInvoice
+              resData[key].invoiceId
             );
             quotations.push(quotation);
           }
         }
-        console.log(quotations);
-
         return quotations;
       }),
       tap(quotations => {
@@ -114,26 +104,5 @@ export class SalesService {
       quantity: quotation.quantity
     };
     return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
-  }
-
-  createInvoice(quotation: any) {
-    const data = {
-      'id': '1',
-      'quotationId': quotation.id,
-      'customer': {
-        'id': quotation.customerId,
-      },
-      'item': quotation.items,
-      'subInvoices': ''
-    };
-    this.isInvoice(quotation.id);
-    return this.http.put(environment.siteUrl + '/invoices/' + quotation.id + '.json', data);
-  }
-
-  isInvoice(id) {
-    const data = {
-      isInvoice: true
-    };
-    return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data).subscribe();
   }
 }
