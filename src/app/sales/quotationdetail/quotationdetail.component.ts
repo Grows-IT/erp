@@ -9,8 +9,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { QuotationDialogComponent } from "../quotation-dialog/quotation-dialog.component";
 import { InvoiceDetailComponent } from "src/app/invoice/invoice-detail/invoice-detail.component";
-import { CustomerService } from './../../customer/customer.service';
-import { Customer } from 'src/app/customer/customer.model';
+import { CustomerService } from "./../../customer/customer.service";
+import { Customer } from "src/app/customer/customer.model";
 
 @Component({
   selector: "app-quotationdetail",
@@ -28,8 +28,14 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
   isShow = false;
 
   // tslint:disable-next-line: max-line-length
-  constructor(public dialog: MatDialog, private cService: CustomerService, private salesService: SalesService, private router: Router, private dialogRef: MatDialogRef<QuotationdetailComponent>, @Inject(MAT_DIALOG_DATA) public data) { }
-
+  constructor(
+    public dialog: MatDialog,
+    private cService: CustomerService,
+    private salesService: SalesService,
+    private router: Router,
+    private dialogRef: MatDialogRef<QuotationdetailComponent>,
+    @Inject(MAT_DIALOG_DATA) public data
+  ) {}
 
   ngOnInit() {
     this.data = this.dialogRef.componentInstance.data;
@@ -98,8 +104,9 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
 
   getListItem(items) {
     console.log(items.length);
+    const products = [];
     for (let i = 0; i < items.length; i++) {
-      this.product = [
+      const product = [
         [
           {
             text: items[i].item,
@@ -131,21 +138,23 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
           style: "itemTotal"
         }
       ];
-      this.listItem.push(this.product);
+      this.listItem.push(product);
       // this.product = [];
       // this.listItem = this.product;
       // this.listItem.push(this.product);
-      if (i === items.length - 1) {
-        this.listItem = [...this.listItem];
-      }
-      console.log(this.listItem);
+      // if (i === items.length - 1) {
+      //   this.listItem = [...this.listItem];
+      // }
+      // this.product = product;
+      console.log(product);
     }
-    }
+    console.log(this.listItem);
+  }
 
   openPdf(item: any) {
     console.log(item);
     this.getListItem(item.items);
-    console.log(this.product);
+    // console.log(this.product);
 
     const documentDefinition = {
       // header: {
@@ -273,7 +282,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
               style: "quotationBillingAddress"
             },
             {
-              text: item.addressTo,
+              text: this.getCustomer(this.quotation.customerId).address,
               style: "quotationBillingAddress"
             }
           ]
@@ -318,75 +327,73 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
               ],
               // Items
               // Item 1
-              this.product,
+              ...this.listItem,
 
               // [
               //   [
               //     {
-              //       text: 'Item 1',
-              //       style: 'itemTitle'
+              //       text: "Item 1",
+              //       style: "itemTitle"
               //     },
               //     {
-              //       text: 'Item Description',
-              //       style: 'itemSubTitle'
-
+              //       text: "Item Description",
+              //       style: "itemSubTitle"
               //     }
               //   ],
               //   {
-              //     text: '1',
-              //     style: 'itemNumber'
+              //     text: "1",
+              //     style: "itemNumber"
               //   },
               //   {
-              //     text: '$999.99',
-              //     style: 'itemNumber'
+              //     text: "$999.99",
+              //     style: "itemNumber"
               //   },
               //   {
-              //     text: '0%',
-              //     style: 'itemNumber'
+              //     text: "0%",
+              //     style: "itemNumber"
               //   },
               //   {
-              //     text: '0%',
-              //     style: 'itemNumber'
+              //     text: "0%",
+              //     style: "itemNumber"
               //   },
               //   {
-              //     text: '$999.99',
-              //     style: 'itemTotal'
+              //     text: "$999.99",
+              //     style: "itemTotal"
               //   }
               // ],
               // // Item 2
               // [
               //   [
               //     {
-              //       text: 'Item 2',
-              //       style: 'itemTitle'
+              //       text: "Item 2",
+              //       style: "itemTitle"
               //     },
               //     {
-              //       text: 'Item Description',
-              //       style: 'itemSubTitle'
-
+              //       text: "Item Description",
+              //       style: "itemSubTitle"
               //     }
               //   ],
               //   {
-              //     text: '1',
-              //     style: 'itemNumber'
+              //     text: "1",
+              //     style: "itemNumber"
               //   },
               //   {
-              //     text: '$999.99',
-              //     style: 'itemNumber'
+              //     text: "$999.99",
+              //     style: "itemNumber"
               //   },
               //   {
-              //     text: '0%',
-              //     style: 'itemNumber'
+              //     text: "0%",
+              //     style: "itemNumber"
               //   },
               //   {
-              //     text: '0%',
-              //     style: 'itemNumber'
+              //     text: "0%",
+              //     style: "itemNumber"
               //   },
               //   {
-              //     text: '$999.99',
-              //     style: 'itemTotal'
+              //     text: "$999.99",
+              //     style: "itemTotal"
               //   }
-              // ],
+              // ]
               // END Items
             ]
           } // table
@@ -608,5 +615,6 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
       }
     };
     pdfMake.createPdf(documentDefinition).open();
+    // console.log(documentDefinition);
   }
 }

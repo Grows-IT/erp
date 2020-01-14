@@ -100,7 +100,7 @@ export class SalesService {
       addressTo: quotation.addressTo,
       date: quotation.date,
       expirationDate: quotation.expirationDate,
-      item: quotation.item,
+      item: quotation.allItem,
       quantity: quotation.quantity
     };
     return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);

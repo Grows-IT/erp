@@ -137,12 +137,12 @@ export class SalesComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  getListItem(item) {
-    for (let i = 0; i < item.length; i++) {
-      this.item = [
+  getListItem(items) {
+    for (let i = 0; i < items.length; i++) {
+      const product = [
         [
           {
-            text: item[i].name,
+            text: items[i].item,
             style: 'itemTitle'
           },
           {
@@ -151,7 +151,7 @@ export class SalesComponent implements OnInit, OnDestroy {
           }
         ],
         {
-          text: item[i].quantity,
+          text: items[i].quantity,
           style: 'itemNumber'
         },
         {
@@ -171,8 +171,8 @@ export class SalesComponent implements OnInit, OnDestroy {
           style: 'itemTotal'
         }
       ];
-
-      this.listItem = this.item;
+      this.listItem.push(product);
+      // this.listItem = this.item;
       // this.listItem.push(this.item);
       // if (i === item.length - 1) {
       //   this.listItem = [...this.listItem];
@@ -366,7 +366,7 @@ export class SalesComponent implements OnInit, OnDestroy {
               ],
               // Items
               // Item 1
-              this.listItem,
+              ...this.listItem,
 
               // [
               //   [
