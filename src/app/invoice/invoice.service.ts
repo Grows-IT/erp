@@ -59,6 +59,8 @@ export class InvoiceService {
   }
 
   createInvoice(quotation: any, type: string) {
+    console.log(quotation);
+
     const data = {
       'quotationId': quotation.id,
       'customerId': quotation.customerId,

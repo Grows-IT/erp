@@ -78,10 +78,20 @@ export class SalesService {
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
             const allItem: SellItem[] = [];
-            const resItems = resData[key].items;
+            // const resItems = resData[key].items;
+            // resData[key].items.forEach(itemInput => {
+            //   const findItem = items.find(it => it.id === itemInput.itemId);
+            //   const item = new SellItem(findItem.name, itemInput.quantity);
+            //   allItem.push(item);
+            // });
+            // for (let i = 0; i < resData[key].items.length; i++) {
+            //   const findItem = items.find(it => it.id === resItems[i].itemId);
+            //   const item = new SellItem(findItem.name, resData[key].items[i].quantity);
+            //   allItem.push(item);
+            // }
+
             for (let i = 0; i < resData[key].items.length; i++) {
-              const findItem = items.find(it => it.id === resItems[i].itemId);
-              const item = new SellItem(findItem.name, resData[key].items[i].quantity);
+              const item = new SellItem(resData[key].items[i].itemId, resData[key].items[i].quantity);
               allItem.push(item);
             }
 
@@ -103,7 +113,6 @@ export class SalesService {
       }),
       tap(quotations => {
         console.log(quotations);
-
         this._quotations.next(quotations);
       })
     );
