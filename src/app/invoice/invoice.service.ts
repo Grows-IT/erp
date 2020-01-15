@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Invoice, SellItem } from './invoice.model';
 import { BehaviorSubject } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { tap, map, switchMap } from 'rxjs/operators';
 
 interface InvoiceResData {
   customerId: string;
@@ -59,8 +59,6 @@ export class InvoiceService {
   }
 
   createInvoice(quotation: any, type: string) {
-    console.log(quotation);
-
     const data = {
       'quotationId': quotation.id,
       'customerId': quotation.customerId,
@@ -73,8 +71,8 @@ export class InvoiceService {
     // return this.http.post(environment.siteUrl + 'items.json', )
     // return this.http.put(environment.siteUrl + '/invoices.json', data);
     return this.http.post<{ [key: string]: InvoiceResData }>(environment.siteUrl + '/invoices.json', data).pipe(
-      tap((key) => {
-        return this.http.patch(environment.siteUrl + '/quotation/' + quotation.id + '.json', { 'invoiceId': key.name }).subscribe();
+      switchMap((key) => {
+        return this.http.patch(environment.siteUrl + '/quotation/' + quotation.id + '.json', { 'invoiceId': key.name });
       })
     );
   }

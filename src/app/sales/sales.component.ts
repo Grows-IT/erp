@@ -13,7 +13,7 @@ import { Customer } from '../customer/customer.model';
 import { InvoiceService } from '../invoice/invoice.service';
 import { Invoice } from '../invoice/invoice.model';
 import { map } from 'rxjs-compat/operator/map';
-import { tap } from 'rxjs/operators';
+import { tap, switchMap } from 'rxjs/operators';
 import { ItemsService } from '../items/items.service';
 import { Item } from '../items/items.model';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -94,10 +94,8 @@ export class SalesComponent implements OnInit, OnDestroy {
       autoFocus: false,
     });
     dialogRef.afterClosed().pipe(
-      tap(() => {
-        this.salesService.getQuotation().subscribe();
-        this.cService.getAllCustomer().subscribe();
-      })
+      switchMap(() => this.salesService.getQuotation()),
+      switchMap(() => this.cService.getAllCustomer()),
     ).subscribe();
   }
 
@@ -111,9 +109,8 @@ export class SalesComponent implements OnInit, OnDestroy {
       data: item
     });
     dialogRef.afterClosed().pipe(
-      tap(() => {
-        this.salesService.getQuotation().subscribe();
-        this.cService.getAllCustomer().subscribe();
+      switchMap(() => {
+        return this.salesService.getQuotation();
       })
     ).subscribe();
   }
@@ -135,9 +132,8 @@ export class SalesComponent implements OnInit, OnDestroy {
 
   createInvoice(item) {
     this.invoiceService.createInvoice(item, 'mainInvoice').pipe(
-      tap(() => {
-        this.salesService.getQuotation();
-        this.invoiceService.getAllInvoice();
+      switchMap(() => {
+        return this.salesService.getQuotation();
       })
     ).subscribe();
   }
