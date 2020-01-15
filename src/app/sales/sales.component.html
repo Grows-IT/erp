@@ -67,7 +67,8 @@
     <th mat-header-cell *matHeaderCellDef> Create Invoice </th>
     <td mat-cell *matCellDef="let element">
       <button mat-button (click)="createInvoice(element)" [disabled]="element.invoiceId != ''">
-        <i class="material-icons"> add </i>
+        {{element.invoiceId}}
+        <i class="material-icons"> add</i>
       </button>
     </td>
   </ng-container>

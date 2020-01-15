@@ -72,7 +72,11 @@ export class InvoiceService {
     // }
     // return this.http.post(environment.siteUrl + 'items.json', )
     // return this.http.put(environment.siteUrl + '/invoices.json', data);
-    return this.http.post<{ [key: string]: InvoiceResData }>(environment.siteUrl + '/invoices.json', data);
+    return this.http.post<{ [key: string]: InvoiceResData }>(environment.siteUrl + '/invoices.json', data).pipe(
+      tap((key) => {
+        return this.http.patch(environment.siteUrl + '/quotation/' + quotation.id + '.json', { 'invoiceId': key.name }).subscribe();
+      })
+    );
   }
 
   deleteInvoice(invoiceId: string, quotationId: string) {

@@ -54,7 +54,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   customerSubscription: Subscription;
   customers: Customer[];
 
-  constructor(public dialog: MatDialog, private salesService: SalesService, private router: Router, private cService: CustomerService, private invService: InvoiceService, private itemsService: ItemsService) {
+  constructor(public dialog: MatDialog, private salesService: SalesService, private router: Router, private cService: CustomerService, private invoiceService: InvoiceService, private itemsService: ItemsService) {
   }
 
   ngOnInit() {
@@ -93,10 +93,12 @@ export class SalesComponent implements OnInit, OnDestroy {
       disableClose: true,
       autoFocus: false,
     });
-    dialogRef.afterClosed().subscribe(() => {
-      this.salesService.getQuotation().subscribe();
-      this.cService.getAllCustomer().subscribe();
-    });
+    dialogRef.afterClosed().pipe(
+      tap(() => {
+        this.salesService.getQuotation().subscribe();
+        this.cService.getAllCustomer().subscribe();
+      })
+    ).subscribe();
   }
 
   edit(item) {
@@ -108,10 +110,12 @@ export class SalesComponent implements OnInit, OnDestroy {
       autoFocus: false,
       data: item
     });
-    dialogRef.afterClosed().subscribe(() => {
-      this.salesService.getQuotation().subscribe();
-      this.cService.getAllCustomer().subscribe();
-    });
+    dialogRef.afterClosed().pipe(
+      tap(() => {
+        this.salesService.getQuotation().subscribe();
+        this.cService.getAllCustomer().subscribe();
+      })
+    ).subscribe();
   }
 
   showDetail(item) {
@@ -130,9 +134,10 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   createInvoice(item) {
-    this.invService.createInvoice(item, 'mainInvoice').pipe(
+    this.invoiceService.createInvoice(item, 'mainInvoice').pipe(
       tap(() => {
         this.salesService.getQuotation();
+        this.invoiceService.getAllInvoice();
       })
     ).subscribe();
   }

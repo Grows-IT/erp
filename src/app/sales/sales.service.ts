@@ -6,7 +6,6 @@ import { map, tap, switchMap, withLatestFrom } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { Quotation } from './sales.model';
 import { SellItem } from '../invoice/invoice.model';
-import { Item } from '../items/items.model';
 import { ItemsService } from '../items/items.service';
 
 interface QutotationResData {
