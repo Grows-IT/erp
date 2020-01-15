@@ -11,6 +11,8 @@ import { QuotationDialogComponent } from "../quotation-dialog/quotation-dialog.c
 import { InvoiceDetailComponent } from "src/app/invoice/invoice-detail/invoice-detail.component";
 import { CustomerService } from "./../../customer/customer.service";
 import { Customer } from "src/app/customer/customer.model";
+import { ItemsService } from 'src/app/items/items.service';
+import { Item } from 'src/app/items/items.model';
 
 @Component({
   selector: "app-quotationdetail",
@@ -26,6 +28,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
   listItem = [];
   product;
   isShow = false;
+  items: Item[];
 
   // tslint:disable-next-line: max-line-length
   constructor(
@@ -34,6 +37,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     private salesService: SalesService,
     private router: Router,
     private dialogRef: MatDialogRef<QuotationdetailComponent>,
+    private itemsService: ItemsService,
     @Inject(MAT_DIALOG_DATA) public data
   ) {}
 
@@ -44,6 +48,11 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
       this.customers = customers;
     });
 
+    this.itemsService.items.subscribe(items => {
+      this.items = items;
+    });
+    this.itemsService.getAllItems().subscribe();
+
     this.subscription = this.salesService.quotations.subscribe(quotations => {
       if (quotations === null) {
         return;
@@ -52,6 +61,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     });
     this.salesService.getQuotation().subscribe();
     this.cService.getAllCustomer().subscribe();
+    this.itemsService.getAllItems().subscribe();
   }
 
   ngOnDestroy(): void {
@@ -64,6 +74,14 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
       return null;
     }
     return customer;
+  }
+
+  getItems(itemId: string) {
+    const product = this.items.find(pro => pro.id === itemId);
+    if (!product) {
+      return null;
+    }
+    return product;
   }
 
   invoiceDetail(data) {

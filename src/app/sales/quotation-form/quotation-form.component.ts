@@ -74,11 +74,13 @@ export class QuotationFormComponent implements OnInit {
           // this.createItemFormGroup()
         ])
       });
+      console.log(this.data.items);
 
-      for (let a = 0; a < this.data.items.length; a++) {
+      for (let i = 0; i < this.data.items.length; i++) {
         const control = <FormArray>this.quotation.controls['allItem'];
-        control.push(this.viewItemFormGroup(a));
+        control.push(this.viewItemFormGroup(i));
       }
+
     } else {
       this.quotation = this.fb.group({
         customerName: ['', [Validators.required]],
@@ -101,12 +103,22 @@ export class QuotationFormComponent implements OnInit {
     return customer;
   }
 
-  private viewItemFormGroup(a) {
+  getItems(itemId: string) {
+    const product = this.items.find(pro => pro.id === itemId);
+    if (!product) {
+      return null;
+    }
+    return product;
+  }
+
+  private viewItemFormGroup(i) {
     this.data = this.dialogRef.componentInstance.data;
+    console.log(this.data.items[i].itemId);
+
     // if (this.data !== null && this.data !== undefined) {
     return this.fb.group({
-      item: [this.data.items[a].item, [Validators.required]],
-      quantity: [this.data.items[a].quantity, [Validators.required]],
+      item: [this.getItems(this.data.items[i].itemId).name, [Validators.required]],
+      quantity: [this.data.items[i].quantity, [Validators.required]],
     });
 
     // } else {
@@ -160,7 +172,7 @@ export class QuotationFormComponent implements OnInit {
   }
 
   onAddRow() {
-    const control = <FormArray>this.quotation.controls['allItem'];
+    const control = <FormArray> this.quotation.controls['allItem'];
     control.push(this.createItemFormGroup());
   }
 
