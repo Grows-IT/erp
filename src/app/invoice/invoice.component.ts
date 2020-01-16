@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { Customer } from '../customer/customer.model';
 import { CustomerService } from '../customer/customer.service';
-import { tap } from 'rxjs/operators';
+import { tap, switchMap } from 'rxjs/operators';
 import { Invoice } from './invoice.model';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -49,10 +49,15 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   expirationDate: any;
   expandedElement;
   expandedElement2;
+  quotations: Quotation[];
+  subscription: Subscription;
 
   constructor(private invoiceService: InvoiceService, private salesService: SalesService, private cService: CustomerService, public dialog: MatDialog) { }
 
   ngOnInit() {
+    this.subscription = this.salesService.quotations.subscribe(quotations => {
+      this.quotations = quotations;
+    });
     // this.salesService.quotations.subscribe(invoices => {
     //   if (invoices === null) {
     //     return;
@@ -71,31 +76,76 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     // this.customerSubscription = this.invoiceService.invoices.subscribe(invoices => {
     //   this.invoices = invoices;
     // });
-    // this.invoiceSubscription = this.invoiceService.invoices.subscribe(invoices => {
-    //   this.invoices = invoices;
-    // });
+    this.invoiceSubscription = this.invoiceService.invoices.subscribe(invoices => {
+      this.invoices = invoices;
+    });
 
     this.cService.getAllCustomer().subscribe();
     this.invoiceService.getAllInvoice().subscribe();
+    this.salesService.getQuotation().subscribe();
   }
 
   ngOnDestroy() {
     this.customerSubscription.unsubscribe();
   }
 
-  getCustomer(customerId: string) {
+  getCustomerAddress(customerId: string) {
+    if (!this.customers) {
+      return null;
+    }
     const customer = this.customers.find(cus => cus.id === customerId);
+    // console.log(customer);
+
     if (!customer) {
       return null;
     }
-    return customer;
+    return customer.address;
+  }
+
+  // getQuotation(quotationId: string) {
+  //   if (!this.quotations) {
+  //     return null;
+  //   }
+  //   const quotation = this.quotations.find(quo => quo.id === quotationId);
+  //   // console.log(allDate);
+
+  //   if (!quotation) {
+  //     return null;
+  //   }
+  //   return quotation;
+  // }
+
+  getDate(quotationId: string) {
+    if (!this.quotations) {
+      return null;
+    }
+    const quotation = this.quotations.find(quo => quo.id === quotationId);
+    // console.log(allDate);
+
+    if (!quotation) {
+      return null;
+    }
+    return quotation.date;
+  }
+
+  getExpirationDate(quotationId: string) {
+    if (!this.quotations) {
+      return null;
+    }
+    const quotation = this.quotations.find(quo => quo.id === quotationId);
+    // console.log(allDate);
+
+    if (!quotation) {
+      return null;
+    }
+    return quotation.expirationDate;
   }
 
 
   delete(invoiceId, quotationId) {
     this.invoiceService.deleteInvoice(invoiceId, quotationId).pipe(
-      tap(() => {
-        this.salesService.getQuotation().subscribe();
+      switchMap(() => {
+        return this.salesService.getQuotation();
       })
     ).subscribe();
   }

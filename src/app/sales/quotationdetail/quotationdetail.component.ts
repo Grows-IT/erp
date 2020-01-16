@@ -13,6 +13,7 @@ import { CustomerService } from "./../../customer/customer.service";
 import { Customer } from "src/app/customer/customer.model";
 import { ItemsService } from 'src/app/items/items.service';
 import { Item } from 'src/app/items/items.model';
+import { FormArray } from '@angular/forms';
 
 @Component({
   selector: "app-quotationdetail",
@@ -29,6 +30,8 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
   product;
   isShow = false;
   items: Item[];
+  total: number;
+  subTotal: number;
 
   // tslint:disable-next-line: max-line-length
   constructor(
@@ -95,6 +98,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     });
   }
 
+
   delete(id: string) {
     this.salesService.deleteQuotation(id).subscribe();
     this.router.navigate(["/sales"]);
@@ -121,13 +125,14 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
   }
 
   getListItem(items) {
+    this.total = 0;
     console.log(items.length);
     const products = [];
     for (let i = 0; i < items.length; i++) {
       const product = [
         [
           {
-            text: items[i].item,
+            text: this.getItems(items[i].itemId).name,
             style: "itemTitle"
           },
           {
@@ -140,7 +145,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
           style: "itemNumber"
         },
         {
-          text: "$999.99",
+          text: this.getItems(items[i].itemId).price,
           style: "itemNumber"
         },
         {
@@ -152,11 +157,12 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
           style: "itemNumber"
         },
         {
-          text: "$999.99",
+          text: this.total = (items[i].quantity * this.getItems(items[i].itemId).price),
           style: "itemTotal"
         }
       ];
       this.listItem.push(product);
+      this.subTotal += this.total;
       // this.product = [];
       // this.listItem = this.product;
       // this.listItem.push(this.product);
@@ -170,6 +176,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
   }
 
   openPdf(item: any) {
+    this.subTotal = 0;
     console.log(item);
     this.getListItem(item.items);
     // console.log(this.product);
@@ -274,7 +281,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
               style: "quotationBillingDetails"
             },
             {
-              text: "Client Name \n Client Company",
+              text: this.getCustomer(item.customerId).name,
               style: "quotationBillingDetails"
             }
           ]
@@ -433,17 +440,17 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
                   style: "itemsFooterSubTitle"
                 },
                 {
-                  text: "$2000.00",
+                  text: this.subTotal,
                   style: "itemsFooterSubValue"
                 }
               ],
               [
                 {
-                  text: "Tax 21%",
+                  text: "Tax 7%",
                   style: "itemsFooterSubTitle"
                 },
                 {
-                  text: "$523.13",
+                  text: (this.subTotal * 7) / 100,
                   style: "itemsFooterSubValue"
                 }
               ],
@@ -453,7 +460,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
                   style: "itemsFooterTotalTitle"
                 },
                 {
-                  text: "$2523.93",
+                  text: this.subTotal + ((this.subTotal * 7) / 100),
                   style: "itemsFooterTotalValue"
                 }
               ]

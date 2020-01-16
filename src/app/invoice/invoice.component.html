@@ -7,22 +7,23 @@
   <ng-container matColumnDef="no">
     <th mat-header-cell *matHeaderCellDef> NO. </th>
     <td mat-cell *matCellDef="let element"><button mat-button (click)="openDetail(element.id)">
-        {{element.invoiceId | cutString}} </button></td>
+        <!-- {{element.invoiceId | cutString}} </button></td> -->
+        {{element.id}} </button></td>
   </ng-container>
 
   <ng-container matColumnDef="addressTo">
     <th mat-header-cell *matHeaderCellDef> Address To </th>
-    <td mat-cell *matCellDef="let element"> {{getCustomer(element.customerId).address}} </td>
+    <td mat-cell *matCellDef="let element"> {{getCustomerAddress(element.customerId)}} </td>
   </ng-container>
 
   <ng-container matColumnDef="date">
     <th mat-header-cell *matHeaderCellDef> Date </th>
-    <td mat-cell *matCellDef="let element"> {{element.date | date}} </td>
+    <td mat-cell *matCellDef="let element">{{getDate(element.quotationId) | date}} </td>
   </ng-container>
 
   <ng-container matColumnDef="expirationDate">
     <th mat-header-cell *matHeaderCellDef> Expiration date </th>
-    <td mat-cell *matCellDef="let element"> {{element.expirationDate | date}} </td>
+    <td mat-cell *matCellDef="let element"> {{getExpirationDate(element.quotationId) | date}} </td>
   </ng-container>
 
   <!-- <ng-container matColumnDef="quantity">

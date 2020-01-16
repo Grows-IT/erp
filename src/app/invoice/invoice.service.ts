@@ -1,16 +1,20 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Invoice, SellItem } from './invoice.model';
+import { Invoice, SellItem, InvoiceGroup } from './invoice.model';
 import { BehaviorSubject } from 'rxjs';
-import { tap, map, switchMap } from 'rxjs/operators';
+import { tap, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { ItemsService } from '../items/items.service';
+import { Quotation } from '../sales/sales.model';
 
 interface InvoiceResData {
-  customerId: string;
   id: string;
-  item: SellItem;
   quotationId: string;
+  customerId: string;
+  type: string;
+  items: SellItem[];
   subInvoice: string;
+  group?: InvoiceGroup[];
 }
 
 @Injectable({
@@ -24,15 +28,44 @@ export class InvoiceService {
     return this._invoice.asObservable();
   }
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private itemsService: ItemsService) {
   }
 
   // get all แล้วก็ส่ง id sub invoice ให้ถูก
 
   getAllInvoice() {
     return this.http.get<{ [key: string]: InvoiceResData }>(environment.siteUrl + '/invoices.json').pipe(
-      map(resData => {
-        console.log(resData);
+      withLatestFrom(this.itemsService.items),
+      map(([resData, items]) => {
+        const invoices: Invoice[] = [];
+        for (const key in resData) {
+          if (resData.hasOwnProperty(key)) {
+            const allItem: SellItem[] = [];
+            for (let i = 0; i < resData[key].items.length; i++) {
+              const item = new SellItem(resData[key].items[i].itemId, resData[key].items[i].quantity);
+              allItem.push(item);
+            }
+            const invoice = new Invoice(
+              key,
+              resData[key].quotationId,
+              resData[key].customerId,
+              resData[key].type,
+              allItem,
+              null
+            );
+            invoices.push(invoice);
+          }
+        }
+        return invoices;
+      }),
+      tap(invoices => {
+        // console.log(invoices);
+        this._invoice.next(invoices);
+      })
+    );
+
+      // map(resData => {
+      //   console.log(resData);
 
         // const invoices: Invoice[] = [];
         // for (const key in resData) {
@@ -49,13 +82,14 @@ export class InvoiceService {
         // }
         // console.log(invoices);
         // return invoices;
-      }),
-      tap(invoices => {
-        console.log(invoices);
+    //   }),
+    //   tap(invoices => {
+    //     console.log(invoices);
 
-        // this._invoice.next(invoices);
-      })
-    );
+    //     // this._invoice.next(invoices);
+    //   })
+    // );
+  //     )
   }
 
   createInvoice(quotation: any, type: string) {
@@ -79,8 +113,8 @@ export class InvoiceService {
 
   deleteInvoice(invoiceId: string, quotationId: string) {
     return this.http.delete(environment.siteUrl + '/invoices/' + invoiceId + '.json').pipe(
-      map(() => {
-        return this.http.patch(environment.siteUrl + '/quotation/' + quotationId + '.json', { invoiceId: '' }).subscribe();
+      switchMap(() => {
+        return this.http.patch(environment.siteUrl + '/quotation/' + quotationId + '.json', { invoiceId: '' });
       })
     );
   }

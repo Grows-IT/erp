@@ -13,7 +13,7 @@
 
   <ng-container matColumnDef="customerName">
     <th mat-header-cell *matHeaderCellDef> Customer name</th>
-    <td mat-cell *matCellDef="let element"> {{ getCustomerName(element.customerId) }} </td>
+    <td mat-cell *matCellDef="let element"> {{ getCustomer(element.customerId).name }} </td>
   </ng-container>
 
   <ng-container matColumnDef="date">

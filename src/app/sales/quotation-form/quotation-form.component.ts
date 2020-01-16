@@ -188,7 +188,7 @@ export class QuotationFormComponent implements OnInit {
     } else if (status === 1) {
       this.salesService.updateQuotation(this.quotation.value, this.data.id).subscribe();
       console.log(this.quotation.value);
-
     }
+    this.dialogRef.close();
   }
 }

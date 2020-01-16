@@ -8,7 +8,7 @@ import { Quotation } from './sales.model';
 import { SellItem } from '../invoice/invoice.model';
 import { ItemsService } from '../items/items.service';
 
-interface QutotationResData {
+interface QuototationResData {
   addressTo: string;
   customerId: string;
   date: Date;
@@ -70,7 +70,7 @@ export class SalesService {
   }
 
   getQuotation() {
-    return this.http.get<{ [key: string]: QutotationResData }>(environment.siteUrl + '/quotation.json').pipe(
+    return this.http.get<{ [key: string]: QuototationResData }>(environment.siteUrl + '/quotation.json').pipe(
       withLatestFrom(this.itemsService.items),
       map(([resData, items]) => {
         const quotations: Quotation[] = [];
@@ -99,7 +99,7 @@ export class SalesService {
         return quotations;
       }),
       tap(quotations => {
-        console.log(quotations);
+        // console.log(quotations);
         this._quotations.next(quotations);
       })
     );
@@ -110,13 +110,40 @@ export class SalesService {
   }
 
   updateQuotation(quotation: any, id: string) {
-    const data = {
-      addressTo: quotation.addressTo,
-      date: quotation.date,
-      expirationDate: quotation.expirationDate,
-      item: quotation.allItem,
-      quantity: quotation.quantity
+    let data;
+
+    const customer = {
+      name: quotation.customerName,
+      address: quotation.addressTo
     };
-    return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
+    return this.http.patch<any>(environment.siteUrl + '/customer.json', customer).pipe(
+      withLatestFrom(this.itemsService.items),
+      switchMap(([res, items]) => {
+        const sellItems: SellItem[] = [];
+        quotation.allItem.forEach(itemInput => {
+          const item = items.find(it => it.name === itemInput.item);
+          const sellItem = new SellItem(item.id, itemInput.quantity);
+          sellItems.push(sellItem);
+        });
+        data = {
+          totalPrice: quotation.totalPrice,
+          // by: quotation.by,
+          customerId: res.name,
+          date: quotation.date,
+          expirationDate: quotation.expirationDate,
+          items: sellItems,
+          invoiceId: ''
+        };
+        return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
+      })
+    );
+  //   const data = {
+  //     addressTo: quotation.addressTo,
+  //     date: quotation.date,
+  //     expirationDate: quotation.expirationDate,
+  //     item: quotation.allItem,
+  //     quantity: quotation.quantity
+  //   };
+  //   return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
   }
 }
