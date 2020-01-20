@@ -29,91 +29,91 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   id = this.data;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private cService: CustomerService,
-private invoiceService: InvoiceService, private fb: FormBuilder) {
-this.addForm = new FormGroup({
-  invoiceName: new FormControl(null, [Validators.required]),
-  row: this.fb.array([
+    private invoiceService: InvoiceService, private fb: FormBuilder) {
+    this.addForm = new FormGroup({
+      invoiceName: new FormControl(null, [Validators.required]),
+      row: this.fb.array([
 
-  ])
-});
-this.rows = this.fb.array([]);
-this.isShowing = false;
-}
+      ])
+    });
+    this.rows = this.fb.array([]);
+    this.isShowing = false;
+  }
 
-ngOnInit() {
+  ngOnInit() {
 
-this.addForm.addControl('rows', this.rows);
+    this.addForm.addControl('rows', this.rows);
 
-this.customerSubscription = this.cService.customers.subscribe(customers => {
-  this.customers = customers;
-});
+    this.customerSubscription = this.cService.customers.subscribe(customers => {
+      this.customers = customers;
+    });
 
-this.invoiceSubscription = this.invoiceService.invoices.subscribe( invoices => {
- if (!invoices === null) {
-   return;
- }
- this.invoices = invoices.find(i => i.id === this.data);
-});
-console.log(this.invoices);
-this.cService.getAllCustomer().subscribe();
-this.invoiceService.getAllInvoice().subscribe();
-
-
-}
-
-ngOnDestroy(): void {
-this.customerSubscription.unsubscribe();
-}
+    this.invoiceSubscription = this.invoiceService.invoices.subscribe(invoices => {
+      if (!invoices === null) {
+        return;
+      }
+      this.invoices = invoices.find(i => i.id === this.data);
+    });
+    console.log(this.invoices);
+    this.cService.getAllCustomer().subscribe();
+    this.invoiceService.getAllInvoice().subscribe();
 
 
-getCustomer(customerId: string) {
-const customer = this.customers.find(cus => cus.id === customerId);
-if (!customer) {
-  return null;
-}
-return customer;
-}
+  }
 
-toggleShoing() {
-this.addForm.reset();
-this.rows.clear();
-this.isShowing = !this.isShowing;
-}
+  ngOnDestroy(): void {
+    this.customerSubscription.unsubscribe();
+  }
 
-openPdf(id) {
 
-}
+  getCustomer(customerId: string) {
+    const customer = this.customers.find(cus => cus.id === customerId);
+    if (!customer) {
+      return null;
+    }
+    return customer;
+  }
 
-onAddRow() {
-this.rows.push(this.createItemFormGroup());
-}
+  toggleShoing() {
+    this.addForm.reset();
+    this.rows.clear();
+    this.isShowing = !this.isShowing;
+  }
 
-onRemoveRow(rowIndex: number) {
-this.rows.removeAt(rowIndex);
-}
+  openPdf(id) {
 
-createItemFormGroup(): FormGroup {
-return new FormGroup({
-  name: new FormControl(null, [Validators.required]),
-  quantity: new FormControl(null, [Validators.required]),
-  price: new FormControl(null, [Validators.required])
-});
-}
+  }
 
-onConfirmClick() {
-if (!this.rows.dirty) {
-  return;
-}
+  onAddRow() {
+    this.rows.push(this.createItemFormGroup());
+  }
 
-const data = {
-  invoiceName: this.addForm.value.invoiceName,
-  row: this.rows.value
-};
+  onRemoveRow(rowIndex: number) {
+    this.rows.removeAt(rowIndex);
+  }
 
-this.invoiceService.addSubInvoice(data, this.id).subscribe();
-this.subInvoice.push(data);
-this.toggleShoing();
-}
+  createItemFormGroup(): FormGroup {
+    return new FormGroup({
+      name: new FormControl(null, [Validators.required]),
+      quantity: new FormControl(null, [Validators.required]),
+      price: new FormControl(null, [Validators.required])
+    });
+  }
+
+  onConfirmClick() {
+    if (!this.rows.dirty) {
+      return;
+    }
+
+    const data = {
+      invoiceName: this.addForm.value.invoiceName,
+      row: this.rows.value
+    };
+
+    this.invoiceService.addSubInvoice(data, this.id).subscribe();
+    this.subInvoice.push(data);
+    this.toggleShoing();
+  }
 }
 
 

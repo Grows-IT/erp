@@ -59,29 +59,29 @@ export class InvoiceService {
         return invoices;
       }),
       tap(invoices => {
-        // console.log(invoices);
+        console.log(invoices);
         this._invoice.next(invoices);
       })
     );
 
-      // map(resData => {
-      //   console.log(resData);
+    // map(resData => {
+    //   console.log(resData);
 
-        // const invoices: Invoice[] = [];
-        // for (const key in resData) {
-        //   if (resData.hasOwnProperty(key)) {
-        //     const item = new SellItem(resData[key].item, resData[key].quantity);
-        //     const invoice = new Invoice(
-        //       key,
-        //       resData[key].quotationId,
-        //       resData[key].customerId,
-        //       resData[key].item,
-        //     );
-        //     invoices.push(invoice);
-        //   }
-        // }
-        // console.log(invoices);
-        // return invoices;
+    // const invoices: Invoice[] = [];
+    // for (const key in resData) {
+    //   if (resData.hasOwnProperty(key)) {
+    //     const item = new SellItem(resData[key].item, resData[key].quantity);
+    //     const invoice = new Invoice(
+    //       key,
+    //       resData[key].quotationId,
+    //       resData[key].customerId,
+    //       resData[key].item,
+    //     );
+    //     invoices.push(invoice);
+    //   }
+    // }
+    // console.log(invoices);
+    // return invoices;
     //   }),
     //   tap(invoices => {
     //     console.log(invoices);
@@ -89,7 +89,7 @@ export class InvoiceService {
     //     // this._invoice.next(invoices);
     //   })
     // );
-  //     )
+    //     )
   }
 
   createInvoice(quotation: any, type: string) {
@@ -99,11 +99,7 @@ export class InvoiceService {
       'items': quotation.items,
       'type': type,
     };
-    // const item = {
-    //   items: new SellItem(quotation.items)
-    // }
-    // return this.http.post(environment.siteUrl + 'items.json', )
-    // return this.http.put(environment.siteUrl + '/invoices.json', data);
+
     return this.http.post<{ [key: string]: InvoiceResData }>(environment.siteUrl + '/invoices.json', data).pipe(
       switchMap((key) => {
         return this.http.patch(environment.siteUrl + '/quotation/' + quotation.id + '.json', { 'invoiceId': key.name });
@@ -132,6 +128,10 @@ export class InvoiceService {
 
     // return this.http.put(environment.siteUrl + '/invoices/' + id + '/subInvoices/.json', [data]);
     return this.http.post(environment.siteUrl + '/invoices/' + id + '/subInvoices/.json', data);
+  }
+
+  addGroupName() {
+
   }
 
 }

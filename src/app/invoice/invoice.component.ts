@@ -2,11 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { InvoiceService } from './invoice.service';
 import { SalesService } from '../sales/sales.service';
 import { Quotation } from '../sales/sales.model';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { trigger, state, transition, style, animate } from '@angular/animations';
-import { Router } from '@angular/router';
-import { InvoiceDetailComponent } from './invoice-detail/invoice-detail.component';
 import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { Customer } from '../customer/customer.model';
@@ -16,6 +12,8 @@ import { Invoice } from './invoice.model';
 import { InvoicegroupComponent } from './invoicegroup/invoicegroup.component';
 import { Item } from '../items/items.model';
 import { ItemsService } from '../items/items.service';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface InvoiceList {
@@ -40,11 +38,12 @@ export interface InvoiceList {
 })
 export class InvoiceComponent implements OnInit, OnDestroy {
   // invoices: Quotation[];
-  invoicesCol: string[] = ['no', 'groups', 'customerName' , 'addressTo', 'date', 'expirationDate', 'pdf', 'delete'];
+  invoicesCol: string[] = ['no', 'groups', 'customerName', 'addressTo', 'date', 'expirationDate', 'pdf', 'delete'];
   // invoicesCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'item', 'quantity', 'pdf', 'delete'];
   customerSubscription: Subscription;
   invoiceSubscription: Subscription;
   itemSubscription: Subscription;
+  quotationSubscription: Subscription;
   customers: Customer[];
   invoices: Invoice[];
   listItem = [];
@@ -52,37 +51,21 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   item: any;
   date: any;
   expirationDate: any;
-  expandedElement;
-  expandedElement2;
   quotations: Quotation[];
-  subscription: Subscription;
   total: number;
   subTotal: number;
 
   constructor(private invoiceService: InvoiceService, private salesService: SalesService, private cService: CustomerService, public dialog: MatDialog, private itemsService: ItemsService) { }
 
   ngOnInit() {
-    this.subscription = this.salesService.quotations.subscribe(quotations => {
+    this.quotationSubscription = this.salesService.quotations.subscribe(quotations => {
       this.quotations = quotations;
     });
-    // this.salesService.quotations.subscribe(invoices => {
-    //   if (invoices === null) {
-    //     return;
-    //   }
-
-    //   this.invoices = invoices.filter(val => {
-    //     return val.invoiceId;
-    //   });
-    // });
-    // this.salesService.getQuotation().subscribe();
 
     this.customerSubscription = this.cService.customers.subscribe(customers => {
       this.customers = customers;
     });
 
-    // this.customerSubscription = this.invoiceService.invoices.subscribe(invoices => {
-    //   this.invoices = invoices;
-    // });
     this.invoiceSubscription = this.invoiceService.invoices.subscribe(invoices => {
       this.invoices = invoices;
     });
@@ -99,6 +82,9 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.customerSubscription.unsubscribe();
+    this.invoiceSubscription.unsubscribe();
+    this.quotationSubscription.unsubscribe();
+    this.itemSubscription.unsubscribe();
   }
 
   getCustomerAddress(customerId: string) {
@@ -106,7 +92,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       return null;
     }
     const customer = this.customers.find(cus => cus.id === customerId);
-    // console.log(customer);
 
     if (!customer) {
       return null;
@@ -119,7 +104,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       return null;
     }
     const customer = this.customers.find(cus => cus.id === customerId);
-    // console.log(customer);
 
     if (!customer) {
       return null;
@@ -127,13 +111,14 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     return customer.name;
   }
 
-  getItems(itemId: string){
+  getItems(itemId: string) {
     const item = this.items.find(it => it.id === itemId);
-    if(!item){
+    if (!item) {
       return null;
     }
     return item;
   }
+
   // getQuotation(quotationId: string) {
   //   if (!this.quotations) {
   //     return null;
@@ -177,7 +162,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   delete(invoiceId, quotationId) {
     this.invoiceService.deleteInvoice(invoiceId, quotationId).pipe(
       switchMap(() => {
-        return this.salesService.getQuotation();
+        return this.invoiceService.getAllInvoice();
       })
     ).subscribe();
   }
@@ -191,7 +176,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       autoFocus: false,
       data: id
     });
-    // this.router.navigate(['/invoice/' + id]);
   }
 
   getListItem(items) {

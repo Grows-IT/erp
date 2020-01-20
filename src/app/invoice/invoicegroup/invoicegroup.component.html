@@ -20,12 +20,13 @@
         <mat-label>Group Name : </mat-label>
         <input matInput formControlName="groupName" required />
       </mat-form-field>
-      <button mat-raised-button color="primary" class="content">add</button>
+      <button mat-raised-button color="primary" class="content" [disabled]="addGroup.invalid" (click)="addGroupName(addGroup)">add</button>
     </div>
   </div>
 </div>
 
 <mat-list class="content">
   <mat-card (click)="onClickopendetail(invoices.id)">
-  <h4>Group 1</h4></mat-card>
+    <h4>Group 1</h4>
+  </mat-card>
 </mat-list>

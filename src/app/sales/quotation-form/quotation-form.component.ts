@@ -9,6 +9,7 @@ import { CustomerService } from 'src/app/customer/customer.service';
 import { Customer } from 'src/app/customer/customer.model';
 import { Subscription } from 'rxjs';
 import { registerLocaleData } from '@angular/common';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-quotation-form',
@@ -186,9 +187,13 @@ export class QuotationFormComponent implements OnInit {
   onConfirmClick(status) {
     if (status === 0) {
       console.log(this.quotation.value);
-      this.salesService.addQuotation(this.quotation.value).subscribe();
+      this.salesService.addQuotation(this.quotation.value).pipe(
+        switchMap(() => this.salesService.getQuotation())
+      ).subscribe();
     } else if (status === 1) {
-      this.salesService.updateQuotation(this.quotation.value, this.data.id).subscribe();
+      this.salesService.updateQuotation(this.quotation.value, this.data.id).pipe(
+        switchMap(() => this.salesService.getQuotation())
+      ).subscribe();
       console.log(this.quotation.value);
     }
     this.dialogRef.close();

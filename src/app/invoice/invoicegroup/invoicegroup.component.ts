@@ -25,19 +25,20 @@ export class InvoicegroupComponent implements OnInit {
     this.addGroup = new FormGroup({
       groupName: new FormControl(null, [Validators.required]),
     });
-   }
+  }
 
   ngOnInit() {
     this.customerSubscription = this.cService.customers.subscribe(customers => {
       this.customers = customers;
     });
 
-    this.invoiceSubscription = this.invoiceService.invoices.subscribe( invoices => {
-      if(!invoices === null){
+    this.invoiceSubscription = this.invoiceService.invoices.subscribe(invoices => {
+      if (!invoices === null) {
         return;
       }
       this.invoices = invoices.find(i => i.id === this.data);
-     });
+    });
+
     this.invoiceService.getAllInvoice().subscribe();
     this.cService.getAllCustomer().subscribe();
   }
@@ -48,28 +49,25 @@ export class InvoicegroupComponent implements OnInit {
       return null;
     }
     return customer;
-    }
+  }
 
-    onClickadd(){
+  onClickadd() {
 
-    }
+  }
 
-    onClickopendetail(id){
-      const dialogRef = this.dialog.open(InvoiceDetailComponent, {
-        panelClass: 'nopadding-dialog',
-        width: '60vw',
-        height: '70vh',
-        disableClose: true,
-        autoFocus: false,
-        data: id
-      });
-    }
+  onClickopendetail(id) {
+    const dialogRef = this.dialog.open(InvoiceDetailComponent, {
+      panelClass: 'nopadding-dialog',
+      width: '60vw',
+      height: '70vh',
+      disableClose: true,
+      autoFocus: false,
+      data: id
+    });
+  }
 
-    onConfirm() {
-      const data = {
-        groupName: this.addGroup.value.groupName
-      };
-      // this.invoiceService.addSubInvoice(data, this.id).subscribe();
-    }
-
+  addGroupName(val) {
+    console.log(val);
+    return this.http.post()
+  }
 }
