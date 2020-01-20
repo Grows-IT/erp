@@ -9,6 +9,7 @@ import { InvoiceComponent } from './invoice/invoice.component';
 import { SigninGuard } from './signin/signin.guard';
 import { InvoiceDetailComponent } from './invoice/invoice-detail/invoice-detail.component';
 import { QuotationdetailComponent } from './sales/quotationdetail/quotationdetail.component';
+import { InvoicegroupComponent } from './invoice/invoicegroup/invoicegroup.component';
 
 const routes: Routes = [
   {
@@ -45,7 +46,7 @@ const routes: Routes = [
       component: InvoiceComponent,
       canActivate: [SigninGuard],
     }, {
-      path: ':id',
+      path: 'invoicegroup/:id',
       component: InvoiceDetailComponent,
     }]
   },
@@ -53,7 +54,12 @@ const routes: Routes = [
     path: 'quotationdetail/:id',
     component: QuotationdetailComponent,
     // canActivate: [SigninGuard],
+  },
+  {
+    path: ':id',
+    component: InvoicegroupComponent,
   }
+
 ];
 
 @NgModule({

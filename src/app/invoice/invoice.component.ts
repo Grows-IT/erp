@@ -13,6 +13,9 @@ import { Customer } from '../customer/customer.model';
 import { CustomerService } from '../customer/customer.service';
 import { tap, switchMap } from 'rxjs/operators';
 import { Invoice } from './invoice.model';
+import { InvoicegroupComponent } from './invoicegroup/invoicegroup.component';
+import { Item } from '../items/items.model';
+import { ItemsService } from '../items/items.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface InvoiceList {
@@ -37,13 +40,15 @@ export interface InvoiceList {
 })
 export class InvoiceComponent implements OnInit, OnDestroy {
   // invoices: Quotation[];
-  invoicesCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'pdf', 'delete'];
+  invoicesCol: string[] = ['no', 'groups', 'customerName' , 'addressTo', 'date', 'expirationDate', 'pdf', 'delete'];
   // invoicesCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'item', 'quantity', 'pdf', 'delete'];
   customerSubscription: Subscription;
   invoiceSubscription: Subscription;
+  itemSubscription: Subscription;
   customers: Customer[];
   invoices: Invoice[];
   listItem = [];
+  items: Item[];
   item: any;
   date: any;
   expirationDate: any;
@@ -51,8 +56,10 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   expandedElement2;
   quotations: Quotation[];
   subscription: Subscription;
+  total: number;
+  subTotal: number;
 
-  constructor(private invoiceService: InvoiceService, private salesService: SalesService, private cService: CustomerService, public dialog: MatDialog) { }
+  constructor(private invoiceService: InvoiceService, private salesService: SalesService, private cService: CustomerService, public dialog: MatDialog, private itemsService: ItemsService) { }
 
   ngOnInit() {
     this.subscription = this.salesService.quotations.subscribe(quotations => {
@@ -80,6 +87,11 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       this.invoices = invoices;
     });
 
+    this.itemSubscription = this.itemsService.items.subscribe(items => {
+      this.items = items;
+    });
+
+    this.itemsService.getAllItems().subscribe();
     this.cService.getAllCustomer().subscribe();
     this.invoiceService.getAllInvoice().subscribe();
     this.salesService.getQuotation().subscribe();
@@ -102,6 +114,26 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     return customer.address;
   }
 
+  getCustomerName(customerId: string) {
+    if (!this.customers) {
+      return null;
+    }
+    const customer = this.customers.find(cus => cus.id === customerId);
+    // console.log(customer);
+
+    if (!customer) {
+      return null;
+    }
+    return customer.name;
+  }
+
+  getItems(itemId: string){
+    const item = this.items.find(it => it.id === itemId);
+    if(!item){
+      return null;
+    }
+    return item;
+  }
   // getQuotation(quotationId: string) {
   //   if (!this.quotations) {
   //     return null;
@@ -151,7 +183,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   openDetail(id) {
-    const dialogRef = this.dialog.open(InvoiceDetailComponent, {
+    const dialogRef = this.dialog.open(InvoicegroupComponent, {
       panelClass: 'nopadding-dialog',
       width: '60vw',
       height: '70vh',
@@ -163,11 +195,12 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   getListItem(items) {
+    this.total = 0;
     for (let i = 0; i < items.length; i++) {
       const product = [
         [
           {
-            text: items[i].item,
+            text: this.getItems(items[i].itemId).name,
             style: 'itemTitle'
           },
           {
@@ -180,7 +213,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
           style: 'itemNumber'
         },
         {
-          text: '$999.99',
+          text: this.getItems(items[i].itemId).price,
           style: 'itemNumber'
         },
         {
@@ -192,12 +225,13 @@ export class InvoiceComponent implements OnInit, OnDestroy {
           style: 'itemNumber'
         },
         {
-          text: '$999.99',
+          text: this.total = (items[i].quantity * this.getItems(items[i].itemId).price),
           style: 'itemTotal'
         }
       ];
 
       this.listItem.push(product);
+      this.subTotal += this.total;
       // this.listItem.push(this.item);
       // if (i === item.length - 1) {
       //   this.listItem = [...this.listItem];
@@ -213,6 +247,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   opnePdf(item: any) {
+    this.subTotal = 0;
     console.log(item);
     this.formatDate(new Date(item.date), new Date(item.expirationDate));
     this.getListItem(item.items);
@@ -272,7 +307,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
                         width: '*'
                       },
                       {
-                        text: this.date,
+                        text: this.getDate(item.quotationId),
                         style: 'invoiceSubValue',
                         width: 100
                       }
@@ -286,7 +321,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
                         width: '*'
                       },
                       {
-                        text: this.expirationDate,
+                        text: this.getExpirationDate(item.quotationId),
                         style: 'invoiceSubValue',
                         width: 100
                       }
@@ -320,7 +355,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
               style: 'invoiceBillingDetails'
             },
             {
-              text: 'Client Name \n Client Company',
+              text: this.getCustomerName(item.customerId),
               style: 'invoiceBillingDetails'
             },
           ]
@@ -346,7 +381,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
               style: 'invoiceBillingAddress'
             },
             {
-              text: item.addressTo,
+              text: this.getCustomerAddress(item.customerId),
               style: 'invoiceBillingAddress'
             },
           ]
@@ -481,17 +516,17 @@ export class InvoiceComponent implements OnInit, OnDestroy {
                   style: 'itemsFooterSubTitle'
                 },
                 {
-                  text: '$2000.00',
+                  text: this.subTotal,
                   style: 'itemsFooterSubValue'
                 }
               ],
               [
                 {
-                  text: 'Tax 21%',
+                  text: 'Tax 7%',
                   style: 'itemsFooterSubTitle'
                 },
                 {
-                  text: '$523.13',
+                  text: (this.subTotal * 7) / 100,
                   style: 'itemsFooterSubValue'
                 }
               ],
@@ -501,7 +536,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
                   style: 'itemsFooterTotalTitle'
                 },
                 {
-                  text: '$2523.93',
+                  text: this.subTotal + ((this.subTotal * 7) / 100),
                   style: 'itemsFooterTotalValue'
                 }
               ],

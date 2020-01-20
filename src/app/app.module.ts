@@ -31,6 +31,7 @@ import { InvoiceDetailComponent } from './invoice/invoice-detail/invoice-detail.
 import { RouterModule } from '@angular/router';
 
 import { QuotationdetailComponent } from './sales/quotationdetail/quotationdetail.component';
+import { InvoicegroupComponent } from './invoice/invoicegroup/invoicegroup.component';
 
 const materialComponent = [
   MatGridListModule,
@@ -75,6 +76,7 @@ const materialComponent = [
     CutStringPipe,
     InvoiceDetailComponent,
     QuotationdetailComponent,
+    InvoicegroupComponent,
   ],
   imports: [
     BrowserModule,

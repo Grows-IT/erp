@@ -8,6 +8,7 @@ import { Item } from 'src/app/items/items.model';
 import { CustomerService } from 'src/app/customer/customer.service';
 import { Customer } from 'src/app/customer/customer.model';
 import { Subscription } from 'rxjs';
+import { registerLocaleData } from '@angular/common';
 
 @Component({
   selector: 'app-quotation-form',
@@ -21,6 +22,7 @@ export class QuotationFormComponent implements OnInit {
   quotation: FormGroup;
   items: Item[];
   itemName: string;
+  Total: number;
   // rows: FormArray;
 
   // quotation = new FormGroup({

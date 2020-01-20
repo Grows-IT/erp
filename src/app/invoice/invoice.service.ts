@@ -114,7 +114,7 @@ export class InvoiceService {
   deleteInvoice(invoiceId: string, quotationId: string) {
     return this.http.delete(environment.siteUrl + '/invoices/' + invoiceId + '.json').pipe(
       switchMap(() => {
-        return this.http.patch(environment.siteUrl + '/quotation/' + quotationId + '.json', { invoiceId: '' });
+        return this.http.patch(environment.siteUrl + '/quotation/' + quotationId + '.json', { 'invoiceId': '' });
       })
     );
   }

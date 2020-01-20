@@ -1,7 +1,7 @@
 <mat-spinner *ngIf="!invoices"></mat-spinner>
 <div *ngIf="invoices">
   <mat-toolbar class="allbg">
-    <span style="color: white;">Quotation : {{data}}</span>
+    <span style="color: white;">Invoice : {{data}}</span>
     <span class="space"></span>
     <button mat-button mat-dialog-close tabindex="-1" style="color: white;">
       <i class="material-icons"> close </i>
@@ -13,20 +13,20 @@
   <!-- <h1>Quotation : {{mainInvoices.quotationId}}</h1> -->
   <h2>Name : {{getCustomer(invoices.customerId).name}} ,
     Address : {{getCustomer(invoices.customerId).address}}</h2>
-  <!-- <button mat-raised-button color="primary" style="margin-bottom: 10px;" (click)="showItem()">Add group</button> -->
+  <button mat-raised-button color="primary" style="margin-bottom: 10px;" (click)="toggleShoing()">Add invoice</button>
   <div>
   <div align="center">
-  <button mat-raised-button color="primary" (click)="toggleShoing()" >Add invoice</button>
+  <!-- <button mat-raised-button color="primary" (click)="toggleShoing()" >Add invoice</button> -->
   </div>
   <br />
   <mat-card *ngIf="isShowing" style="margin-bottom: 10px;">
     <div [formGroup]="addForm">
       <mat-form-field appearance="outline">
-        <mat-label>Group Name : </mat-label>
-        <input matInput formControlName="groupName" required>
+        <mat-label>Invoice Name : </mat-label>
+        <input matInput formControlName="invoiceName" required>
       </mat-form-field>
     </div>
-    <!-- <div class="col-md-2" [formGroup]="rows">
+    <div class="col-md-2" [formGroup]="rows">
       <div class="form-group">
         <table id="addGroupTable">
           <tbody>
@@ -56,7 +56,7 @@
           </tbody>
         </table>
       </div>
-    </div> -->
+    </div>
     <div align="center">
       <button mat-raised-button color="primary" (click)="onAddRow()">add item</button></div>
     <div><button mat-raised-button class="btn" color="accent" (click)="onConfirmClick()" tabindex="1"

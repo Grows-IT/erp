@@ -1,0 +1,31 @@
+<mat-spinner *ngIf="!invoices"></mat-spinner>
+<div *ngIf="invoices">
+  <mat-toolbar class="allbg">
+    <span style="color: white;">Invoice : {{ data }}</span>
+    <span class="space"></span>
+    <button mat-button mat-dialog-close tabindex="-1" style="color: white;">
+      <i class="material-icons"> close </i>
+    </button>
+  </mat-toolbar>
+</div>
+<div *ngIf="invoices" class="content">
+  <!-- <h1>Quotation : {{mainInvoices.quotationId}}</h1> -->
+  <h2>
+    Name : {{ getCustomer(invoices.customerId).name }} , Address :
+    {{ getCustomer(invoices.customerId).address }}
+  </h2>
+  <div>
+    <div [formGroup]="addGroup" align="center">
+      <mat-form-field appearance="outline">
+        <mat-label>Group Name : </mat-label>
+        <input matInput formControlName="groupName" required />
+      </mat-form-field>
+      <button mat-raised-button color="primary" class="content">add</button>
+    </div>
+  </div>
+</div>
+
+<mat-list class="content">
+  <mat-card (click)="onClickopendetail(invoices.id)">
+  <h4>Group 1</h4></mat-card>
+</mat-list>

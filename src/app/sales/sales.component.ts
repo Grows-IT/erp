@@ -45,7 +45,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class SalesComponent implements OnInit, OnDestroy {
   quotations: Quotation[];
   // quotationCol: string[] = ['no', 'customerName', 'date', 'totalPrice', 'status', 'by', 'edit', 'pdf', 'createInvoice', 'delete'];
-  quotationCol: string[] = ['no', 'customerName', 'edit', 'pdf', 'createInvoice', 'delete'];
+  quotationCol: string[] = ['no', 'customerName', 'date', 'edit', 'pdf', 'createInvoice', 'delete'];
   listItem = [];
   items: Item[];
   date: any;
@@ -66,9 +66,12 @@ export class SalesComponent implements OnInit, OnDestroy {
     this.customerSubscription = this.cService.customers.subscribe(customers => {
       this.customers = customers;
     });
-    this.customerSubscription = this.itemsService.items.subscribe(items => {
+    this.itemsService.items.subscribe(items => {
       this.items = items;
     });
+    // this.customerSubscription = this.itemsService.items.subscribe(items => {
+    //   this.items = items;
+    // });
     this.itemsService.getAllItems().subscribe();
     this.salesService.getQuotation().subscribe();
     this.cService.getAllCustomer().subscribe();
@@ -98,7 +101,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   openQuotation() {
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       panelClass: 'removespace',
-      width: '50vw',
+      width: '40vw',
       height: '70vh',
       disableClose: true,
       autoFocus: false,
@@ -112,7 +115,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   edit(item) {
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       panelClass: 'removespace',
-      width: '60vw',
+      width: '40vw',
       height: '70vh',
       disableClose: true,
       autoFocus: false,
