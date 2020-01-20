@@ -185,7 +185,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   openDetail(id) {
     const dialogRef = this.dialog.open(InvoicegroupComponent, {
       panelClass: 'nopadding-dialog',
-      width: '60vw',
+      width: '40vw',
       height: '70vh',
       disableClose: true,
       autoFocus: false,

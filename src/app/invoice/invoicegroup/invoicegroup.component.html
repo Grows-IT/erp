@@ -26,6 +26,14 @@
 </div>
 
 <mat-list class="content">
-  <mat-card (click)="onClickopendetail(invoices.id)">
-  <h4>Group 1</h4></mat-card>
+  <mat-card >
+  <button mat-button (click)="onClickopendetail(invoices.id)">Group 1</button>
+  <button mat-icon-button [matMenuTriggerFor]="more" aria-label="" style="float: right;">
+    <mat-icon>more_vert</mat-icon></button>
+  </mat-card>
+    <mat-menu #more>
+      <button mat-menu-item>Delete</button>
+      <button mat-menu-item>Edit</button>
+    </mat-menu>
+
 </mat-list>
