@@ -5,7 +5,6 @@ import { Invoice, SellItem, InvoiceGroup } from './invoice.model';
 import { BehaviorSubject } from 'rxjs';
 import { tap, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ItemsService } from '../items/items.service';
-import { Quotation } from '../sales/sales.model';
 
 interface InvoiceResData {
   id: string;
@@ -31,8 +30,6 @@ export class InvoiceService {
   constructor(private http: HttpClient, private itemsService: ItemsService) {
   }
 
-  // get all แล้วก็ส่ง id sub invoice ให้ถูก
-
   getAllInvoice() {
     return this.http.get<{ [key: string]: InvoiceResData }>(environment.siteUrl + '/invoices.json').pipe(
       withLatestFrom(this.itemsService.items),
@@ -51,7 +48,7 @@ export class InvoiceService {
               resData[key].customerId,
               resData[key].type,
               allItem,
-              null
+              resData[key].group
             );
             invoices.push(invoice);
           }
@@ -59,7 +56,6 @@ export class InvoiceService {
         return invoices;
       }),
       tap(invoices => {
-        console.log(invoices);
         this._invoice.next(invoices);
       })
     );
@@ -123,15 +119,16 @@ export class InvoiceService {
   //   // return this.http.get<Invoice>(environment.siteUrl + '/invoices/-LxZdDePB4WEbHuNNoeU' + '.json');
   // }
 
-  addSubInvoice(data, id) {
-    console.log(data);
-
-    // return this.http.put(environment.siteUrl + '/invoices/' + id + '/subInvoices/.json', [data]);
-    return this.http.post(environment.siteUrl + '/invoices/' + id + '/subInvoices/.json', data);
+  addSubInvoice(data, invoiceId, groupId) {
+    return this.http.post(environment.siteUrl + '/invoices/' + invoiceId + '/group/' + groupId + '/subInvoices/.json', data);
   }
 
-  addGroupName() {
+  addGroupName(id, groupName) {
+    return this.http.post(environment.siteUrl + '/invoices/' + id + '/group.json', groupName.value);
+  }
 
+  getAllGroupName(id) {
+    return this.http.get(environment.siteUrl + '/invoices/' + id + '/group.json');
   }
 
 }

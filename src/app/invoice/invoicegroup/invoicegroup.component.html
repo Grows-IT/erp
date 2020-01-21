@@ -18,16 +18,18 @@
     <div [formGroup]="addGroup" align="center">
       <mat-form-field appearance="outline">
         <mat-label>Group Name : </mat-label>
-        <input matInput formControlName="groupName" required />
+        <input matInput formControlName="name" required />
       </mat-form-field>
-      <button mat-raised-button color="primary" class="content" [disabled]="addGroup.invalid" (click)="addGroupName(addGroup)">add</button>
+      <button mat-raised-button color="primary" class="content" [disabled]="addGroup.invalid" (click)="addGroupName(invoices.id, addGroup)">add</button>
     </div>
   </div>
 </div>
 
 <mat-list class="content">
-  <mat-card >
-  <button mat-button (click)="onClickopendetail(invoices.id)">Group 1</button>
+  <mat-card *ngFor="let item of this.listGroupName">
+    <!-- {{this.listGroupName|json}} -->
+    {{item[0]}}
+  <button mat-button (click)="onClickOpenDetail(item[0], invoices.customerId, invoices.id)">{{item[1].name}}</button>
   <button mat-icon-button [matMenuTriggerFor]="more" aria-label="" style="float: right;">
     <mat-icon>more_vert</mat-icon></button>
   </mat-card>

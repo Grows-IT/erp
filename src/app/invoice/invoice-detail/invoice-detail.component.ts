@@ -19,14 +19,15 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   invoiceSubscription: Subscription;
   customerSubscription: Subscription;
   customers: Customer[];
-  invoices: Invoice;
+  invoices: Invoice[];
   mainInvoices: any;
   subInvoice: any = [];
   addForm: FormGroup;
   rows: FormArray;
   isShowing: boolean;
+  invoiceDetial: any;
   // this.data is id
-  id = this.data;
+  dataInvoiceGroup = this.data;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private cService: CustomerService,
     private invoiceService: InvoiceService, private fb: FormBuilder) {
@@ -36,6 +37,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
 
       ])
     });
+
     this.rows = this.fb.array([]);
     this.isShowing = false;
   }
@@ -52,9 +54,11 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
       if (!invoices === null) {
         return;
       }
-      this.invoices = invoices.find(i => i.id === this.data);
+      this.invoices = invoices;
+      /////////////
+      this.invoiceDetial = this.getInvoiceDetail(this.dataInvoiceGroup.id);
+      ///////////
     });
-    console.log(this.invoices);
     this.cService.getAllCustomer().subscribe();
     this.invoiceService.getAllInvoice().subscribe();
 
@@ -65,6 +69,17 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     this.customerSubscription.unsubscribe();
   }
 
+  getInvoiceDetail(invoiceId: string) {
+    const invoice = this.invoices.find(inv => inv.id === invoiceId);
+    if (!invoice) {
+      return null;
+    }
+    return invoice;
+  }
+
+  getGroupName() {
+
+  }
 
   getCustomer(customerId: string) {
     const customer = this.customers.find(cus => cus.id === customerId);
@@ -110,7 +125,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
       row: this.rows.value
     };
 
-    this.invoiceService.addSubInvoice(data, this.id).subscribe();
+    this.invoiceService.addSubInvoice(data, this.dataInvoiceGroup.invoiceId, this.dataInvoiceGroup.groupId).subscribe();
     this.subInvoice.push(data);
     this.toggleShoing();
   }

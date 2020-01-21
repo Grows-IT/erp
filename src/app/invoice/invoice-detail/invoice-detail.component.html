@@ -1,7 +1,9 @@
 <mat-spinner *ngIf="!invoices"></mat-spinner>
 <div *ngIf="invoices">
   <mat-toolbar class="allbg">
-    <span style="color: white;">Invoice : {{data}}</span>
+    <span style="color: white;">Invoice : {{dataInvoiceGroup.invoiceId}} , </span>
+    {{getGroupName(dataInvoiceGroup.groupId)}}
+    <span style="color: white;"> Group Name : {{dataInvoiceGroup.groupId}}</span>
     <span class="space"></span>
     <button mat-button mat-dialog-close tabindex="-1" style="color: white;">
       <i class="material-icons"> close </i>
@@ -11,8 +13,8 @@
 
 <div *ngIf="invoices" class="content">
   <!-- <h1>Quotation : {{mainInvoices.quotationId}}</h1> -->
-  <h2>Name : {{getCustomer(invoices.customerId).name}} ,
-    Address : {{getCustomer(invoices.customerId).address}}</h2>
+  <h2>Name : {{getCustomer(dataInvoiceGroup.customerId).name}} ,
+    Address : {{getCustomer(dataInvoiceGroup.customerId).address}}</h2>
   <button mat-raised-button color="primary" style="margin-bottom: 10px;" (click)="toggleShoing()">Add invoice</button>
   <div>
     <div align="center">

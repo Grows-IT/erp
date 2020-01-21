@@ -20,10 +20,13 @@ export class InvoicegroupComponent implements OnInit {
   customerSubscription: Subscription;
   customers: Customer[];
   addGroup: FormGroup;
+  listGroupName: any;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private invoiceService: InvoiceService, private cService: CustomerService, public dialog: MatDialog) {
+
+
     this.addGroup = new FormGroup({
-      groupName: new FormControl(null, [Validators.required]),
+      name: new FormControl(null, [Validators.required]),
     });
   }
 
@@ -37,6 +40,15 @@ export class InvoicegroupComponent implements OnInit {
         return;
       }
       this.invoices = invoices.find(i => i.id === this.data);
+    });
+
+    this.invoiceService.getAllGroupName(this.data).subscribe(val => {
+      if (!val) {
+        return;
+      }
+
+      this.listGroupName = Object.entries(val);
+      console.log(this.listGroupName);
     });
 
     this.invoiceService.getAllInvoice().subscribe();
@@ -55,19 +67,18 @@ export class InvoicegroupComponent implements OnInit {
 
   }
 
-  onClickopendetail(id) {
+  onClickOpenDetail(groupId, customerId, invoiceId) {
     const dialogRef = this.dialog.open(InvoiceDetailComponent, {
       panelClass: 'nopadding-dialog',
       width: '60vw',
       height: '70vh',
       disableClose: true,
       autoFocus: false,
-      data: id
+      data: {groupId, customerId, invoiceId}
     });
   }
 
-  addGroupName(val) {
-    console.log(val);
-    return this.http.post()
+  addGroupName(id, groupName) {
+    this.invoiceService.addGroupName(id, groupName).subscribe();
   }
 }
