@@ -126,6 +126,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
 
   getListItem(items) {
     this.total = 0;
+    this.listItem = [];
     console.log(items.length);
     const products = [];
     for (let i = 0; i < items.length; i++) {

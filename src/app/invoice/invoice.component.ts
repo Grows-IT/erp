@@ -180,6 +180,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   getListItem(items) {
     this.total = 0;
+    this.listItem = [];
     for (let i = 0; i < items.length; i++) {
       const product = [
         [
