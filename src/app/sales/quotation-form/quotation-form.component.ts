@@ -9,7 +9,7 @@ import { CustomerService } from 'src/app/customer/customer.service';
 import { Customer } from 'src/app/customer/customer.model';
 import { Subscription } from 'rxjs';
 import { registerLocaleData } from '@angular/common';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-quotation-form',
@@ -24,6 +24,7 @@ export class QuotationFormComponent implements OnInit {
   items: Item[];
   itemName: string;
   Total: number;
+
   // rows: FormArray;
 
   // quotation = new FormGroup({
@@ -68,9 +69,9 @@ export class QuotationFormComponent implements OnInit {
     this.data = this.dialogRef.componentInstance.data;
     if (this.data !== null && this.data !== undefined) {
       this.quotation = this.fb.group({
-        customerName: [this.getCustomerName(this.data.customerId).name, [Validators.required]],
+        customerName: [this.getCustomer(this.data.customerId).name, [Validators.required]],
         // by: ['', [Validators.required]],
-        addressTo: [this.getCustomerName(this.data.customerId).address, [Validators.required]],
+        addressTo: [this.getCustomer(this.data.customerId).address, [Validators.required]],
         date: [this.data.date, [Validators.required]],
         expirationDate: [this.data.expirationDate, [Validators.required]],
         allItem: this.fb.array([
@@ -96,9 +97,21 @@ export class QuotationFormComponent implements OnInit {
         ])
       });
     }
+    console.log(this.customers);
+    // this.filteredOptions = this.myControl.valueChanges
+    //   .pipe(
+    //     startWith(''),
+    //     map(value => this._filter(value))
+    //   );
   }
+  // private _filter(value: string): string[] {
+  //   const filterValue = value.toLowerCase();
 
-  getCustomerName(customerId: string) {
+  //   return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  // }
+
+
+  getCustomer(customerId: string) {
     const customer = this.customers.find(cus => cus.id === customerId);
     if (!customer) {
       return null;
