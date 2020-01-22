@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Invoice, SellItem, InvoiceGroup } from './invoice.model';
+import { Invoice, SellItem, InvoiceGroup, SubInvoice } from './invoice.model';
 import { BehaviorSubject } from 'rxjs';
 import { tap, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ItemsService } from '../items/items.service';
@@ -42,13 +42,30 @@ export class InvoiceService {
               const item = new SellItem(resData[key].items[i].itemId, resData[key].items[i].quantity);
               allItem.push(item);
             }
+            let groups = [];
+            if (resData[key].group && resData[key].group.length > 0) {
+              groups = resData[key].group.map(groupData => {
+                if (groupData.subInvoices && groupData.subInvoices.length > 0) {
+                  const subInvoices = groupData.subInvoices.map(subinvoiceData => {
+                    const sellItems = subinvoiceData.sellItems.map(sellItemData => {
+                      return new SellItem(sellItemData.itemId, sellItemData.quantity);
+                    });
+                    return new SubInvoice(sellItems);
+                  });
+                  return new InvoiceGroup(groupData.name, subInvoices);
+                }
+                return new InvoiceGroup(groupData.name, []);
+              });
+            }
+
+
             const invoice = new Invoice(
               key,
               resData[key].quotationId,
               resData[key].customerId,
               resData[key].type,
               allItem,
-              resData[key].group
+              groups
             );
             invoices.push(invoice);
           }
@@ -59,33 +76,6 @@ export class InvoiceService {
         this._invoice.next(invoices);
       })
     );
-
-    // map(resData => {
-    //   console.log(resData);
-
-    // const invoices: Invoice[] = [];
-    // for (const key in resData) {
-    //   if (resData.hasOwnProperty(key)) {
-    //     const item = new SellItem(resData[key].item, resData[key].quantity);
-    //     const invoice = new Invoice(
-    //       key,
-    //       resData[key].quotationId,
-    //       resData[key].customerId,
-    //       resData[key].item,
-    //     );
-    //     invoices.push(invoice);
-    //   }
-    // }
-    // console.log(invoices);
-    // return invoices;
-    //   }),
-    //   tap(invoices => {
-    //     console.log(invoices);
-
-    //     // this._invoice.next(invoices);
-    //   })
-    // );
-    //     )
   }
 
   createInvoice(quotation: any, type: string) {
@@ -94,6 +84,7 @@ export class InvoiceService {
       'customerId': quotation.customerId,
       'items': quotation.items,
       'type': type,
+      // 'group': null
     };
 
     return this.http.post<{ [key: string]: InvoiceResData }>(environment.siteUrl + '/invoices.json', data).pipe(
@@ -111,26 +102,22 @@ export class InvoiceService {
     );
   }
 
-  // getSubInvioce(id) {
-  //   return this.http.get<Invoice>(environment.siteUrl + '/invoices/' + id + '.json')
-  //     .pipe(tap(data => {
-  //       this._subInvoice.next(data);
-  //     }));
-  //   // return this.http.get<Invoice>(environment.siteUrl + '/invoices/-LxZdDePB4WEbHuNNoeU' + '.json');
-  // }
-
   addSubInvoice(data, invoiceId, groupId) {
     return this.http.post(environment.siteUrl + '/invoices/' + invoiceId + '/group/' + groupId + '/subInvoices/.json', data);
   }
 
   addGroupName(id, groupName) {
-    return this.http.post(environment.siteUrl + '/invoices/' + id + '/group.json', groupName.value);
+    return this.http.patch(environment.siteUrl + '/invoices/' + id + '/group.json', groupName.value);
   }
 
   getAllGroupName(id) {
     return this.http.get(environment.siteUrl + '/invoices/' + id + '/group.json');
   }
 
+  updateInvoice(invoice: Invoice) {
+    console.log(invoice);
+    return this.http.patch(environment.siteUrl + '/invoices/' + invoice.id + '.json', invoice);
+  }
 }
 
 

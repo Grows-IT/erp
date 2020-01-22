@@ -33,7 +33,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     private invoiceService: InvoiceService, private fb: FormBuilder) {
     this.addForm = new FormGroup({
       invoiceName: new FormControl(null, [Validators.required]),
-      row: this.fb.array([
+      sellItem: this.fb.array([
 
       ])
     });
@@ -55,14 +55,9 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
         return;
       }
       this.invoices = invoices;
-      /////////////
-      this.invoiceDetial = this.getInvoiceDetail(this.dataInvoiceGroup.id);
-      ///////////
     });
     this.cService.getAllCustomer().subscribe();
     this.invoiceService.getAllInvoice().subscribe();
-
-
   }
 
   ngOnDestroy(): void {
@@ -122,7 +117,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
 
     const data = {
       invoiceName: this.addForm.value.invoiceName,
-      row: this.rows.value
+      sellItem: this.rows.value
     };
 
     this.invoiceService.addSubInvoice(data, this.dataInvoiceGroup.invoiceId, this.dataInvoiceGroup.groupId).subscribe();

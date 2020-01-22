@@ -29,7 +29,7 @@ export class ItemsService {
   getAllItems() {
     return this.http.get<{ [key: string]: ItemResData }>(environment.siteUrl + '/items.json').pipe(
       map((resItem) => {
-        console.log(resItem);
+        // console.log(resItem);
         const items: Item[] = [];
 
         for (const key in resItem) {

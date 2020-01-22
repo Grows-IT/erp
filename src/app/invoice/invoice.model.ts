@@ -12,7 +12,20 @@ export class Invoice {
 export class InvoiceGroup {
   constructor(
     public name: string,
-    public subInvoiceIds: string[]
+    public subInvoices: SubInvoice[]
+  ) { }
+
+  toObject() {
+    return {
+      name: this.name,
+      subInvoices: []
+    };
+  }
+}
+
+export class SubInvoice {
+  constructor(
+    public sellItems: SellItem[]
   ) { }
 }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Invoice } from '../invoice.model';
+import { Invoice, InvoiceGroup } from '../invoice.model';
 import { InvoiceService } from '../invoice.service';
 import { MAT_DIALOG_DATA } from '@angular/material';
 import { MatDialog } from '@angular/material';
@@ -15,7 +15,7 @@ import { InvoiceDetailComponent } from '../invoice-detail/invoice-detail.compone
   styleUrls: ['./invoicegroup.component.scss']
 })
 export class InvoicegroupComponent implements OnInit {
-  invoices: Invoice;
+  invoice: Invoice;
   invoiceSubscription: Subscription;
   customerSubscription: Subscription;
   customers: Customer[];
@@ -39,17 +39,16 @@ export class InvoicegroupComponent implements OnInit {
       if (!invoices === null) {
         return;
       }
-      this.invoices = invoices.find(i => i.id === this.data);
+      this.invoice = invoices.find(i => i.id === this.data);
     });
 
-    this.invoiceService.getAllGroupName(this.data).subscribe(val => {
-      if (!val) {
-        return;
-      }
+    // this.invoiceService.getAllGroupName(this.data).subscribe(val => {
+    //   if (!val) {
+    //     return;
+    //   }
 
-      this.listGroupName = Object.entries(val);
-      console.log(this.listGroupName);
-    });
+    //   this.listGroupName = Object.entries(val);
+    // });
 
     this.invoiceService.getAllInvoice().subscribe();
     this.cService.getAllCustomer().subscribe();
@@ -67,18 +66,19 @@ export class InvoicegroupComponent implements OnInit {
 
   }
 
-  onClickOpenDetail(groupId, customerId, invoiceId) {
+  onClickOpenDetail(group, customerId, invoiceId) {
     const dialogRef = this.dialog.open(InvoiceDetailComponent, {
       panelClass: 'nopadding-dialog',
       width: '60vw',
       height: '70vh',
       disableClose: true,
       autoFocus: false,
-      data: {groupId, customerId, invoiceId}
+      data: {group, customerId, invoiceId}
     });
   }
 
-  addGroupName(id, groupName) {
-    this.invoiceService.addGroupName(id, groupName).subscribe();
+  addGroupName(groupName) {
+    this.invoice.group.push(new InvoiceGroup(groupName.value.name, []));
+    this.invoiceService.updateInvoice(this.invoice).subscribe();
   }
 }
