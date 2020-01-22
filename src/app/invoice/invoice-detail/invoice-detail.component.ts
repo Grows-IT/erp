@@ -37,7 +37,6 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
 
       ])
     });
-
     this.rows = this.fb.array([]);
     this.isShowing = false;
   }

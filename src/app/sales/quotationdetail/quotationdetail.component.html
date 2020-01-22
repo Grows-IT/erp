@@ -12,7 +12,7 @@
       <img
         src="/assets/icons/invoicewhite.svg"
         style="width: 25px;"
-        (click)="invoiceDetail(data)"
+        (click)="invoiceDetail(quotation.invoiceId)"
       />
     </button>
 
@@ -71,6 +71,13 @@
 
   <div style="padding-left: 50px;">
     <h3>Date</h3>
+  </div>
+
+  <div style="padding-left: 50px;">
+    <img src="/assets/icons/date.svg" class="imgdetail" />
+    <h4 style="display: inline-block; color: darkcyan">
+      {{ quotation.date }}
+    </h4>
   </div>
 
   <div style="padding-left: 50px;">

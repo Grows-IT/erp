@@ -14,6 +14,9 @@ import { Customer } from "src/app/customer/customer.model";
 import { ItemsService } from 'src/app/items/items.service';
 import { Item } from 'src/app/items/items.model';
 import { FormArray } from '@angular/forms';
+import { InvoicegroupComponent } from 'src/app/invoice/invoicegroup/invoicegroup.component';
+import { InvoiceService } from 'src/app/invoice/invoice.service';
+import { Invoice } from 'src/app/invoice/invoice.model';
 
 @Component({
   selector: "app-quotationdetail",
@@ -32,9 +35,12 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
   items: Item[];
   total: number;
   subTotal: number;
+  invoiceSubscription: Subscription;
+  invoices: Invoice[];
 
   // tslint:disable-next-line: max-line-length
   constructor(
+    private invoiceService: InvoiceService,
     public dialog: MatDialog,
     private cService: CustomerService,
     private salesService: SalesService,
@@ -46,6 +52,10 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.data = this.dialogRef.componentInstance.data;
+
+    this.invoiceSubscription = this.invoiceService.invoices.subscribe(invoices => {
+      this.invoices = invoices;
+    });
 
     this.customerSubscription = this.cService.customers.subscribe(customers => {
       this.customers = customers;
@@ -63,6 +73,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
       this.quotation = quotations.find(q => q.id === this.data);
     });
     this.salesService.getQuotation().subscribe();
+    this.invoiceService.getAllInvoice().subscribe();
     this.cService.getAllCustomer().subscribe();
     this.itemsService.getAllItems().subscribe();
   }
@@ -79,6 +90,14 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     return customer;
   }
 
+  getInvoice(quotationId: string) {
+    const invoice = this.invoices.find(inv => inv.id === quotationId);
+    if (!invoice) {
+      return null;
+    }
+    return invoice.id;
+  }
+
   getItems(itemId: string) {
     const product = this.items.find(pro => pro.id === itemId);
     if (!product) {
@@ -87,14 +106,14 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     return product;
   }
 
-  invoiceDetail(data) {
-    const dialogRef = this.dialog.open(InvoiceDetailComponent, {
+  invoiceDetail(id) {
+    const dialogRef = this.dialog.open(InvoicegroupComponent, {
       panelClass: "nopadding-dialog",
       width: "80vw",
       height: "70vh",
       disableClose: true,
       autoFocus: false,
-      data: this.data
+      data: id
     });
   }
 

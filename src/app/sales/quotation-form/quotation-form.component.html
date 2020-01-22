@@ -13,10 +13,10 @@
     <mat-grid-tile colspan="2" rowspan="4">
       <mat-form-field appearance="outline">
         <mat-label>Customer Name</mat-label>
-        <textarea matInput rows="2" formControlName="customerName" type="text" [matAutocomplete]="auto" required></textarea>
-        <mat-autocomplete #auto="matAutocomplete" >
-          <mat-option *ngFor="let cus of customers;" [value]="cus.name">
-            {{cus.name}}
+        <textarea matInput rows="2" formControlName="customerName" type="text" [matAutocomplete]="auto1" required></textarea>
+        <mat-autocomplete #auto1="matAutocomplete" >
+          <mat-option *ngFor="let cusname of filteredOptions | async;" [value]="cusname">
+            {{cusname}}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
@@ -36,10 +36,11 @@
     <mat-grid-tile colspan="4" rowspan="4">
       <mat-form-field appearance="outline">
         <mat-label>To (Customer's address)</mat-label>
-        <textarea matInput rows="8" formControlName="addressTo" type="text" [matAutocomplete]="auto" required></textarea>
+        <textarea matInput rows="8" formControlName="addressTo" type="text" [matAutocomplete]="auto"></textarea>
         <mat-autocomplete #auto="matAutocomplete" >
-          <mat-option *ngFor="let cus of customers;" [value]="cus.address">
-            {{cus.address}}
+          <mat-option value="{{autoAddress()}}">
+            <!-- {{cus.address}} -->
+            {{autoAddress()}}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
