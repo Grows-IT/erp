@@ -7,9 +7,9 @@ import { ItemsService } from 'src/app/items/items.service';
 import { Item } from 'src/app/items/items.model';
 import { CustomerService } from 'src/app/customer/customer.service';
 import { Customer } from 'src/app/customer/customer.model';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { registerLocaleData } from '@angular/common';
-import { switchMap, debounceTime } from 'rxjs/operators';
+import { switchMap, debounceTime, startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-quotation-form',
@@ -24,6 +24,13 @@ export class QuotationFormComponent implements OnInit {
   items: Item[];
   itemName: string;
   Total: number;
+  filteredOptions: Observable<string[]>;
+
+  options = [
+    'One',
+    'Two',
+    'Three'
+  ];
 
   // rows: FormArray;
 
@@ -98,18 +105,27 @@ export class QuotationFormComponent implements OnInit {
       });
     }
     console.log(this.customers);
-    // this.filteredOptions = this.myControl.valueChanges
-    //   .pipe(
-    //     startWith(''),
-    //     map(value => this._filter(value))
-    //   );
+    this.filteredOptions = this.quotation.get('customerName').valueChanges
+      .pipe(
+        startWith(''),
+        map(val => this.filter(val))
+      );
   }
-  // private _filter(value: string): string[] {
-  //   const filterValue = value.toLowerCase();
 
-  //   return this.options.filter(option => option.toLowerCase().includes(filterValue));
-  // }
+  filter(val: string): string[] {
+    const customersNames = this.customers.map(cus => cus.name);
+    return customersNames.filter(cus =>
+      cus.toLowerCase().indexOf(val.toLowerCase()) === 0);
+  }
 
+  autoAddress() {
+    const cusNames = this.quotation.get('customerName').value;
+    const findCus = this.customers.find(cus => cus.name === cusNames );
+    if (!findCus) {
+      return null;
+    }
+    return findCus.address;
+  }
 
   getCustomer(customerId: string) {
     const customer = this.customers.find(cus => cus.id === customerId);
