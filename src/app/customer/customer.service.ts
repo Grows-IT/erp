@@ -44,4 +44,8 @@ export class CustomerService {
       })
     );
   }
+
+  deleteCustomer(id: string) {
+    return this.http.delete(environment.siteUrl + '/customer/' + id + '.json');
+  }
 }
