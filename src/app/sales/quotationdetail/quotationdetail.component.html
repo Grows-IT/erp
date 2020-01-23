@@ -8,7 +8,7 @@
     <button mat-button (click)="openPdf(quotation)">
       <img src="/assets/icons/pdf-file.svg" style="width: 25px;" />
     </button>
-    <button mat-button>
+    <button mat-button *ngIf="quotation.invoiceId">
       <img
         src="/assets/icons/invoicewhite.svg"
         style="width: 25px;"

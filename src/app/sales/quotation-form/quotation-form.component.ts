@@ -214,13 +214,17 @@ export class QuotationFormComponent implements OnInit {
   }
 
   onConfirmClick(status) {
+    const cusNames = this.quotation.get('customerName').value;
+    const findCus = this.customers.find(cus => cus.name === cusNames );
+    console.log('customer id:', findCus.id );
+
     if (status === 0) {
       console.log(this.quotation.value);
       this.salesService.addQuotation(this.quotation.value).pipe(
         switchMap(() => this.salesService.getQuotation())
       ).subscribe();
     } else if (status === 1) {
-      this.salesService.updateQuotation(this.quotation.value, this.data.id).pipe(
+      this.salesService.updateQuotation(this.quotation.value, this.data.id, findCus.id).pipe(
         switchMap(() => this.salesService.getQuotation())
       ).subscribe();
       console.log(this.quotation.value);
