@@ -109,16 +109,10 @@ export class SalesService {
     return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json');
   }
 
-  updateQuotation(quotation: any, id: string) {
+  updateQuotation(quotation: any, id: string, cusId: string) {
     let data;
-
-    const customer = {
-      name: quotation.customerName,
-      address: quotation.addressTo
-    };
-    return this.http.patch<any>(environment.siteUrl + '/customer.json', customer).pipe(
-      withLatestFrom(this.itemsService.items),
-      switchMap(([res, items]) => {
+    return this.itemsService.items.pipe(
+      switchMap(items => {
         const sellItems: SellItem[] = [];
         quotation.allItem.forEach(itemInput => {
           const item = items.find(it => it.name === itemInput.item);
@@ -126,17 +120,50 @@ export class SalesService {
           sellItems.push(sellItem);
         });
         data = {
-          totalPrice: quotation.totalPrice,
-          // by: quotation.by,
-          customerId: res.name,
-          date: quotation.date,
-          expirationDate: quotation.expirationDate,
-          items: sellItems,
-          invoiceId: ''
+            totalPrice: quotation.totalPrice,
+              // by: quotation.by,
+            customerId: cusId,
+            date: quotation.date,
+            expirationDate: quotation.expirationDate,
+            items: sellItems,
+            invoiceId: ''
         };
         return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
       })
     );
+    // const sellItems: SellItem[] = [];
+
+  }
+}
+
+  // updateQuotation(quotation: any, id: string) {
+  //   let data;
+
+  //   const customer = {
+  //     name: quotation.customerName,
+  //     address: quotation.addressTo
+  //   };
+  //   return this.http.patch<any>(environment.siteUrl + '/customer.json', customer).pipe(
+  //     withLatestFrom(this.itemsService.items),
+  //     switchMap(([res, items]) => {
+  //       const sellItems: SellItem[] = [];
+  //       quotation.allItem.forEach(itemInput => {
+  //         const item = items.find(it => it.name === itemInput.item);
+  //         const sellItem = new SellItem(item.id, itemInput.quantity);
+  //         sellItems.push(sellItem);
+  //       });
+  //       data = {
+  //         totalPrice: quotation.totalPrice,
+  //         // by: quotation.by,
+  //         customerId: res.name,
+  //         date: quotation.date,
+  //         expirationDate: quotation.expirationDate,
+  //         items: sellItems,
+  //         invoiceId: ''
+  //       };
+  //       return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
+  //     })
+  //   );
   //   const data = {
   //     addressTo: quotation.addressTo,
   //     date: quotation.date,
@@ -145,5 +172,5 @@ export class SalesService {
   //     quantity: quotation.quantity
   //   };
   //   return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
-  }
-}
+//   }
+// }
