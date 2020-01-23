@@ -20,7 +20,6 @@ interface InvoiceResData {
   providedIn: 'root'
 })
 export class InvoiceService {
-  // invoiceList: any[];
   private _invoice = new BehaviorSubject<Invoice[]>(null);
 
   get invoices() {
@@ -57,7 +56,6 @@ export class InvoiceService {
                 return new InvoiceGroup(groupData.name, []);
               });
             }
-
 
             const invoice = new Invoice(
               key,
@@ -102,17 +100,17 @@ export class InvoiceService {
     );
   }
 
-  addSubInvoice(data, invoiceId, groupId) {
-    return this.http.post(environment.siteUrl + '/invoices/' + invoiceId + '/group/' + groupId + '/subInvoices/.json', data);
-  }
+  // addSubInvoice(data, invoiceId, groupId) {
+  //   return this.http.post(environment.siteUrl + '/invoices/' + invoiceId + '/group/' + groupId + '/subInvoices/.json', data);
+  // }
 
   addGroupName(id, groupName) {
     return this.http.patch(environment.siteUrl + '/invoices/' + id + '/group.json', groupName.value);
   }
 
-  getAllGroupName(id) {
-    return this.http.get(environment.siteUrl + '/invoices/' + id + '/group.json');
-  }
+  // getAllGroupName(id) {
+  //   return this.http.get(environment.siteUrl + '/invoices/' + id + '/group.json');
+  // }
 
   updateInvoice(invoice: Invoice) {
     console.log(invoice);
