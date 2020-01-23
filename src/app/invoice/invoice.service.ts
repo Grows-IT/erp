@@ -50,7 +50,7 @@ export class InvoiceService {
                     const sellItems = subinvoiceData.sellItems.map(sellItemData => {
                       return new SellItem(sellItemData.itemId, sellItemData.quantity);
                     });
-                    return new SubInvoice(sellItems);
+                    return new SubInvoice(subinvoiceData.name, sellItems);
                   });
                   return new InvoiceGroup(groupData.name, subInvoices);
                 }

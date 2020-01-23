@@ -1,9 +1,9 @@
 <mat-spinner *ngIf="!invoices"></mat-spinner>
 <div *ngIf="invoices">
   <mat-toolbar class="allbg">
-    <span style="color: white;">Invoice : {{dataInvoiceGroup.invoiceId}} , </span>
+    <span style="color: white;">Invoice : {{dataInvoiceGroup.invoice.id}} , </span>
     {{getGroupName(dataInvoiceGroup.groupId)}}
-    <span style="color: white;"> Group Name : {{dataInvoiceGroup.group.name}}</span>
+    <span style="color: white;"> Group Name : {{dataInvoiceGroup.invoice.group[dataInvoiceGroup.index].name}}</span>
     <span class="space"></span>
     <button mat-button mat-dialog-close tabindex="-1" style="color: white;">
       <i class="material-icons"> close </i>
@@ -12,9 +12,8 @@
 </div>
 
 <div *ngIf="invoices" class="content">
-  <!-- <h1>Quotation : {{mainInvoices.quotationId}}</h1> -->
-  <h2>Name : {{getCustomer(dataInvoiceGroup.customerId).name}} ,
-    Address : {{getCustomer(dataInvoiceGroup.customerId).address}}</h2>
+  <h2>Name : {{getCustomer(dataInvoiceGroup.customerId)}} ,
+    Address : {{getCustomer(dataInvoiceGroup.customerId)}}</h2>
   <button mat-raised-button color="primary" style="margin-bottom: 10px;" (click)="toggleShoing()">Add invoice</button>
   <div>
     <div align="center">
@@ -25,7 +24,7 @@
       <div [formGroup]="addForm">
         <mat-form-field appearance="outline">
           <mat-label>Invoice Name : </mat-label>
-          <input matInput formControlName="invoiceName" required>
+          <input matInput formControlName="name" required>
         </mat-form-field>
       </div>
       <div class="col-md-2" [formGroup]="rows">
@@ -46,12 +45,6 @@
                   </mat-form-field>
                 </td>
                 <td>
-                  <mat-form-field appearance="outline">
-                    <mat-label>Price : </mat-label>
-                    <input matInput type="number" [formControl]="row.get('price')" required>
-                  </mat-form-field>
-                </td>
-                <td>
                   <button mat-raised-button color="warn" (click)="onRemoveRow(i, row)">Remove</button>
                 </td>
               </tr>
@@ -69,7 +62,7 @@
     </mat-card>
     <br />
 
-    <div *ngFor="let subInv of subInvoice;">
+    <div *ngFor="let subInv of dataInvoiceGroup.invoice.group;">
       <h4>Group Name : {{subInv.groupName}}</h4>
       <table mat-table [dataSource]="subInv.row" multiTemplateDataRows matSort class="mat-elevation-z8">
         <ng-container matColumnDef="item">

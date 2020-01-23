@@ -66,14 +66,14 @@ export class InvoicegroupComponent implements OnInit {
 
   }
 
-  onClickOpenDetail(group, customerId, invoiceId) {
+  onClickOpenDetail(invoice, index) {
     const dialogRef = this.dialog.open(InvoiceDetailComponent, {
       panelClass: 'nopadding-dialog',
       width: '60vw',
       height: '70vh',
       disableClose: true,
       autoFocus: false,
-      data: {group, customerId, invoiceId}
+      data: { invoice, index }
     });
   }
 

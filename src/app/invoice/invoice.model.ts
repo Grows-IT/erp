@@ -25,6 +25,7 @@ export class InvoiceGroup {
 
 export class SubInvoice {
   constructor(
+    public name: string,
     public sellItems: SellItem[]
   ) { }
 }

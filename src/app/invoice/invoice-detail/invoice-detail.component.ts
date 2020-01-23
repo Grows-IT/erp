@@ -5,7 +5,7 @@ import { FormGroup, FormArray, FormControl, Validators, FormBuilder } from '@ang
 import { CustomerService } from 'src/app/customer/customer.service';
 import { Subscription } from 'rxjs';
 import { Customer } from 'src/app/customer/customer.model';
-import { Invoice } from '../invoice.model';
+import { Invoice, SubInvoice, SellItem } from '../invoice.model';
 
 
 @Component({
@@ -15,7 +15,7 @@ import { Invoice } from '../invoice.model';
 })
 export class InvoiceDetailComponent implements OnInit, OnDestroy {
   expandedElement;
-  invoiceCol: string[] = ['item', 'quantity', 'price'];
+  invoiceCol: string[] = ['item', 'quantity'];
   invoiceSubscription: Subscription;
   customerSubscription: Subscription;
   customers: Customer[];
@@ -32,13 +32,15 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private cService: CustomerService,
     private invoiceService: InvoiceService, private fb: FormBuilder) {
     this.addForm = new FormGroup({
-      invoiceName: new FormControl(null, [Validators.required]),
+      name: new FormControl(null, [Validators.required]),
       sellItem: this.fb.array([
 
       ])
     });
     this.rows = this.fb.array([]);
     this.isShowing = false;
+    console.log(this.dataInvoiceGroup);
+
   }
 
   ngOnInit() {
@@ -105,7 +107,6 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     return new FormGroup({
       name: new FormControl(null, [Validators.required]),
       quantity: new FormControl(null, [Validators.required]),
-      price: new FormControl(null, [Validators.required])
     });
   }
 
@@ -115,11 +116,16 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     }
 
     const data = {
-      invoiceName: this.addForm.value.invoiceName,
+      name: this.addForm.value.name,
       sellItem: this.rows.value
     };
 
-    this.invoiceService.addSubInvoice(data, this.dataInvoiceGroup.invoiceId, this.dataInvoiceGroup.groupId).subscribe();
+    console.log(this.dataInvoiceGroup.invoice);
+
+    const sellItems: SellItem[] = data.sellItem.map(val => new SellItem(val.name, val.quantity));
+    this.dataInvoiceGroup.invoice.group[this.dataInvoiceGroup.index].subInvoices.push(new SubInvoice(data.name, sellItems));
+
+    this.invoiceService.updateInvoice(this.dataInvoiceGroup.invoice).subscribe();
     this.subInvoice.push(data);
     this.toggleShoing();
   }
