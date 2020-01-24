@@ -42,14 +42,6 @@ export class InvoicegroupComponent implements OnInit {
       this.invoice = invoices.find(i => i.id === this.data);
     });
 
-    // this.invoiceService.getAllGroupName(this.data).subscribe(val => {
-    //   if (!val) {
-    //     return;
-    //   }
-
-    //   this.listGroupName = Object.entries(val);
-    // });
-
     this.invoiceService.getAllInvoice().subscribe();
     this.cService.getAllCustomer().subscribe();
   }

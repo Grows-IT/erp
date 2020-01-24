@@ -100,22 +100,31 @@ export class InvoiceService {
     );
   }
 
-  // addSubInvoice(data, invoiceId, groupId) {
-  //   return this.http.post(environment.siteUrl + '/invoices/' + invoiceId + '/group/' + groupId + '/subInvoices/.json', data);
-  // }
-
   addGroupName(id, groupName) {
     return this.http.patch(environment.siteUrl + '/invoices/' + id + '/group.json', groupName.value);
   }
 
-  // getAllGroupName(id) {
-  //   return this.http.get(environment.siteUrl + '/invoices/' + id + '/group.json');
+  updateInvoice(invoice: Invoice) {
+    const inv = Object.assign({}, invoice);
+    delete inv.id;
+
+    return this.http.patch(environment.siteUrl + '/invoices/' + invoice.id + '.json', inv);
+  }
+
+  // getCountInvoice() {
+  //   return this.http.get();
   // }
 
-  updateInvoice(invoice: Invoice) {
-    console.log(invoice);
-    return this.http.patch(environment.siteUrl + '/invoices/' + invoice.id + '.json', invoice);
-  }
+  // updateCountInvoice(c: number) {
+  //   if (!c) {
+  //     c = 0;
+  //   }
+  //   const count = {
+  //     count: c + 1
+  //   };
+  //   this.http.patch(environment.siteUrl + '/invoiceCount.json', count);
+  // }
+
 }
 
 
