@@ -36,8 +36,8 @@ export class CustomerComponent implements OnInit {
   openCustomer() {
     const dialogRef = this.dialog.open(CustomerdialogComponent, {
       panelClass: 'nopadding-dialog',
-      width: '40vw',
-      height: '70vh',
+      width: '30vw',
+      height: '65vh',
       disableClose: false,
       autoFocus: false,
     });
@@ -51,8 +51,8 @@ export class CustomerComponent implements OnInit {
   editCustomer(cus) {
     const dialogRef = this.dialog.open(CustomerdialogComponent, {
       panelClass: 'nopadding-dialog',
-      width: '40vw',
-      height: '70vh',
+      width: '30vw',
+      height: '65vh',
       disableClose: false,
       autoFocus: false,
       data: cus,

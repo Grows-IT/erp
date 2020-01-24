@@ -30,11 +30,28 @@ export class FlowerplantComponent implements OnInit {
   openFlowerplant() {
     const dialogRef = this.dialog.open(FlowerplantdialogComponent, {
       panelClass: 'nopadding-dialog',
-      width: '40vw',
-      height: '70vh',
+      width: '30vw',
+      height: '65vh',
       disableClose: false,
       autoFocus: false,
     });
+  }
+
+  editFlowerplant(item) {
+    const dialogRef = this.dialog.open(FlowerplantdialogComponent, {
+      panelClass: 'nopadding-dialog',
+      width: '30vw',
+      height: '65vh',
+      disableClose: false,
+      autoFocus: false,
+      data: item,
+    });
+
+    dialogRef.afterClosed().pipe(
+      switchMap(() => {
+        return this.itemsService.getAllItems();
+      })
+    ).subscribe();
   }
 
   delete(id: string) {

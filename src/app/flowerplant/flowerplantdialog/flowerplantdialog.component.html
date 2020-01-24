@@ -7,33 +7,35 @@
 </mat-toolbar>
 <h4 align="center">No. xxxx</h4>
 
-<!-- <form [formGroup] = "items" novalidate>
-<mat-grid-list cols="10" rowHeight="20px">
-  <mat-grid-tile colspan="10" rowspan="1"></mat-grid-tile>
+<form [formGroup] = "item" novalidate>
+<mat-grid-list cols="8" rowHeight="55px">
+  <mat-grid-tile colspan="2" rowspan="6"></mat-grid-tile>
+  <mat-grid-tile colspan="4" rowspan="2">
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <textarea matInput rows="2" formControlName="name"></textarea>
+    </mat-form-field>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="4" rowspan="2">
+    <mat-form-field appearance="outline">
+      <mat-label>Price</mat-label>
+      <textarea matInput rows="2" formControlName="price"></textarea>
+    </mat-form-field>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="4" rowspan="2">
+    <mat-form-field appearance="outline">
+      <mat-label>Quantity</mat-label>
+      <textarea matInput rows="2" formControlName="quantity"></textarea>
+    </mat-form-field>
+  </mat-grid-tile>
 </mat-grid-list>
 
-<mat-grid-list cols="8" rowHeight="55px">
-  <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
-  <mat-grid-tile colspan="4" rowspan="2">
-    <mat-form-field appearance="outline">
-      <mat-label>Customer Name</mat-label>
-      <textarea matInput rows="2" formControlName="customerName"></textarea>
-    </mat-form-field>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="4" rowspan="2">
-    <mat-form-field appearance="outline">
-      <mat-label>Address</mat-label>
-      <textarea matInput rows="2" formControlName="addressTo"></textarea>
-    </mat-form-field>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
-</mat-grid-list> -->
-
-<!-- <mat-dialog-actions align="center">
+<mat-dialog-actions align="center">
   <button *ngIf="!data" mat-raised-button color="primary" (click)="onConfirmClick(0)" tabindex="1"
-    [disabled]="!customer.valid">Create</button>
+    [disabled]="!item.valid">Create</button>
   <button *ngIf="data" mat-raised-button color="primary" (click)="onConfirmClick(1)" tabindex="1"
-    [disabled]="!customer.valid">Update</button>
+    [disabled]="!item.valid">Update</button>
   <button mat-raised-button mat-dialog-close tabindex="-1" color="warn">cancel</button>
-</mat-dialog-actions> -->
-<!-- </form> -->
+</mat-dialog-actions>
+
+</form>
