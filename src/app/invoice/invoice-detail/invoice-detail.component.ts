@@ -61,7 +61,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     this.cService.getAllCustomer().subscribe();
     this.invoiceService.getAllInvoice().subscribe();
     this.itemsService.getAllItems().subscribe();
-
+    this.invoiceService.updateCountInvoice().subscribe();
   }
 
   ngOnDestroy(): void {

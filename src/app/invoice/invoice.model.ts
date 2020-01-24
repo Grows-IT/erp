@@ -5,6 +5,7 @@ export class Invoice {
     public customerId: string,
     public type: string,
     public items: SellItem[],
+    public count: number,
     public group?: InvoiceGroup[]
   ) { }
 }
