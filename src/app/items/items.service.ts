@@ -26,6 +26,16 @@ export class ItemsService {
   constructor(private http: HttpClient) {
   }
 
+  addItem(item: any) {
+
+    const items = {
+      name: item.name,
+      price: item.price,
+      availableQuntity: item.quantity
+    };
+    return this.http.post<any>(environment.siteUrl + '/items.json', items);
+  }
+
   getAllItems() {
     return this.http.get<{ [key: string]: ItemResData }>(environment.siteUrl + '/items.json').pipe(
       map((resItem) => {
@@ -44,6 +54,16 @@ export class ItemsService {
         this._item.next(items);
       })
     );
+  }
+
+  updateItem(item: any, id: string) {
+    let data;
+    data = {
+      name: item.name,
+      price: item.price,
+      availableQuntity: item.quantity
+    };
+    return this.http.patch(environment.siteUrl + '/items/' + id + '.json', data);
   }
 
   deleteItem(id: string) {
