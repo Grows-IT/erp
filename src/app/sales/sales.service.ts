@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Quotation } from './sales.model';
 import { SellItem } from '../invoice/invoice.model';
 import { ItemsService } from '../items/items.service';
+import { InvoiceService } from '../invoice/invoice.service';
 
 interface QuototationResData {
   addressTo: string;
@@ -36,7 +37,7 @@ export class SalesService {
     return this._quotations.asObservable();
   }
 
-  constructor(private http: HttpClient, private itemsService: ItemsService) {
+  constructor(private http: HttpClient, private itemsService: ItemsService, private invoiceService: InvoiceService) {
   }
 
   addQuotation(quotation: any) {
@@ -106,7 +107,14 @@ export class SalesService {
   }
 
   deleteQuotation(id: string) {
-    return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json');
+    return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json')
+    // .pipe(
+    //   withLatestFrom(this.invoiceService.invoices),
+    //   map(([resData, invoices]) => {
+    //     const quoid = invoices.find(quo => quo.id === id);
+    //   }
+    // )
+    // );
   }
 
   updateQuotation(quotation: any, id: string, cusId: string) {

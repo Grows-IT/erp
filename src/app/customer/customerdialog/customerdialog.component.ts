@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { CustomerService } from '../customer.service';
 import { Customer } from '../customer.model';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { switchMap } from 'rxjs/operators';
 
 
 @Component({
@@ -13,14 +15,33 @@ import { Customer } from '../customer.model';
 export class CustomerdialogComponent implements OnInit {
   customerSubscription: Subscription;
   customers: Customer[];
+  customer: FormGroup;
+  // data: any;
 
-  constructor(public dialogRef: MatDialogRef<CustomerdialogComponent>, private cService: CustomerService) { }
+  // tslint:disable-next-line: max-line-length
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder, public dialogRef: MatDialogRef<CustomerdialogComponent>, private cService: CustomerService) { }
 
   ngOnInit() {
     this.customerSubscription = this.cService.customers.subscribe(customers => {
       this.customers = customers;
     });
     this.cService.getAllCustomer().subscribe();
+
+
+    // this.data = this.dialogRef.componentInstance.data;
+
+    if (this.data !== null && this.data !== undefined) {
+      this.customer = this.fb.group({
+        customerName: [this.data.name, [Validators.required]],
+        addressTo:  [this.data.address, [Validators.required]]
+      });
+    } else {
+
+    this.customer = this.fb.group({
+      customerName: ['', [Validators.required]],
+      addressTo:  ['', [Validators.required]]
+    });
+  }
   }
 
   close(): void {
@@ -29,18 +50,20 @@ export class CustomerdialogComponent implements OnInit {
 
   onConfirmClick(status) {
 
-    // if (status === 0) {
-    //   console.log(this.customers.values);
-    //   this.cService.addQuotation(this.quotation.value).pipe(
-    //     switchMap(() => this.salesService.getQuotation())
-    //   ).subscribe();
-    // } else if (status === 1) {
-    //   this.salesService.updateQuotation(this.quotation.value, this.data.id, findCus.id).pipe(
-    //     switchMap(() => this.salesService.getQuotation())
-    //   ).subscribe();
-    //   console.log(this.quotation.value);
-    // }
-    this.dialogRef.close();
-  }
+    if (status === 0) {
+      console.log(this.customers.values);
+      this.cService.addCustomer(this.customer.value).pipe(
+        switchMap(() => this.cService.getAllCustomer())
+      ).subscribe();
+    } else if (status === 1) {
+      this.cService.updateCustomer(this.customer.value, this.data.id).pipe(
+        switchMap(() => this.cService.getAllCustomer())
+      ).subscribe();
+      console.log(this.customer.value);
+      console.log(this.data.id);
 
+    // }
+  }
+    this.dialogRef.close();
+}
 }

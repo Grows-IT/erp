@@ -45,4 +45,8 @@ export class ItemsService {
       })
     );
   }
+
+  deleteItem(id: string) {
+    return this.http.delete(environment.siteUrl + '/items/' + id + '.json');
+  }
 }

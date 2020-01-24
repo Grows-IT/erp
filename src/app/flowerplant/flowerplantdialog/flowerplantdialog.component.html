@@ -1,13 +1,13 @@
 <mat-toolbar class="sticky" class="allbg">
-  <span style="color: white;">Customer</span>
+  <span style="color: white;">Flower & Plant</span>
   <span class="space"></span>
   <button mat-button (click)="close()" style="color: white;" >
     <i class="material-icons"> close </i>
   </button>
 </mat-toolbar>
-<h4 align="center">Customer No. xxxx</h4>
+<h4 align="center">No. xxxx</h4>
 
-<form [formGroup] = "customer" novalidate>
+<!-- <form [formGroup] = "items" novalidate>
 <mat-grid-list cols="10" rowHeight="20px">
   <mat-grid-tile colspan="10" rowspan="1"></mat-grid-tile>
 </mat-grid-list>
@@ -27,13 +27,13 @@
     </mat-form-field>
   </mat-grid-tile>
   <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
-</mat-grid-list>
+</mat-grid-list> -->
 
-<mat-dialog-actions align="center">
+<!-- <mat-dialog-actions align="center">
   <button *ngIf="!data" mat-raised-button color="primary" (click)="onConfirmClick(0)" tabindex="1"
     [disabled]="!customer.valid">Create</button>
   <button *ngIf="data" mat-raised-button color="primary" (click)="onConfirmClick(1)" tabindex="1"
     [disabled]="!customer.valid">Update</button>
   <button mat-raised-button mat-dialog-close tabindex="-1" color="warn">cancel</button>
-</mat-dialog-actions>
-</form>
+</mat-dialog-actions> -->
+<!-- </form> -->
