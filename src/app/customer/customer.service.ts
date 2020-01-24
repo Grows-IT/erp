@@ -21,6 +21,15 @@ export class CustomerService {
     this.customerDetail = db.list('quotation');
   }
 
+  addCustomer(customer: any) {
+
+    const cus = {
+      name: customer.customerName,
+      address: customer.addressTo
+    };
+    return this.http.post<any>(environment.siteUrl + '/customer.json', cus);
+  }
+
   getAllCustomer() {
     return this.http.get<Customer[]>(environment.siteUrl + '/customer.json').pipe(
       map((res) => {
@@ -36,14 +45,16 @@ export class CustomerService {
     );
   }
 
-  getCustomer(id) {
-    return this.http.get<Customer>(environment.siteUrl + '/customer/' + id + '.json').pipe(
-      map(res => {
-        // console.log(res);
-        return new Customer(id, res.name, res.address);
-      })
-    );
+  updateCustomer(customer: any, id: string) {
+    let data;
+    data = {
+      name: customer.customerName,
+      address: customer.addressTo
+    };
+    return this.http.patch(environment.siteUrl + '/customer/' + id + '.json', data);
   }
+
+
 
   deleteCustomer(id: string) {
     return this.http.delete(environment.siteUrl + '/customer/' + id + '.json');

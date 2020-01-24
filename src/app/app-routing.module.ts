@@ -11,11 +11,17 @@ import { InvoiceDetailComponent } from './invoice/invoice-detail/invoice-detail.
 import { QuotationdetailComponent } from './sales/quotationdetail/quotationdetail.component';
 import { InvoicegroupComponent } from './invoice/invoicegroup/invoicegroup.component';
 import { CustomerComponent } from './customer/customer.component';
+import { FlowerplantComponent } from './flowerplant/flowerplant.component';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+    canActivate: [SigninGuard],
+  },
+  {
+    path: 'flowerplant',
+    component: FlowerplantComponent,
     canActivate: [SigninGuard],
   },
   {

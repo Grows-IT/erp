@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 })
 export class CustomerComponent implements OnInit {
 
-  quotationCol: string[] = ['no', 'customerName', 'address', 'edit', 'delete'];
+  customerCol: string[] = ['no', 'customerName', 'address', 'edit', 'delete'];
   customerSubscription: Subscription;
   customers: Customer[];
 
@@ -48,25 +48,26 @@ export class CustomerComponent implements OnInit {
     // ).subscribe();
   }
 
-  editCustomer(Customer) {
+  editCustomer(cus) {
     const dialogRef = this.dialog.open(CustomerdialogComponent, {
       panelClass: 'nopadding-dialog',
       width: '40vw',
       height: '70vh',
       disableClose: false,
       autoFocus: false,
-      data: Customer
+      data: cus,
     });
 
-    // dialogRef.afterClosed().pipe(
-    //   switchMap(() => this.salesService.getQuotation()),
-    //   switchMap(() => this.cService.getAllCustomer()),
-    // ).subscribe();
+    dialogRef.afterClosed().pipe(
+      switchMap(() => {
+        return this.cService.getAllCustomer();
+      })
+    ).subscribe();
   }
 
   delete(id: string) {
     this.cService.deleteCustomer(id).pipe(
-      // switchMap(() => this.cService.getCustomer())
+      switchMap(() => this.cService.getAllCustomer())
     ).subscribe();
   }
 
