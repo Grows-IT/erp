@@ -36,8 +36,9 @@ export class HomeComponent implements OnInit {
     const customers = new Menu('Customers', 'assets/menu/customers2.svg', 'customers');
     const flowerplant = new Menu('Flowers & Plant', 'assets/menu/flowerplant.svg', 'flowerplant');
     const employee = new Menu('Employee', 'assets/menu/employee.svg', 'employee');
+    const setting = new Menu('Users management', 'assets/menu/gear.svg', 'usersmanagement');
     this.menu = [sales, invoice, CRM, qualitycon, account];
     this.menu2 = [pricelist, report, purchase, truck];
-    this.downmenu = [airlines, shipping, suppliers, customers, flowerplant, employee];
+    this.downmenu = [airlines, shipping, suppliers, customers, flowerplant, employee, setting];
 }
 }
