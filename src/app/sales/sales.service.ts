@@ -106,15 +106,23 @@ export class SalesService {
     );
   }
 
+  // deleteQuotation(id: string) {
+  //   return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json')
+  //   .pipe(
+  //     withLatestFrom(this.invoiceService.invoices),
+  //     map(invoices => {
+  //       const invoice = invoices.find(quo => quo.id === id);
+  //       return this.http.delete(environment.siteUrl + '/invoices/' + invoice.id + '.json');
+  //     }));
+      // map(([resData, invoices]) => {
+      //   const invoice = invoices.find(inv => inv.id === id);
+      //   return this.http.delete(environment.siteUrl + '/invoices/' + invoice.id + '.json')
+      // }
+
+  // }
+
   deleteQuotation(id: string) {
     return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json')
-    // .pipe(
-    //   withLatestFrom(this.invoiceService.invoices),
-    //   map(([resData, invoices]) => {
-    //     const quoid = invoices.find(quo => quo.id === id);
-    //   }
-    // )
-    // );
   }
 
   updateQuotation(quotation: any, id: string, cusId: string) {
