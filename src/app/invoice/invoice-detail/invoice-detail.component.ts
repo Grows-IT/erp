@@ -22,7 +22,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 })
 export class InvoiceDetailComponent implements OnInit, OnDestroy {
   expandedElement;
-  invoiceCol: string[] = ['item', 'quantity', 'totlePrice'];
+  invoiceCol: string[] = ['item', 'quantity', 'totalPrice'];
   invoiceSubscription: Subscription;
   customerSubscription: Subscription;
   quotationSubscription: Subscription;
@@ -39,6 +39,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   listItem = [];
   date: any;
   expirationDate: any;
+  tableTotal = [];
   // this.data is id
   items: Item[];
   dataInvoiceGroup = this.data;
@@ -78,17 +79,19 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     this.cService.getAllCustomer().subscribe();
     this.invoiceService.getAllInvoice().subscribe();
     this.itemsService.getAllItems().subscribe();
+    this.getTotal(this.dataInvoiceGroup);
   }
 
   ngOnDestroy(): void {
     this.customerSubscription.unsubscribe();
   }
 
-  getItems(itemId: string) {
-    const product = this.items.find(pro => pro.id === itemId);
+  getItems(item: SellItem) {
+    const product = this.items.find(pro => pro.id === item.itemId);
     if (!product) {
       return null;
     }
+    // this.tableTotal += product.price;
     return product;
   }
 
@@ -150,6 +153,25 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     this.rows.push(this.createItemFormGroup());
   }
 
+  // getMaxQuantity() {
+  //   const item = this.rows.get('name');
+  //   console.log(this.rows.value);
+
+  //   if (!item) {
+  //     return 0;
+  //   }
+  // }
+
+  getTotal(data) {
+    console.log(data);
+
+    // if (!this.tableTotal[i]) {
+    //   this.tableTotal[i] = 0;
+    // }
+    // this.tableTotal[i] = subTotal + this.tableTotal[i];
+    // console.log(this.tableTotal[i]);
+  }
+
   onRemoveRow(rowIndex: number) {
     this.rows.removeAt(rowIndex);
   }
@@ -179,7 +201,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   decode(id, count) {
-    return this.sharedService.decode(id, count);
+    return this.sharedService.decode(id, count, false);
   }
 
   formatDate(date: Date) {
@@ -229,15 +251,11 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
           }
         ],
         {
-          text: items[i].quantity,
+          text: items[i].quantity.toLocaleString(),
           style: 'itemNumber'
         },
         {
-          text: this.getItems(items[i].itemId).price,
-          style: 'itemNumber'
-        },
-        {
-          text: '0%',
+          text: this.getItems(items[i].itemId).price.toLocaleString(),
           style: 'itemNumber'
         },
         {
@@ -245,11 +263,15 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
           style: 'itemNumber'
         },
         {
-          text: this.total = (items[i].quantity * this.getItems(items[i].itemId).price),
+          text: '0%',
+          style: 'itemNumber'
+        },
+        {
+          text: (items[i].quantity * this.getItems(items[i].itemId).price).toLocaleString(),
           style: 'itemTotal'
         }
       ];
-
+      this.total = (items[i].quantity * this.getItems(items[i].itemId).price);
       this.listItem.push(product);
       this.subTotal += this.total;
     }
@@ -257,8 +279,6 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
 
   openPdf(item: any, groupIndex: number, invoiceIndex: number) {
     this.subTotal = 0;
-    // console.log(this.dataInvoiceGroup);
-    // console.log(item);
     this.getListItem(item.sellItems);
 
     const documentDefinition = {
@@ -301,7 +321,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
 
                       },
                       {
-                        text: this.sharedService.decode(this.dataInvoiceGroup.invoice.id, this.dataInvoiceGroup.invoice.count) + groupIndex + invoiceIndex,
+                        text: this.sharedService.decode(this.dataInvoiceGroup.invoice.id, this.dataInvoiceGroup.invoice.count, false) + groupIndex + invoiceIndex,
                         style: 'invoiceSubValue',
                         width: 100
 
@@ -456,7 +476,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
                   style: 'itemsFooterSubTitle'
                 },
                 {
-                  text: this.subTotal,
+                  text: this.subTotal.toLocaleString(),
                   style: 'itemsFooterSubValue'
                 }
               ],
@@ -466,7 +486,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
                   style: 'itemsFooterSubTitle'
                 },
                 {
-                  text: (this.subTotal * 7) / 100,
+                  text: ((this.subTotal * 7) / 100).toLocaleString(),
                   style: 'itemsFooterSubValue'
                 }
               ],
@@ -476,7 +496,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
                   style: 'itemsFooterTotalTitle'
                 },
                 {
-                  text: this.subTotal + ((this.subTotal * 7) / 100),
+                  text: (this.subTotal + ((this.subTotal * 7) / 100)).toLocaleString(),
                   style: 'itemsFooterTotalValue'
                 }
               ],

@@ -169,15 +169,11 @@ export class SalesComponent implements OnInit, OnDestroy {
           }
         ],
         {
-          text: items[i].quantity,
+          text: items[i].quantity.toLocaleString(),
           style: 'itemNumber'
         },
         {
-          text: this.getItems(items[i].itemId).price,
-          style: 'itemNumber'
-        },
-        {
-          text: '0%',
+          text: this.getItems(items[i].itemId).price.toLocaleString(),
           style: 'itemNumber'
         },
         {
@@ -185,10 +181,15 @@ export class SalesComponent implements OnInit, OnDestroy {
           style: 'itemNumber'
         },
         {
-          text: this.total = (items[i].quantity * this.getItems(items[i].itemId).price),
+          text: '0%',
+          style: 'itemNumber'
+        },
+        {
+          text: (items[i].quantity * this.getItems(items[i].itemId).price).toLocaleString(),
           style: 'itemTotal'
         }
       ];
+      this.total = (items[i].quantity * this.getItems(items[i].itemId).price),
       this.listItem.push(product);
       this.subTotal += this.total;
       // this.listItem = this.item;
@@ -201,7 +202,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   decode(id, count) {
-    return this.sharedService.decode(id, count);
+    return this.sharedService.decode(id, count, true);
   }
 
   formatDate(date: Date, expirationDate: Date) {
@@ -256,7 +257,7 @@ export class SalesComponent implements OnInit, OnDestroy {
 
                       },
                       {
-                        text: this.sharedService.decode(item.id, item.count),
+                        text: this.sharedService.decode(item.id, item.count, true),
                         style: 'quotationSubValue',
                         width: 100
 
@@ -480,7 +481,7 @@ export class SalesComponent implements OnInit, OnDestroy {
                   style: 'itemsFooterSubTitle'
                 },
                 {
-                  text: this.subTotal,
+                  text: this.subTotal.toLocaleString(),
                   style: 'itemsFooterSubValue'
                 }
               ],
@@ -490,7 +491,7 @@ export class SalesComponent implements OnInit, OnDestroy {
                   style: 'itemsFooterSubTitle'
                 },
                 {
-                  text: (this.subTotal * 7) / 100,
+                  text: ((this.subTotal * 7) / 100).toLocaleString(),
                   style: 'itemsFooterSubValue'
                 }
               ],
@@ -500,7 +501,7 @@ export class SalesComponent implements OnInit, OnDestroy {
                   style: 'itemsFooterTotalTitle'
                 },
                 {
-                  text: this.subTotal + ((this.subTotal * 7) / 100),
+                  text: (this.subTotal + ((this.subTotal * 7) / 100)).toLocaleString(),
                   style: 'itemsFooterTotalValue'
                 }
               ],

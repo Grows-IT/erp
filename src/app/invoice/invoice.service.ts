@@ -100,8 +100,7 @@ export class InvoiceService {
       switchMap((key) => {
         return this.http.patch(environment.siteUrl + '/quotation/' + quotation.id + '.json', { 'invoiceId': key.name });
       })
-    )
-
+    );
   }
 
   deleteInvoice(invoiceId: string, quotationId: string) {

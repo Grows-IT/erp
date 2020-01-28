@@ -7,7 +7,7 @@ export class SharedService {
 
   constructor() { }
 
-  decode(id, count) {
+  decode(id, count, isQuotation) {
     const PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
     id = id.substring(0, 8);
     let timestamp = 0;
@@ -17,7 +17,12 @@ export class SharedService {
     }
     const zeroPad = (num, places) => String(num).padStart(places, '0');
     const date = new Date(timestamp);
-    const invoiceId = 'GIT' + date.getDate() + date.getMonth() + 1 + date.getFullYear().toString().substr(-2) + zeroPad(count, 5);
-    return invoiceId;
+    let no;
+    if (isQuotation) {
+      no = 'Q' + date.getDate() + date.getMonth() + 1 + date.getFullYear().toString().substr(-2) + zeroPad(count, 5);
+    } else {
+      no = 'I' + date.getDate() + date.getMonth() + 1 + date.getFullYear().toString().substr(-2) + zeroPad(count, 5);
+    }
+    return no;
   }
 }

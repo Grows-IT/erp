@@ -47,6 +47,7 @@
                 <td>
                   <mat-form-field appearance="outline">
                     <mat-label>Quantity : </mat-label>
+                    <!-- {{getMaxQuantity()}} -->
                     <input matInput type="number" min="0" [formControl]="row.get('quantity')" required>
                   </mat-form-field>
                 </td>
@@ -71,28 +72,34 @@
     <div *ngFor="let subInv of dataInvoiceGroup.invoice.group; let i = index">
       <div *ngIf="dataInvoiceGroup.index === i">
         <span *ngFor="let list of subInv.subInvoices; let j = index">
+          <!-- {{list|json}} -->
           <h4>Invoice Name : {{list.name}} ,
-            Invoice NO : {{decode(dataInvoiceGroup.invoice.id, dataInvoiceGroup.invoice.count)}}{{dataInvoiceGroup.index}}{{j}} ,
-            PDF : <button mat-button (click)="openPdf(list, dataInvoiceGroup.index, j)"><img src="/assets/icons/pdfbw.svg"></button>
+            Invoice NO :
+            {{decode(dataInvoiceGroup.invoice.id, dataInvoiceGroup.invoice.count)}}{{dataInvoiceGroup.index}}{{j}} ,
+            PDF : <button mat-button (click)="openPdf(list, dataInvoiceGroup.index, j)"><img
+                src="/assets/icons/pdfbw.svg"></button>
           </h4>
-          <table mat-table [dataSource]="list.sellItems" multiTemplateDataRows class="mat-elevation-z8">
+          <table *ngIf="list.sellItems" mat-table [dataSource]="list.sellItems" multiTemplateDataRows class="mat-elevation-z8">
             <ng-container matColumnDef="item">
               <th mat-header-cell *matHeaderCellDef> Item </th>
-              <td mat-cell *matCellDef="let element">{{getItems(element.itemId).name}} </td>
+              <td mat-cell *matCellDef="let element">{{getItems(element).name}} </td>
             </ng-container>
 
             <ng-container matColumnDef="quantity">
               <th mat-header-cell *matHeaderCellDef> Quantity </th>
-              <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+              <td mat-cell *matCellDef="let element"> {{(element.quantity).toLocaleString()}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="totlePrice">
-              <th mat-header-cell *matHeaderCellDef> Totle price </th>
-              <td mat-cell *matCellDef="let element">{{getItems(element.itemId).name}} </td>
+            <ng-container matColumnDef="totalPrice">
+              <th mat-header-cell *matHeaderCellDef> Total price </th>
+              <td mat-cell *matCellDef="let element">
+                <!-- {{getTotal((getItems(element).price * element.quantity), j)}} -->
+                {{(getItems(element).price * element.quantity).toLocaleString()}} </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="invoiceCol"></tr>
             <tr mat-row *matRowDef="let row; columns: invoiceCol" class="detail-row"></tr>
           </table>
+          <!-- {{tableTotal[j]}} -->
         </span>
       </div>
     </div>

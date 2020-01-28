@@ -25,8 +25,6 @@ export class InvoicegroupComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private invoiceService: InvoiceService, private cService: CustomerService,
     public dialog: MatDialog, private sharedService: SharedService) {
-
-
     this.addGroup = new FormGroup({
       name: new FormControl(null, [Validators.required]),
     });
@@ -56,10 +54,6 @@ export class InvoicegroupComponent implements OnInit {
     return customer;
   }
 
-  onClickadd() {
-
-  }
-
   onClickOpenDetail(invoice, index) {
     const dialogRef = this.dialog.open(InvoiceDetailComponent, {
       panelClass: 'nopadding-dialog',
@@ -77,6 +71,6 @@ export class InvoicegroupComponent implements OnInit {
   }
 
   decode(id, count) {
-    return this.sharedService.decode(id, count);
+    return this.sharedService.decode(id, count, false);
   }
 }

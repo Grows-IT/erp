@@ -25,7 +25,6 @@ import { SharedService } from 'src/app/shared/shared.service';
   styleUrls: ["./quotationdetail.component.scss"]
 })
 export class QuotationdetailComponent implements OnInit, OnDestroy {
-  // data: any;
   subscription: Subscription;
   customerSubscription: Subscription;
   customers: Customer[];
@@ -38,8 +37,8 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
   subTotal: number;
   invoiceSubscription: Subscription;
   invoices: Invoice[];
+  quotations: Quotation[];
 
-  // tslint:disable-next-line: max-line-length
   constructor(
     private invoiceService: InvoiceService,
     public dialog: MatDialog,
@@ -50,7 +49,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     private sharedService: SharedService,
     private itemsService: ItemsService,
     @Inject(MAT_DIALOG_DATA) public data
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.data = this.dialogRef.componentInstance.data;
@@ -69,6 +68,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     this.itemsService.getAllItems().subscribe();
 
     this.subscription = this.salesService.quotations.subscribe(quotations => {
+      this.quotations = quotations;
       if (quotations === null) {
         return;
       }
@@ -139,9 +139,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
   }
 
   decode(id) {
-    console.log(this.quotation);
-
-    return this.sharedService.decode(id, this.quotation.count);
+    return this.sharedService.decode(id, this.quotation.count, true);
   }
 
   edit(quotation) {
@@ -153,6 +151,10 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
       autoFocus: false,
       data: this.quotation
     });
+  }
+
+  getDate(date: Date) {
+    return this.formatDate(date);
   }
 
   getListItem(items) {
@@ -173,15 +175,11 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
           }
         ],
         {
-          text: items[i].quantity,
+          text: (items[i].quantity).toLocaleString(),
           style: "itemNumber"
         },
         {
-          text: this.getItems(items[i].itemId).price,
-          style: "itemNumber"
-        },
-        {
-          text: "0%",
+          text: this.getItems(items[i].itemId).price.toLocaleString(),
           style: "itemNumber"
         },
         {
@@ -189,45 +187,25 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
           style: "itemNumber"
         },
         {
-          text: this.total = (items[i].quantity * this.getItems(items[i].itemId).price),
+          text: "0%",
+          style: "itemNumber"
+        },
+        {
+          text: (items[i].quantity * this.getItems(items[i].itemId).price).toLocaleString(),
           style: "itemTotal"
         }
       ];
+      this.total = (items[i].quantity * this.getItems(items[i].itemId).price),
       this.listItem.push(product);
       this.subTotal += this.total;
-      // this.product = [];
-      // this.listItem = this.product;
-      // this.listItem.push(this.product);
-      // if (i === items.length - 1) {
-      //   this.listItem = [...this.listItem];
-      // }
-      // this.product = product;
-      console.log(product);
     }
-    console.log(this.listItem);
   }
 
   openPdf(item: any) {
     this.subTotal = 0;
-    console.log(item);
     this.getListItem(item.items);
-    // console.log(this.product);
 
     const documentDefinition = {
-      // header: {
-      //   columns: [
-      //     { text: 'HEADER LEFT', style: 'documentHeaderLeft' },
-      //     { text: 'HEADER CENTER', style: 'documentHeaderCenter' },
-      //     { text: 'HEADER RIGHT', style: 'documentHeaderRight' }
-      //   ]
-      // },
-      // footer: {
-      //   columns: [
-      //     { text: 'FOOTER LEFT', style: 'documentFooterLeft' },
-      //     { text: 'FOOTER CENTER', style: 'documentFooterCenter' },
-      //     { text: 'FOOTER RIGHT', style: 'documentFooterRight' }
-      //   ]
-      // },
       content: [
         // Header
         {
@@ -253,7 +231,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
                         width: "*"
                       },
                       {
-                        text: this.sharedService.decode(item.id, item.count),
+                        text: this.sharedService.decode(item.id, item.count, true),
                         style: "quotationSubValue",
                         width: 100
                       }
@@ -267,7 +245,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
                         width: "*"
                       },
                       {
-                        text: this.quotation.date,
+                        text: this.getDate(this.quotation.date),
                         style: "quotationSubValue",
                         width: 100
                       }
@@ -281,7 +259,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
                         width: "*"
                       },
                       {
-                        text: this.quotation.expirationDate,
+                        text: this.getDate(this.quotation.expirationDate),
                         style: "quotationSubValue",
                         width: 100
                       }
@@ -472,7 +450,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
                   style: "itemsFooterSubTitle"
                 },
                 {
-                  text: this.subTotal,
+                  text: this.subTotal.toLocaleString(),
                   style: "itemsFooterSubValue"
                 }
               ],
@@ -482,7 +460,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
                   style: "itemsFooterSubTitle"
                 },
                 {
-                  text: (this.subTotal * 7) / 100,
+                  text: ((this.subTotal * 7) / 100).toLocaleString(),
                   style: "itemsFooterSubValue"
                 }
               ],
@@ -492,7 +470,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
                   style: "itemsFooterTotalTitle"
                 },
                 {
-                  text: this.subTotal + ((this.subTotal * 7) / 100),
+                  text: (this.subTotal + ((this.subTotal * 7) / 100)).toLocaleString(),
                   style: "itemsFooterTotalValue"
                 }
               ]
