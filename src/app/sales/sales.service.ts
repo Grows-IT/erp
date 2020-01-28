@@ -17,6 +17,7 @@ interface QuototationResData {
   invoiceId: string;
   items: SellItem[];
   quantity: number;
+  count: number,
 }
 
 interface InvoiceResData {
@@ -25,6 +26,10 @@ interface InvoiceResData {
   item: SellItem;
   quotationId: string;
   subInvoice: string;
+}
+
+interface QuotationCount {
+  count: number;
 }
 
 @Injectable({
@@ -47,9 +52,14 @@ export class SalesService {
       name: quotation.customerName,
       address: quotation.addressTo
     };
+    let customerKey: string;
     return this.http.post<any>(environment.siteUrl + '/customer.json', customer).pipe(
+      switchMap(res => {
+        customerKey = res.name;
+        return this.updateCountQuotation();
+      }),
       withLatestFrom(this.itemsService.items),
-      switchMap(([res, items]) => {
+      switchMap(([quotationCount, items]) => {
         const sellItems: SellItem[] = [];
         quotation.allItem.forEach(itemInput => {
           const item = items.find(it => it.name === itemInput.item);
@@ -59,10 +69,11 @@ export class SalesService {
         data = {
           totalPrice: quotation.totalPrice,
           // by: quotation.by,
-          customerId: res.name,
+          customerId: customerKey,
           date: quotation.date,
           expirationDate: quotation.expirationDate,
           items: sellItems,
+          count: quotationCount.count,
           invoiceId: ''
         };
         return this.http.post(environment.siteUrl + '/quotation.json', data);
@@ -92,7 +103,8 @@ export class SalesService {
               resData[key].date,
               resData[key].expirationDate,
               allItem,
-              resData[key].invoiceId
+              resData[key].invoiceId,
+              resData[key].count,
             );
             quotations.push(quotation);
           }
@@ -136,21 +148,40 @@ export class SalesService {
           sellItems.push(sellItem);
         });
         data = {
-            totalPrice: quotation.totalPrice,
-              // by: quotation.by,
-            customerId: cusId,
-            date: quotation.date,
-            expirationDate: quotation.expirationDate,
-            items: sellItems,
-            invoiceId: ''
+          totalPrice: quotation.totalPrice,
+          // by: quotation.by,
+          customerId: cusId,
+          date: quotation.date,
+          expirationDate: quotation.expirationDate,
+          items: sellItems,
+          invoiceId: ''
         };
         return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
       })
     );
-    // const sellItems: SellItem[] = [];
+  }
 
+  getCountInvoice() {
+    return this.http.get<QuotationCount>(environment.siteUrl + '/quotationCount.json');
+  }
+
+  updateCountQuotation() {
+    return this.getCountInvoice().pipe(
+      switchMap((c) => {
+        if (!c) {
+          return this.http.put<QuotationCount>(environment.siteUrl + '/quotationCount.json', { count: 1 });
+        } else {
+          const count = {
+            'count': c.count + 1
+          };
+          return this.http.patch<QuotationCount>(environment.siteUrl + '/quotationCount.json', count);
+        }
+      })
+    );
   }
 }
+
+
 
   // updateQuotation(quotation: any, id: string) {
   //   let data;

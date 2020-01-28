@@ -8,6 +8,7 @@ import { CustomerService } from 'src/app/customer/customer.service';
 import { Customer } from 'src/app/customer/customer.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { InvoiceDetailComponent } from '../invoice-detail/invoice-detail.component';
+import { SharedService } from 'src/app/shared/shared.service';
 
 @Component({
   selector: 'app-invoicegroup',
@@ -22,7 +23,8 @@ export class InvoicegroupComponent implements OnInit {
   addGroup: FormGroup;
   listGroupName: any;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private invoiceService: InvoiceService, private cService: CustomerService, public dialog: MatDialog) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private invoiceService: InvoiceService, private cService: CustomerService,
+    public dialog: MatDialog, private sharedService: SharedService) {
 
 
     this.addGroup = new FormGroup({
@@ -72,5 +74,9 @@ export class InvoicegroupComponent implements OnInit {
   addGroupName(groupName) {
     this.invoice.group.push(new InvoiceGroup(groupName.value.name, []));
     this.invoiceService.updateInvoice(this.invoice).subscribe();
+  }
+
+  decode(id, count) {
+    return this.sharedService.decode(id, count);
   }
 }

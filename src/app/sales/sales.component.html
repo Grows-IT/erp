@@ -8,12 +8,12 @@
   <ng-container matColumnDef="no">
     <th mat-header-cell *matHeaderCellDef> NO. </th>
     <td mat-cell *matCellDef="let element"><button mat-button (click)="quotationDetail(element.id)">
-        {{element.id  | cutString}} </button></td>
+        {{decode(element.id, element.count)}}</button></td>
   </ng-container>
 
   <ng-container matColumnDef="customerName">
     <th mat-header-cell *matHeaderCellDef> Customer name</th>
-    <td mat-cell *matCellDef="let element"> {{ getCustomer(element.customerId).name }} </td>
+    <td mat-cell *matCellDef="let element"> {{getCustomer(element.customerId).name}} </td>
   </ng-container>
 
   <ng-container matColumnDef="date">

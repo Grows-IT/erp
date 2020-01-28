@@ -11,6 +11,7 @@ export class Quotation {
     public expirationDate: Date,
     public items: SellItem[],
     public invoiceId: string,
+    public count: number,
   ) { }
 }
 

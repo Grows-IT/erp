@@ -12,6 +12,7 @@ import { Invoice } from './invoice.model';
 import { InvoicegroupComponent } from './invoicegroup/invoicegroup.component';
 import { Item } from '../items/items.model';
 import { ItemsService } from '../items/items.service';
+import { SharedService } from '../shared/shared.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -55,7 +56,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   total: number;
   subTotal: number;
 
-  constructor(private invoiceService: InvoiceService, private salesService: SalesService, private cService: CustomerService, public dialog: MatDialog, private itemsService: ItemsService) { }
+  constructor(private invoiceService: InvoiceService, private salesService: SalesService, private cService: CustomerService,
+    public dialog: MatDialog, private itemsService: ItemsService, private sharedService: SharedService) { }
 
   ngOnInit() {
     this.quotationSubscription = this.salesService.quotations.subscribe(quotations => {
@@ -132,17 +134,21 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   //   return quotation;
   // }
 
+  formatDate(date: Date) {
+    return date.toDateString();
+  }
+
   getDate(quotationId: string) {
     if (!this.quotations) {
       return null;
     }
     const quotation = this.quotations.find(quo => quo.id === quotationId);
-    // console.log(allDate);
+    const date = new Date(quotation.date);
 
     if (!quotation) {
       return null;
     }
-    return quotation.date;
+    return this.formatDate(date);
   }
 
   getExpirationDate(quotationId: string) {
@@ -150,12 +156,12 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       return null;
     }
     const quotation = this.quotations.find(quo => quo.id === quotationId);
-    // console.log(allDate);
+    const date = new Date(quotation.expirationDate);
 
     if (!quotation) {
       return null;
     }
-    return quotation.expirationDate;
+    return this.formatDate(date);
   }
 
 
@@ -178,17 +184,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     });
   }
 
-  decode(id) {
-    const PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
-    id = id.substring(0, 8);
-    let timestamp = 0;
-    for (let i = 0; i < id.length; i++) {
-      const c = id.charAt(i);
-      timestamp = timestamp * 64 + PUSH_CHARS.indexOf(c);
-    }
-    const date = new Date(timestamp);
-    const invoiceId = 'GIT' + date.getDate() + date.getMonth() + 1 + date.getFullYear().toString().substr(-2) + date.getTime();
-    return invoiceId;
+  decode(id, count) {
+    return this.sharedService.decode(id, count);
   }
 
   getListItem(items) {
@@ -230,24 +227,12 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
       this.listItem.push(product);
       this.subTotal += this.total;
-      // this.listItem.push(this.item);
-      // if (i === item.length - 1) {
-      //   this.listItem = [...this.listItem];
-      // console.log(this.listItem);
-      // }
     }
-  }
-
-  formatDate(date: Date, expirationDate: Date) {
-    // console.log(date.toDateString());
-    this.date = date.toDateString();
-    this.expirationDate = expirationDate.toDateString();
   }
 
   opnePdf(item: any) {
     this.subTotal = 0;
     console.log(item);
-    this.formatDate(new Date(item.date), new Date(item.expirationDate));
     this.getListItem(item.items);
 
     const documentDefinition = {
@@ -290,7 +275,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
                       },
                       {
-                        text: item.id.substring(8),
+                        text: this.sharedService.decode(item.id, item.count),
                         style: 'invoiceSubValue',
                         width: 100
 
@@ -425,74 +410,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
               // Items
               // Item 1
               ...this.listItem,
-
-              // [
-              //   [
-              //     {
-              //       text: 'Item 1',
-              //       style: 'itemTitle'
-              //     },
-              //     {
-              //       text: 'Item Description',
-              //       style: 'itemSubTitle'
-
-              //     }
-              //   ],
-              //   {
-              //     text: '1',
-              //     style: 'itemNumber'
-              //   },
-              //   {
-              //     text: '$999.99',
-              //     style: 'itemNumber'
-              //   },
-              //   {
-              //     text: '0%',
-              //     style: 'itemNumber'
-              //   },
-              //   {
-              //     text: '0%',
-              //     style: 'itemNumber'
-              //   },
-              //   {
-              //     text: '$999.99',
-              //     style: 'itemTotal'
-              //   }
-              // ],
-              // // Item 2
-              // [
-              //   [
-              //     {
-              //       text: 'Item 2',
-              //       style: 'itemTitle'
-              //     },
-              //     {
-              //       text: 'Item Description',
-              //       style: 'itemSubTitle'
-
-              //     }
-              //   ],
-              //   {
-              //     text: '1',
-              //     style: 'itemNumber'
-              //   },
-              //   {
-              //     text: '$999.99',
-              //     style: 'itemNumber'
-              //   },
-              //   {
-              //     text: '0%',
-              //     style: 'itemNumber'
-              //   },
-              //   {
-              //     text: '0%',
-              //     style: 'itemNumber'
-              //   },
-              //   {
-              //     text: '$999.99',
-              //     style: 'itemTotal'
-              //   }
-              // ],
               // END Items
             ]
           }, // table

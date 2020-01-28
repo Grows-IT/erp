@@ -1,7 +1,7 @@
 <mat-spinner *ngIf="!invoice"></mat-spinner>
 <div *ngIf="invoice">
   <mat-toolbar class="allbg">
-    <span style="color: white;">Invoice : {{ data }}</span>
+    <span style="color: white;">Invoice : {{decode(invoice.id, invoice.count)}}</span>
     <span class="space"></span>
     <button mat-button mat-dialog-close tabindex="-1" style="color: white;">
       <i class="material-icons"> close </i>

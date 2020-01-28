@@ -13,7 +13,12 @@ interface InvoiceResData {
   type: string;
   items: SellItem[];
   subInvoice: string;
+  count: number;
   group?: InvoiceGroup[];
+}
+
+interface InvoiceCount {
+  count: number;
 }
 
 @Injectable({
@@ -63,6 +68,7 @@ export class InvoiceService {
               resData[key].customerId,
               resData[key].type,
               allItem,
+              resData[key].count,
               groups
             );
             invoices.push(invoice);
@@ -77,19 +83,25 @@ export class InvoiceService {
   }
 
   createInvoice(quotation: any, type: string) {
-    const data = {
-      'quotationId': quotation.id,
-      'customerId': quotation.customerId,
-      'items': quotation.items,
-      'type': type,
-      // 'group': null
-    };
-
-    return this.http.post<{ [key: string]: InvoiceResData }>(environment.siteUrl + '/invoices.json', data).pipe(
+    return this.updateCountInvoice().pipe(
+      map((count) => {
+        const data = {
+          'quotationId': quotation.id,
+          'customerId': quotation.customerId,
+          'items': quotation.items,
+          'type': type,
+          'count': count.count
+        };
+        return data;
+      }),
+      switchMap((data) => {
+        return this.http.post<{ [key: string]: InvoiceResData }>(environment.siteUrl + '/invoices.json', data);
+      }),
       switchMap((key) => {
         return this.http.patch(environment.siteUrl + '/quotation/' + quotation.id + '.json', { 'invoiceId': key.name });
       })
-    );
+    )
+
   }
 
   deleteInvoice(invoiceId: string, quotationId: string) {
@@ -111,20 +123,24 @@ export class InvoiceService {
     return this.http.patch(environment.siteUrl + '/invoices/' + invoice.id + '.json', inv);
   }
 
-  // getCountInvoice() {
-  //   return this.http.get();
-  // }
+  getCountInvoice() {
+    return this.http.get<InvoiceCount>(environment.siteUrl + '/invoiceCount.json');
+  }
 
-  // updateCountInvoice(c: number) {
-  //   if (!c) {
-  //     c = 0;
-  //   }
-  //   const count = {
-  //     count: c + 1
-  //   };
-  //   this.http.patch(environment.siteUrl + '/invoiceCount.json', count);
-  // }
-
+  updateCountInvoice() {
+    return this.getCountInvoice().pipe(
+      switchMap((c) => {
+        if (!c) {
+          return this.http.put<InvoiceCount>(environment.siteUrl + '/invoiceCount.json', { count: 1 });
+        } else {
+          const count = {
+            'count': c.count + 1
+          };
+          return this.http.patch<InvoiceCount>(environment.siteUrl + '/invoiceCount.json', count);
+        }
+      })
+    );
+  }
 }
 
 
