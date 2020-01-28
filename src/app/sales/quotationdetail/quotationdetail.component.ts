@@ -17,6 +17,7 @@ import { FormArray } from '@angular/forms';
 import { InvoicegroupComponent } from 'src/app/invoice/invoicegroup/invoicegroup.component';
 import { InvoiceService } from 'src/app/invoice/invoice.service';
 import { Invoice } from 'src/app/invoice/invoice.model';
+import { SharedService } from 'src/app/shared/shared.service';
 
 @Component({
   selector: "app-quotationdetail",
@@ -46,6 +47,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     private salesService: SalesService,
     private router: Router,
     private dialogRef: MatDialogRef<QuotationdetailComponent>,
+    private sharedService: SharedService,
     private itemsService: ItemsService,
     @Inject(MAT_DIALOG_DATA) public data
   ) {}
@@ -117,6 +119,10 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  formatDate(date: Date) {
+    const d = new Date(date);
+    return d.toDateString();
+  }
 
   delete(id: string) {
     this.salesService.deleteQuotation(id).subscribe();
@@ -130,6 +136,12 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
 
   close(): void {
     this.dialogRef.close();
+  }
+
+  decode(id) {
+    console.log(this.quotation);
+
+    return this.sharedService.decode(id, this.quotation.count);
   }
 
   edit(quotation) {
@@ -241,7 +253,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
                         width: "*"
                       },
                       {
-                        text: item.id.substring(8),
+                        text: this.sharedService.decode(item.id, item.count),
                         style: "quotationSubValue",
                         width: 100
                       }

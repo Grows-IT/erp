@@ -1,7 +1,8 @@
 <mat-spinner *ngIf="!invoices"></mat-spinner>
 <div *ngIf="invoices">
   <mat-toolbar class="allbg">
-    <span style="color: white;">Invoice : {{decode(dataInvoiceGroup.invoice.id)}} , </span>
+    <span style="color: white;">Invoice : {{decode(dataInvoiceGroup.invoice.id, dataInvoiceGroup.invoice.count)}} ,
+    </span>
     <span style="color: white;"> Group Name : {{dataInvoiceGroup.invoice.group[dataInvoiceGroup.index].name}}</span>
     <span class="space"></span>
     <button mat-button mat-dialog-close tabindex="-1" style="color: white;">
@@ -69,8 +70,11 @@
 
     <div *ngFor="let subInv of dataInvoiceGroup.invoice.group; let i = index">
       <div *ngIf="dataInvoiceGroup.index === i">
-        <span *ngFor="let list of subInv.subInvoices">
-          <h4>Group Name : {{list.name}}</h4>
+        <span *ngFor="let list of subInv.subInvoices; let j = index">
+          <h4>Invoice Name : {{list.name}} ,
+            Invoice NO : {{decode(dataInvoiceGroup.invoice.id, dataInvoiceGroup.invoice.count)}}{{dataInvoiceGroup.index}}{{j}} ,
+            PDF : <button mat-button (click)="openPdf(list, dataInvoiceGroup.index, j)"><img src="/assets/icons/pdfbw.svg"></button>
+          </h4>
           <table mat-table [dataSource]="list.sellItems" multiTemplateDataRows class="mat-elevation-z8">
             <ng-container matColumnDef="item">
               <th mat-header-cell *matHeaderCellDef> Item </th>
@@ -82,6 +86,10 @@
               <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
             </ng-container>
 
+            <ng-container matColumnDef="totlePrice">
+              <th mat-header-cell *matHeaderCellDef> Totle price </th>
+              <td mat-cell *matCellDef="let element">{{getItems(element.itemId).name}} </td>
+            </ng-container>
             <tr mat-header-row *matHeaderRowDef="invoiceCol"></tr>
             <tr mat-row *matRowDef="let row; columns: invoiceCol" class="detail-row"></tr>
           </table>

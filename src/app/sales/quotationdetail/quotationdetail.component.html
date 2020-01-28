@@ -27,7 +27,7 @@
 
 <h4 align="center">
   Quote NO.
-  <h4 style="color: darkcyan; display: inline-block;">{{ data }}</h4>
+  <h4 style="color: darkcyan; display: inline-block;">{{ decode(data) }}</h4>
 </h4>
 <div align="center">
   <mat-spinner *ngIf="!quotation"></mat-spinner>
@@ -76,14 +76,14 @@
   <div style="padding-left: 50px;">
     <img src="/assets/icons/date.svg" class="imgdetail" />
     <h4 style="display: inline-block; color: darkcyan">
-      {{ quotation.date }}
+      {{ formatDate(quotation.date) }}
     </h4>
   </div>
 
   <div style="padding-left: 50px;">
     <img src="/assets/icons/expire.svg" class="imgdetail" />
     <h4 style="display: inline-block; color: darkcyan">
-      {{ quotation.expirationDate }}
+      {{ formatDate(quotation.expirationDate) }}
     </h4>
   </div>
   <div class="showhidebutton">

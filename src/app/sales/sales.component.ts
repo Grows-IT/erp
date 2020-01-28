@@ -16,6 +16,7 @@ import { map } from 'rxjs-compat/operator/map';
 import { tap, switchMap } from 'rxjs/operators';
 import { ItemsService } from '../items/items.service';
 import { Item } from '../items/items.model';
+import { SharedService } from '../shared/shared.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 // export interface QuotationList {
@@ -56,7 +57,8 @@ export class SalesComponent implements OnInit, OnDestroy {
   total: number;
   subTotal: number;
 
-  constructor(public dialog: MatDialog, private salesService: SalesService, private router: Router, private cService: CustomerService, private invoiceService: InvoiceService, private itemsService: ItemsService) {
+  constructor(public dialog: MatDialog, private salesService: SalesService, private router: Router, private cService: CustomerService,
+    private invoiceService: InvoiceService, private itemsService: ItemsService, private sharedService: SharedService) {
   }
 
   ngOnInit() {
@@ -82,9 +84,9 @@ export class SalesComponent implements OnInit, OnDestroy {
     this.customerSubscription.unsubscribe();
   }
 
-  getItems(itemId: string){
+  getItems(itemId: string) {
     const item = this.items.find(it => it.id === itemId);
-    if(!item){
+    if (!item) {
       return null;
     }
     return item;
@@ -198,6 +200,10 @@ export class SalesComponent implements OnInit, OnDestroy {
     }
   }
 
+  decode(id, count) {
+    return this.sharedService.decode(id, count);
+  }
+
   formatDate(date: Date, expirationDate: Date) {
     // console.log(date.toDateString());
     this.date = date.toDateString();
@@ -250,7 +256,7 @@ export class SalesComponent implements OnInit, OnDestroy {
 
                       },
                       {
-                        text: item.id.substring(8),
+                        text: this.sharedService.decode(item.id, item.count),
                         style: 'quotationSubValue',
                         width: 100
 
