@@ -12,6 +12,7 @@ import { QuotationdetailComponent } from './sales/quotationdetail/quotationdetai
 import { InvoicegroupComponent } from './invoice/invoicegroup/invoicegroup.component';
 import { CustomerComponent } from './customer/customer.component';
 import { FlowerplantComponent } from './flowerplant/flowerplant.component';
+import { UsersmanagementComponent } from './usersmanagement/usersmanagement.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,11 @@ const routes: Routes = [
   {
     path: 'flowerplant',
     component: FlowerplantComponent,
+    canActivate: [SigninGuard],
+  },
+  {
+    path: 'usersmanagement',
+    component: UsersmanagementComponent,
     canActivate: [SigninGuard],
   },
   {

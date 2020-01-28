@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, of } from 'rxjs';
 import { tap, first, switchMap, catchError, map } from 'rxjs/operators';
+import { stringify } from 'querystring';
 
 export class Auth {
   constructor(
@@ -46,10 +47,37 @@ export class AuthService {
     );
   }
 
+  signup(form) {
+    const data = {
+      email: form.email,
+      password: form.password,
+      returnSecureToken: true
+    };
+
+    return this.http.post<{ email: string, idToken: string }>(environment.authSignUpUtl + environment.firebase.apiKey, data).pipe(
+      tap(val => {
+        console.log(val);
+        const authen = new Auth(val.email, val.idToken);
+        this.saveUserToStorage(authen);
+        // console.log(this.getTokenFormStorage());
+        this._token.next(authen.token);
+        this._user.next(authen);
+      })
+    );
+  }
+
+
   logout() {
     this._user.next(null);
     this._token.next(null);
     localStorage.clear();
+  }
+
+  delete(){
+    // const data = {
+    //   idToken: String
+    // };
+    // return this.http.post<{ idToken: string }>(environment.deleteAccount + environment.firebase.apiKey, data);
   }
 
   isLoggedIn() {

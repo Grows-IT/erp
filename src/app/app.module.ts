@@ -53,6 +53,8 @@ import { CustomerComponent } from "./customer/customer.component";
 import { CustomerdialogComponent } from "./customer/customerdialog/customerdialog.component";
 import { FlowerplantComponent } from './flowerplant/flowerplant.component';
 import { FlowerplantdialogComponent } from './flowerplant/flowerplantdialog/flowerplantdialog.component';
+import { UsersmanagementComponent } from './usersmanagement/usersmanagement.component';
+import { UserdialogComponent } from './usersmanagement/userdialog/userdialog.component';
 
 const materialComponent = [
   MatGridListModule,
@@ -101,7 +103,9 @@ const materialComponent = [
     CustomerComponent,
     CustomerdialogComponent,
     FlowerplantComponent,
-    FlowerplantdialogComponent
+    FlowerplantdialogComponent,
+    UsersmanagementComponent,
+    UserdialogComponent
   ],
   imports: [
     BrowserModule,
@@ -116,6 +120,6 @@ const materialComponent = [
   ],
   providers: [MatNativeDateModule],
   bootstrap: [AppComponent],
-  entryComponents: [QuotationDialogComponent, CustomerdialogComponent, FlowerplantdialogComponent]
+  entryComponents: [QuotationDialogComponent, CustomerdialogComponent, FlowerplantdialogComponent, UserdialogComponent]
 })
 export class AppModule {}

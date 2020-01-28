@@ -4,13 +4,15 @@
 
 const siteUrl = 'https://erp-grows-it.firebaseio.com';
 const authLoginUtl = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
-const authSigninUtl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
+const authSignUpUtl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
+const deleteAccount = 'https://identitytoolkit.googleapis.com/v1/accounts:delete?key=';
 
 export const environment = {
   production: false,
   siteUrl,
   authLoginUtl,
-  authSigninUtl,
+  authSignUpUtl,
+  deleteAccount,
   firebase: {
     apiKey: 'AIzaSyC-7g5A_6HW0LwMhve7jKajZGq93GTXRZE',
     authDomain: 'erp-grows-it.firebaseapp.com',
