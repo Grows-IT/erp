@@ -180,14 +180,12 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteTableSubInvoice(id, i, j) {
-    this.dataInvoiceGroup.invoice.group[i].subInvoices.splice(j, 1);
+    // this.dataInvoiceGroup.invoice.group[i].subInvoices.splice(j, 1);
+    this.dataInvoiceGroup.invoice.group[i].subInvoices[j].status = 'cancel';
     // console.log(this.dataInvoiceGroup.invoice);
     this.invoiceService.deleteTableSubInvoice(id, this.dataInvoiceGroup.invoice).pipe(
       tap(() => this.invoiceService.getAllInvoice())
     ).subscribe();
-  }
-
-  delete(ele, i, j) {
   }
 
   onRemoveRow(rowIndex: number) {
@@ -216,7 +214,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     this.invoiceService.updateCountSubInvoice().pipe(
       tap(subInvoiceCount => {
         this.dataInvoiceGroup.invoice.group[this.dataInvoiceGroup.index].subInvoices.push(
-          new SubInvoice(invoiceId + '' + subInvoiceCount.count, data.name, sellItems)
+          new SubInvoice(invoiceId + '' + subInvoiceCount.count, data.name, sellItems, 'active')
         );
       }),
       switchMap(() => {

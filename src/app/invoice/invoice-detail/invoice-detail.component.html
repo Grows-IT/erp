@@ -72,16 +72,22 @@
     <div *ngFor="let subInv of dataInvoiceGroup.invoice.group; let i = index">
       <div *ngIf="dataInvoiceGroup.index === i">
         <span *ngFor="let list of subInv.subInvoices; let j = index">
+          <!-- <div *ngIf="list.status === 'active'"> -->
           <!-- {{list|json}} -->
           <h4>Invoice Name : {{list.name}} ,
             Invoice NO : {{list.subInvoiceId}},
-            <!-- {{decode(dataInvoiceGroup.invoice.id, dataInvoiceGroup.invoice.count)}}{{dataInvoiceGroup.index}}{{j}} , -->
-            PDF : <button mat-button (click)="openPdf(list, dataInvoiceGroup.index, j)">
-              <img src="/assets/icons/pdfbw.svg">
-            </button>
+            <span *ngIf="list.status === 'active'">
+              PDF : <button mat-button (click)="openPdf(list, dataInvoiceGroup.index, j)">
+                <img src="/assets/icons/pdfbw.svg">
+              </button>
+            </span>
+            <span *ngIf="list.status !== 'active'" style="color: red;">Cancel</span>
           </h4>
-          <table *ngIf="list.sellItems" mat-table [dataSource]="list.sellItems" multiTemplateDataRows
-            class="mat-elevation-z8">
+
+          <!-- table status active -->
+
+          <table *ngIf="list.sellItems&&list.status === 'active'" mat-table [dataSource]="list.sellItems"
+            multiTemplateDataRows class="mat-elevation-z8">
             <ng-container matColumnDef="item">
               <th mat-header-cell *matHeaderCellDef> Item </th>
               <td mat-cell *matCellDef="let element">{{getItems(element).name}} </td>
@@ -89,7 +95,8 @@
 
             <ng-container matColumnDef="quantity">
               <th mat-header-cell *matHeaderCellDef> Quantity </th>
-              <td mat-cell *matCellDef="let element"><span *ngIf="element">{{(element.quantity).toLocaleString()}}</span></td>
+              <td mat-cell *matCellDef="let element"><span
+                  *ngIf="element">{{(element.quantity).toLocaleString()}}</span></td>
             </ng-container>
 
             <ng-container matColumnDef="totalPrice">
@@ -105,26 +112,75 @@
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #more>
-                  <button mat-menu-item (click)="deleteTableSubInvoice(dataInvoiceGroup.invoice.id, i, j)">Delete Table</button>
+                  <button mat-menu-item (click)="deleteTableSubInvoice(dataInvoiceGroup.invoice.id, i, j)">Delete
+                    Table</button>
                 </mat-menu>
               </th>
               <td mat-cell *matCellDef="let element">
-                <!-- <button mat-icon-button [matMenuTriggerFor]="more" aria-label="" style="float: right;">
-                  <mat-icon>more_vert</mat-icon>
-                </button>
-                <mat-menu #more>
-                  <button mat-menu-item (click)="delete(element, i, j)">Delete</button>
-                  <button mat-menu-item>Edit</button>
-                </mat-menu> -->
               </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="invoiceCol"></tr>
             <tr mat-row *matRowDef="let row; columns: invoiceCol" class="detail-row"></tr>
           </table>
+
+          <!-- end table status active -->
+
+
+          <!-- table status cancel -->
+
+          <table *ngIf="list.sellItems&&list.status !== 'active'" mat-table [dataSource]="list.sellItems"
+            multiTemplateDataRows class="mat-elevation-z8">
+            <ng-container matColumnDef="item">
+              <th mat-header-cell *matHeaderCellDef> Item </th>
+              <td mat-cell *matCellDef="let element" class="disabled">{{getItems(element).name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="quantity">
+              <th mat-header-cell *matHeaderCellDef> Quantity </th>
+              <td mat-cell *matCellDef="let element" class="disabled"><span
+                  *ngIf="element">{{(element.quantity).toLocaleString()}}</span></td>
+            </ng-container>
+
+            <ng-container matColumnDef="totalPrice">
+              <th mat-header-cell *matHeaderCellDef> Total price </th>
+              <td mat-cell *matCellDef="let element" class="disabled">
+                {{(getItems(element).price * element.quantity).toLocaleString()}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="more">
+              <th mat-header-cell *matHeaderCellDef>
+                <button mat-icon-button [matMenuTriggerFor]="more" aria-label="" style="float: right;" disabled>
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #more>
+                  <button mat-menu-item (click)="deleteTableSubInvoice(dataInvoiceGroup.invoice.id, i, j)"
+                    class="disabled">Delete
+                    Table</button>
+                </mat-menu>
+              </th>
+              <td mat-cell *matCellDef="let element">
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="invoiceCol"></tr>
+            <tr mat-row *matRowDef="let row; columns: invoiceCol" class="detail-row"></tr>
+          </table>
+
+          <!-- end table status cancel -->
+
+          <!-- check total status -->
+
           <p align="right" *ngIf="tableTotal[j]">
-            <b>Total {{tableTotal[j].toLocaleString()}} + tax 7% = {{((tableTotal[j] * 7)/100 + tableTotal[j]).toLocaleString()}}</b>
+            <b *ngIf="list.status === 'active'">Total {{tableTotal[j].toLocaleString()}} + tax 7% =
+              {{((tableTotal[j] * 7)/100 + tableTotal[j]).toLocaleString()}}</b>
+
+            <b *ngIf="list.status !== 'active'" class="disabled">Total {{tableTotal[j].toLocaleString()}} + tax 7% =
+              {{((tableTotal[j] * 7)/100 + tableTotal[j]).toLocaleString()}}</b>
           </p>
+
+          <!-- end total check status -->
+
         </span>
       </div>
     </div>

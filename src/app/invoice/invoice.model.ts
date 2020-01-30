@@ -28,7 +28,8 @@ export class SubInvoice {
   constructor(
     public subInvoiceId: string,
     public name: string,
-    public sellItems: SellItem[]
+    public sellItems: SellItem[],
+    public status: string
   ) { }
 }
 

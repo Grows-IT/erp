@@ -54,7 +54,7 @@ export class InvoiceService {
                     const sellItems = subinvoiceData.sellItems.map(sellItemData => {
                       return new SellItem(sellItemData.itemId, sellItemData.quantity);
                     });
-                    return new SubInvoice(subinvoiceData.subInvoiceId, subinvoiceData.name, sellItems);
+                    return new SubInvoice(subinvoiceData.subInvoiceId, subinvoiceData.name, sellItems, subinvoiceData.status);
                   });
                   return new InvoiceGroup(groupData.name, subInvoices);
                 }
@@ -161,10 +161,9 @@ export class InvoiceService {
   }
 
   deleteTableSubInvoice(id, invoice) {
-    const inv = Object.assign({}, invoice);
-    delete inv.id;
-
-    return this.http.patch(environment.siteUrl + '/invoices/' + id + '.json', inv);
+    // const inv = Object.assign({}, invoice);
+    // delete inv.id;
+    return this.http.patch(environment.siteUrl + '/invoices/' + id + '.json', invoice);
   }
 }
 
