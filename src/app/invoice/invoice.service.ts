@@ -17,7 +17,7 @@ interface InvoiceResData {
   group?: InvoiceGroup[];
 }
 
-interface InvoiceCount {
+interface Count {
   count: number;
 }
 
@@ -54,7 +54,7 @@ export class InvoiceService {
                     const sellItems = subinvoiceData.sellItems.map(sellItemData => {
                       return new SellItem(sellItemData.itemId, sellItemData.quantity);
                     });
-                    return new SubInvoice(subinvoiceData.name, sellItems);
+                    return new SubInvoice(subinvoiceData.subInvoiceId, subinvoiceData.name, sellItems);
                   });
                   return new InvoiceGroup(groupData.name, subInvoices);
                 }
@@ -123,22 +123,48 @@ export class InvoiceService {
   }
 
   getCountInvoice() {
-    return this.http.get<InvoiceCount>(environment.siteUrl + '/invoiceCount.json');
+    return this.http.get<Count>(environment.siteUrl + '/invoiceCount.json');
   }
 
   updateCountInvoice() {
     return this.getCountInvoice().pipe(
       switchMap((c) => {
         if (!c) {
-          return this.http.put<InvoiceCount>(environment.siteUrl + '/invoiceCount.json', { count: 1 });
+          return this.http.put<Count>(environment.siteUrl + '/invoiceCount.json', { count: 1 });
         } else {
           const count = {
             'count': c.count + 1
           };
-          return this.http.patch<InvoiceCount>(environment.siteUrl + '/invoiceCount.json', count);
+          return this.http.patch<Count>(environment.siteUrl + '/invoiceCount.json', count);
         }
       })
     );
+  }
+
+  getCountSubInvoice() {
+    return this.http.get<Count>(environment.siteUrl + '/subInvoiceCount.json');
+  }
+
+  updateCountSubInvoice() {
+    return this.getCountSubInvoice().pipe(
+      switchMap((c) => {
+        if (!c) {
+          return this.http.put<Count>(environment.siteUrl + '/subInvoiceCount.json', { count: 1 });
+        } else {
+          const count = {
+            'count': c.count + 1
+          };
+          return this.http.patch<Count>(environment.siteUrl + '/subInvoiceCount.json', count);
+        }
+      })
+    );
+  }
+
+  deleteTableSubInvoice(id, invoice) {
+    const inv = Object.assign({}, invoice);
+    delete inv.id;
+
+    return this.http.patch(environment.siteUrl + '/invoices/' + id + '.json', inv);
   }
 }
 

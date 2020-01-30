@@ -9,6 +9,7 @@ import { Customer } from 'src/app/customer/customer.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { InvoiceDetailComponent } from '../invoice-detail/invoice-detail.component';
 import { SharedService } from 'src/app/shared/shared.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-invoicegroup',
@@ -63,6 +64,12 @@ export class InvoicegroupComponent implements OnInit {
       autoFocus: false,
       data: { invoice, index }
     });
+
+    dialogRef.afterClosed().pipe(
+      switchMap(() => {
+        return this.invoiceService.getAllInvoice();
+      })
+    ).subscribe();
   }
 
   addGroupName(groupName) {
