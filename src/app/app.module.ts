@@ -29,7 +29,8 @@ import {
   MatExpansionModule,
   MatProgressSpinnerModule,
   MatCheckboxModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatSelectModule,
 } from "@angular/material";
 
 import { AppComponent } from "./app.component";
@@ -82,7 +83,8 @@ const materialComponent = [
   RouterModule,
   MatToolbarModule,
   MatSlideToggleModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatSelectModule
 ];
 
 @NgModule({

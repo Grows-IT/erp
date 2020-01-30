@@ -15,7 +15,7 @@ import { switchMap } from 'rxjs/operators';
 })
 export class UsersmanagementComponent implements OnInit {
 
-  userCol: string[] = ['no', 'email', 'password', 'role' , 'status' , 'edit', 'delete'];
+  userCol: string[] = ['email', 'role' , 'status' , 'edit', 'delete'];
   userSubscription: Subscription;
   users: User[];
 
@@ -56,11 +56,12 @@ export class UsersmanagementComponent implements OnInit {
     ).subscribe();
   }
 
-  delete(id: string) {
+
+  delete(id: string, token: string) {
     this.uService.deleteUser(id).pipe(
       switchMap(() => this.uService.getUser())
     ).subscribe();
-    // this.authService.delete().subscribe();
+    this.authService.delete(token).subscribe();
   }
 
 }

@@ -18,13 +18,13 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   addUser(user: any) {
-    const users = {
-      email: user.email,
-      password: user.password,
-      role: user.role,
-      status: user.status
-    };
-    return this.http.post<User>(environment.siteUrl + '/users.json', users);
+    // const users = {
+    //   email: user.email,
+    //   password: user.password,
+    //   role: user.role,
+    //   status: user.status
+    // };
+    return this.http.post<User>(environment.siteUrl + '/users.json', user);
   }
 
   getUser() {
@@ -38,9 +38,9 @@ export class UserService {
           return new User(
             id,
             res[Object.keys(res)[i]].email,
-            res[Object.keys(res)[i]].password,
+            res[Object.keys(res)[i]].token,
             res[Object.keys(res)[i]].role,
-            res[Object.keys(res)[i]].status
+            res[Object.keys(res)[i]].status,
           );
         });
         return users;
@@ -49,6 +49,15 @@ export class UserService {
         this._user.next(users);
       })
     );
+  }
+
+  updateUser(user: any, id: string) {
+    let data;
+    data = {
+      role: user.role,
+      status: user.status
+    };
+    return this.http.patch(environment.siteUrl + '/users/' + id + '.json', data);
   }
 
   deleteUser(id: string) {

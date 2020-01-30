@@ -46,7 +46,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class SalesComponent implements OnInit, OnDestroy {
   quotations: Quotation[];
   // quotationCol: string[] = ['no', 'customerName', 'date', 'totalPrice', 'status', 'by', 'edit', 'pdf', 'createInvoice', 'delete'];
-  quotationCol: string[] = ['no', 'customerName', 'date', 'edit', 'pdf', 'createInvoice', 'delete'];
+  quotationCol: string[] = ['no', 'customerName', 'date', 'email' , 'edit', 'pdf', 'createInvoice', 'delete'];
   listItem = [];
   items: Item[];
   date: any;

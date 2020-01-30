@@ -5,7 +5,7 @@ export class Quotation {
     public totalPrice: number,
     public status: string,
     public customerId: string,
-    public by: string,
+    public email: string,
     public id: string,
     public date: Date,
     public expirationDate: Date,

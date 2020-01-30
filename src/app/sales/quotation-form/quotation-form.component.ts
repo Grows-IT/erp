@@ -10,6 +10,8 @@ import { Customer } from 'src/app/customer/customer.model';
 import { Subscription, Observable } from 'rxjs';
 import { registerLocaleData } from '@angular/common';
 import { switchMap, debounceTime, startWith, map } from 'rxjs/operators';
+import { UserService } from 'src/app/usersmanagement/user.service';
+import { AuthService } from 'src/app/signin/auth.service';
 
 @Component({
   selector: 'app-quotation-form',
@@ -25,12 +27,6 @@ export class QuotationFormComponent implements OnInit {
   itemName: string;
   Total: number;
   filteredOptions: Observable<string[]>;
-
-  options = [
-    'One',
-    'Two',
-    'Three'
-  ];
 
   // rows: FormArray;
 
@@ -58,11 +54,12 @@ export class QuotationFormComponent implements OnInit {
   //   ]),
   // });
 
-  constructor(private salesService: SalesService, private dialogRef: MatDialogRef<QuotationDialogComponent>, private fb: FormBuilder, private itemsService: ItemsService, private cService: CustomerService) {
+  constructor(private salesService: SalesService, private dialogRef: MatDialogRef<QuotationDialogComponent>, private fb: FormBuilder, private itemsService: ItemsService, private cService: CustomerService, private uService: UserService, private auth: AuthService) {
     // this.rows = this.fb.array([]);
   }
 
   ngOnInit() {
+
     this.customerSubscription = this.cService.customers.subscribe(customers => {
       this.customers = customers;
     });

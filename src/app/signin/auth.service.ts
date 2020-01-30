@@ -4,6 +4,8 @@ import { environment } from 'src/environments/environment';
 import { BehaviorSubject, of } from 'rxjs';
 import { tap, first, switchMap, catchError, map } from 'rxjs/operators';
 import { stringify } from 'querystring';
+import { UserService } from '../usersmanagement/user.service';
+import { User } from '../usersmanagement/user.model';
 
 export class Auth {
   constructor(
@@ -26,7 +28,7 @@ export class AuthService {
     return this._token.asObservable();
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private userService: UserService) { }
 
   login(form) {
     const data = {
@@ -55,14 +57,23 @@ export class AuthService {
     };
 
     return this.http.post<{ email: string, idToken: string }>(environment.authSignUpUtl + environment.firebase.apiKey, data).pipe(
-      tap(val => {
-        console.log(val);
-        const authen = new Auth(val.email, val.idToken);
-        this.saveUserToStorage(authen);
-        // console.log(this.getTokenFormStorage());
-        this._token.next(authen.token);
-        this._user.next(authen);
+      switchMap(res => {
+        const user = {
+          email: form.email,
+          token: res.idToken,
+          role: form.role,
+          status: form.status
+        };
+        return this.userService.addUser(user);
       })
+      // tap(val => {
+      //   console.log(val);
+      //   const authen = new Auth(val.email, val.idToken);
+      //   this.saveUserToStorage(authen);
+      //   // console.log(this.getTokenFormStorage());
+      //   this._token.next(authen.token);
+      //   this._user.next(authen);
+      // }),
     );
   }
 
@@ -73,11 +84,12 @@ export class AuthService {
     localStorage.clear();
   }
 
-  delete(){
-    // const data = {
-    //   idToken: String
-    // };
-    // return this.http.post<{ idToken: string }>(environment.deleteAccount + environment.firebase.apiKey, data);
+
+  delete(token){
+    const data = {
+      idToken: token
+    };
+    return this.http.post(environment.deleteAccount + environment.firebase.apiKey, data);
   }
 
   isLoggedIn() {
@@ -95,6 +107,7 @@ export class AuthService {
     );
   }
 
+
   private saveUserToStorage(val: Auth) {
     localStorage.setItem('user', JSON.stringify(val));
     localStorage.setItem('token', JSON.stringify(val.token));
@@ -104,7 +117,8 @@ export class AuthService {
     return of(localStorage.getItem('token'));
   }
 
-  private getUserFormStorage() {
-    return of(localStorage.getItem('user'));
+  getUserFormStorage() {
+    // return of(localStorage.getItem('auth'));
+    return of(JSON.parse(localStorage.getItem('auth')) as User);
   }
 }
