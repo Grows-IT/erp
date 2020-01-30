@@ -8,16 +8,21 @@ import { Quotation } from './sales.model';
 import { SellItem } from '../invoice/invoice.model';
 import { ItemsService } from '../items/items.service';
 import { InvoiceService } from '../invoice/invoice.service';
+import { Customer } from 'src/app/customer/customer.model';
+import { CustomerService } from 'src/app/customer/customer.service';
+import { AuthService } from '../signin/auth.service';
+import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 
 interface QuototationResData {
   addressTo: string;
   customerId: string;
   date: Date;
+  email: string;
   expirationDate: Date;
   invoiceId: string;
   items: SellItem[];
   quantity: number;
-  count: number,
+  count: number;
 }
 
 interface InvoiceResData {
@@ -42,44 +47,83 @@ export class SalesService {
     return this._quotations.asObservable();
   }
 
-  constructor(private http: HttpClient, private itemsService: ItemsService, private invoiceService: InvoiceService) {
+  constructor(private http: HttpClient, private itemsService: ItemsService, private invoiceService: InvoiceService, private cService: CustomerService, private auth: AuthService) {
   }
 
-  addQuotation(quotation: any) {
+  addQuotation(inputs: any) {
     let data;
-
-    const customer = {
-      name: quotation.customerName,
-      address: quotation.addressTo
-    };
-    let customerKey: string;
-    return this.http.post<any>(environment.siteUrl + '/customer.json', customer).pipe(
+    let cusEmail: string;
+    let count: number;
+    let customer: Customer;
+    return this.auth.getUserFormStorage().pipe(
       switchMap(res => {
-        customerKey = res.name;
+        cusEmail = res.email;
         return this.updateCountQuotation();
       }),
-      withLatestFrom(this.itemsService.items),
-      switchMap(([quotationCount, items]) => {
+      switchMap(quotationCount => {
+        count = quotationCount.count;
+        return this.cService.customers;
+      }),
+      switchMap(customers => {
+        customer = customers.find(cus => cus.name === inputs.customerName);
+        return this.itemsService.items;
+      }),
+      switchMap(items => {
         const sellItems: SellItem[] = [];
-        quotation.allItem.forEach(itemInput => {
+        inputs.allItem.forEach(itemInput => {
           const item = items.find(it => it.name === itemInput.item);
           const sellItem = new SellItem(item.id, itemInput.quantity);
           sellItems.push(sellItem);
         });
         data = {
-          totalPrice: quotation.totalPrice,
-          // by: quotation.by,
-          customerId: customerKey,
-          date: quotation.date,
-          expirationDate: quotation.expirationDate,
+          email: cusEmail,
+          customerId: customer.id,
+          date: inputs.date,
+          expirationDate: inputs.expirationDate,
           items: sellItems,
-          count: quotationCount.count,
+          count: count,
           invoiceId: ''
         };
         return this.http.post(environment.siteUrl + '/quotation.json', data);
       })
     );
   }
+
+  // addQuotation(quotation: any) {
+  //   let data;
+
+  //   const customer = {
+  //     name: quotation.customerName,
+  //     address: quotation.addressTo
+  //   };
+  //   let customerKey: string;
+  //   return this.http.post<any>(environment.siteUrl + '/customer.json', customer).pipe(
+  //     switchMap(res => {
+  //       customerKey = res.name;
+  //       return this.updateCountQuotation();
+  //     }),
+  //     withLatestFrom(this.itemsService.items),
+  //     switchMap(([quotationCount, items]) => {
+  //       const sellItems: SellItem[] = [];
+  //       quotation.allItem.forEach(itemInput => {
+  //         const item = items.find(it => it.name === itemInput.item);
+  //         const sellItem = new SellItem(item.id, itemInput.quantity);
+  //         sellItems.push(sellItem);
+  //       });
+  //       data = {
+  //         totalPrice: quotation.totalPrice,
+  //         staff: quotation.staff,
+  //         customerId: customerKey,
+  //         date: quotation.date,
+  //         expirationDate: quotation.expirationDate,
+  //         items: sellItems,
+  //         count: quotationCount.count,
+  //         invoiceId: ''
+  //       };
+  //       return this.http.post(environment.siteUrl + '/quotation.json', data);
+  //     })
+  //   );
+  // }
 
   getQuotation() {
     return this.http.get<{ [key: string]: QuototationResData }>(environment.siteUrl + '/quotation.json').pipe(
@@ -98,7 +142,7 @@ export class SalesService {
               null,
               null,
               resData[key].customerId,
-              null,
+              resData[key].email,
               key,
               resData[key].date,
               resData[key].expirationDate,

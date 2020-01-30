@@ -25,25 +25,35 @@
     <mat-grid-tile colspan="4" rowspan="2">
       <mat-form-field appearance="outline">
         <mat-label>Role</mat-label>
-        <textarea matInput rows="2" formControlName="role"></textarea>
+        <textarea type="text"  matInput rows="2" formControlName="role"[matAutocomplete]="auto" required></textarea>
+        <mat-autocomplete #auto="matAutocomplete" >
+          <mat-option *ngFor="let option of filteredRole | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile colspan="4" rowspan="2">
       <mat-form-field appearance="outline">
         <mat-label>Status</mat-label>
-        <textarea matInput rows="2" formControlName="status"></textarea>
+        <textarea matInput rows="2" formControlName="status" type="text" [matAutocomplete]="auto1" required></textarea>
+        <mat-autocomplete #auto1="matAutocomplete" >
+          <mat-option *ngFor="let option of filteredStatus | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
     </mat-grid-tile>
   </mat-grid-list>
 
-  <div align="center">
-  <button mat-raised-button color="primary" (click)="signup()">Sign up</button></div>
-<!--
+  <!-- <div align="center">
+  <button mat-raised-button color="primary" (click)="signup()">Sign up</button></div> -->
+
 <mat-dialog-actions align="center">
-  <button *ngIf="!data" mat-raised-button color="primary" (click)="onConfirmClick(0)" tabindex="1"
-    [disabled]="!customer.valid">Create</button>
-  <button *ngIf="data" mat-raised-button color="primary" (click)="onConfirmClick(1)" tabindex="1"
-    [disabled]="!customer.valid">Update</button>
+  <button *ngIf="!data" mat-raised-button color="primary" (click)="signup(0)" tabindex="1"
+    [disabled]="!user.valid">Create</button>
+  <button *ngIf="data" mat-raised-button color="primary" (click)="signup(1)" tabindex="1"
+    [disabled]="!user.valid">Update</button>
   <button mat-raised-button mat-dialog-close tabindex="-1" color="warn">cancel</button>
-</mat-dialog-actions> -->
-<!-- </form> -->
+</mat-dialog-actions>
+</form>
