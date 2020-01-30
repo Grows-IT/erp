@@ -2,16 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import 'rxjs/add/operator/map';
-import { map, tap, switchMap, withLatestFrom } from 'rxjs/operators';
+import { map, tap, switchMap, withLatestFrom, reduce } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { Quotation } from './sales.model';
-import { SellItem } from '../invoice/invoice.model';
+import { SellItem, Invoice } from '../invoice/invoice.model';
 import { ItemsService } from '../items/items.service';
 import { InvoiceService } from '../invoice/invoice.service';
 import { Customer } from 'src/app/customer/customer.model';
 import { CustomerService } from 'src/app/customer/customer.service';
 import { AuthService } from '../signin/auth.service';
-import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 
 interface QuototationResData {
   addressTo: string;
@@ -48,6 +47,7 @@ export class SalesService {
   }
 
   constructor(private http: HttpClient, private itemsService: ItemsService, private invoiceService: InvoiceService, private cService: CustomerService, private auth: AuthService) {
+    this.invoiceService.getAllInvoice().subscribe();
   }
 
   addQuotation(inputs: any) {
@@ -162,24 +162,36 @@ export class SalesService {
     );
   }
 
+  deleteQuotation(id: string) {
+    return this.invoiceService.invoices.pipe(
+      switchMap(invoices => {
+        const invoice = invoices.find(inv => inv.quotationId === id);
+        console.log(invoice);
+        return this.http.delete(environment.siteUrl + '/invoices/' + invoice.id + '.json');
+      }),
+      switchMap(() => {
+        return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json');
+      })
+      );
+    // return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json')
+    // .pipe(
+    //   withLatestFrom(this.invoiceService.invoices),
+    //   map(([resData, invoices]) => {
+    //     const invoice = invoices.find(quo => quo.quotationId === id);
+    //     return this.http.delete(environment.siteUrl + '/invoices/' + invoice.id + '.json');
+    //   })
+    // );
+
+      // withLatestFrom(this.invoiceService.invoices),
+      // map(invoices => {
+      //   const invoice = invoices.find(quo => quo.id === id);
+      //   return this.http.delete(environment.siteUrl + '/invoices/' + invoice.id + '.json');
+      // }));
+  }
+
   // deleteQuotation(id: string) {
   //   return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json')
-  //   .pipe(
-  //     withLatestFrom(this.invoiceService.invoices),
-  //     map(invoices => {
-  //       const invoice = invoices.find(quo => quo.id === id);
-  //       return this.http.delete(environment.siteUrl + '/invoices/' + invoice.id + '.json');
-  //     }));
-      // map(([resData, invoices]) => {
-      //   const invoice = invoices.find(inv => inv.id === id);
-      //   return this.http.delete(environment.siteUrl + '/invoices/' + invoice.id + '.json')
-      // }
-
   // }
-
-  deleteQuotation(id: string) {
-    return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json')
-  }
 
   updateQuotation(quotation: any, id: string, cusId: string) {
     let data;
