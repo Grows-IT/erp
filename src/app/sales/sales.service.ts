@@ -205,12 +205,12 @@ export class SalesService {
     );
   }
 
-  getCountInvoice() {
+  getCountQuotation() {
     return this.http.get<QuotationCount>(environment.siteUrl + '/quotationCount.json');
   }
 
   updateCountQuotation() {
-    return this.getCountInvoice().pipe(
+    return this.getCountQuotation().pipe(
       switchMap((c) => {
         if (!c) {
           return this.http.put<QuotationCount>(environment.siteUrl + '/quotationCount.json', { count: 1 });
