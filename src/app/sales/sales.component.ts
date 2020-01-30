@@ -153,6 +153,12 @@ export class SalesComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
+  delete(id: string) {
+    this.salesService.deleteQuotation(id).pipe(
+      switchMap(() => this.salesService.getQuotation())
+    ).subscribe();
+  }
+
   getListItem(items) {
     this.total = 0;
     this.listItem = [];
@@ -687,11 +693,5 @@ export class SalesComponent implements OnInit, OnDestroy {
     };
     pdfMake.createPdf(documentDefinition).open();
 
-  }
-
-  delete(id: string) {
-    this.salesService.deleteQuotation(id).pipe(
-      switchMap(() => this.salesService.getQuotation())
-    ).subscribe();
   }
 }
