@@ -6,6 +6,7 @@ export class Invoice {
     public type: string,
     public items: SellItem[],
     public count: number,
+    public status: string,
     public group?: InvoiceGroup[]
   ) { }
 }

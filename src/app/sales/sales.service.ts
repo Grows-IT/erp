@@ -13,6 +13,7 @@ import { CustomerService } from 'src/app/customer/customer.service';
 import { AuthService } from '../signin/auth.service';
 
 interface QuototationResData {
+  status: string;
   addressTo: string;
   customerId: string;
   date: Date;
@@ -46,7 +47,13 @@ export class SalesService {
     return this._quotations.asObservable();
   }
 
-  constructor(private http: HttpClient, private itemsService: ItemsService, private invoiceService: InvoiceService, private cService: CustomerService, private auth: AuthService) {
+  constructor(
+    private http: HttpClient,
+    private itemsService: ItemsService,
+    private invoiceService: InvoiceService,
+    private cService: CustomerService,
+    private auth: AuthService
+  ) {
     this.invoiceService.getAllInvoice().subscribe();
   }
 
@@ -76,12 +83,13 @@ export class SalesService {
           sellItems.push(sellItem);
         });
         data = {
+          status: 'active',
           email: cusEmail,
           customerId: customer.id,
           date: inputs.date,
           expirationDate: inputs.expirationDate,
           items: sellItems,
-          count: count,
+          count,
           invoiceId: ''
         };
         return this.http.post(environment.siteUrl + '/quotation.json', data);
@@ -89,108 +97,87 @@ export class SalesService {
     );
   }
 
-  // addQuotation(quotation: any) {
-  //   let data;
+  getQuotation() {
+    return this.http
+      .get<{ [key: string]: QuototationResData }>(
+        environment.siteUrl + '/quotation.json'
+      )
+      .pipe(
+        withLatestFrom(this.itemsService.items),
+        map(([resData, items]) => {
+          const quotations: Quotation[] = [];
+          for (const key in resData) {
+            if (resData.hasOwnProperty(key)) {
+              const allItem: SellItem[] = [];
+              for (let i = 0; i < resData[key].items.length; i++) {
+                const item = new SellItem(
+                  resData[key].items[i].itemId,
+                  resData[key].items[i].quantity
+                );
+                allItem.push(item);
+              }
 
-  //   const customer = {
-  //     name: quotation.customerName,
-  //     address: quotation.addressTo
-  //   };
-  //   let customerKey: string;
-  //   return this.http.post<any>(environment.siteUrl + '/customer.json', customer).pipe(
-  //     switchMap(res => {
-  //       customerKey = res.name;
-  //       return this.updateCountQuotation();
-  //     }),
-  //     withLatestFrom(this.itemsService.items),
-  //     switchMap(([quotationCount, items]) => {
-  //       const sellItems: SellItem[] = [];
-  //       quotation.allItem.forEach(itemInput => {
-  //         const item = items.find(it => it.name === itemInput.item);
-  //         const sellItem = new SellItem(item.id, itemInput.quantity);
-  //         sellItems.push(sellItem);
-  //       });
-  //       data = {
-  //         totalPrice: quotation.totalPrice,
-  //         staff: quotation.staff,
-  //         customerId: customerKey,
-  //         date: quotation.date,
-  //         expirationDate: quotation.expirationDate,
-  //         items: sellItems,
-  //         count: quotationCount.count,
-  //         invoiceId: ''
-  //       };
-  //       return this.http.post(environment.siteUrl + '/quotation.json', data);
-  //     })
+              const quotation = new Quotation(
+                null,
+                resData[key].status,
+                resData[key].customerId,
+                resData[key].email,
+                key,
+                resData[key].date,
+                resData[key].expirationDate,
+                allItem,
+                resData[key].invoiceId,
+                resData[key].count
+              );
+              quotations.push(quotation);
+            }
+          }
+          return quotations;
+        }),
+        tap(quotations => {
+          // console.log(quotations);
+          this._quotations.next(quotations);
+        })
+      );
+  }
+
+  deleteQuotation(id: string, invoiceId: string) {
+    const data = { status: 'canceled' };
+    return this.http.patch(
+      environment.siteUrl + '/quotation/' + id + '.json',
+      data
+    ).pipe(
+    switchMap(() => {
+      return this.http.patch(
+        environment.siteUrl + '/invoices/' + invoiceId + '.json',
+        data
+      );
+    })
+    );
+  }
+  //   if (!invoiceId) {
+  //     return;
+  //   }
+  //   return this.http.delete(
+  //     environment.siteUrl + "/invoices/" + invoiceId + ".json"
   //   );
   // }
 
-  getQuotation() {
-    return this.http.get<{ [key: string]: QuototationResData }>(environment.siteUrl + '/quotation.json').pipe(
-      withLatestFrom(this.itemsService.items),
-      map(([resData, items]) => {
-        const quotations: Quotation[] = [];
-        for (const key in resData) {
-          if (resData.hasOwnProperty(key)) {
-            const allItem: SellItem[] = [];
-            for (let i = 0; i < resData[key].items.length; i++) {
-              const item = new SellItem(resData[key].items[i].itemId, resData[key].items[i].quantity);
-              allItem.push(item);
-            }
-
-            const quotation = new Quotation(
-              null,
-              null,
-              resData[key].customerId,
-              resData[key].email,
-              key,
-              resData[key].date,
-              resData[key].expirationDate,
-              allItem,
-              resData[key].invoiceId,
-              resData[key].count,
-            );
-            quotations.push(quotation);
-          }
-        }
-        return quotations;
-      }),
-      tap(quotations => {
-        // console.log(quotations);
-        this._quotations.next(quotations);
-      })
-    );
-  }
-
-  deleteQuotation(id: string) {
-    return this.invoiceService.invoices.pipe(
-      switchMap(invoices => {
-        const invoice = invoices.find(inv => inv.quotationId === id);
-        console.log(invoice);
-        return this.http.delete(environment.siteUrl + '/invoices/' + invoice.id + '.json');
-      }),
-      switchMap(() => {
-        return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json');
-      })
-      );
-    // return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json')
-    // .pipe(
-    //   withLatestFrom(this.invoiceService.invoices),
-    //   map(([resData, invoices]) => {
-    //     const invoice = invoices.find(quo => quo.quotationId === id);
-    //     return this.http.delete(environment.siteUrl + '/invoices/' + invoice.id + '.json');
+    // return this.invoiceService.invoices.pipe(
+    //   switchMap(invoices => {
+    //     const invoice = invoices.find(inv => inv.quotationId === id);
+    //     console.log(invoice);
+    //     if (invoice !== null && invoice !== undefined) {
+    //       return this.http.delete(
+    //         environment.siteUrl + "/invoices/" + invoice.id + ".json"
+    //       );
+    //     }
+    //     return;
+    //   })
+    //   switchMap(() => {
+    //     return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json');
     //   })
     // );
-
-      // withLatestFrom(this.invoiceService.invoices),
-      // map(invoices => {
-      //   const invoice = invoices.find(quo => quo.id === id);
-      //   return this.http.delete(environment.siteUrl + '/invoices/' + invoice.id + '.json');
-      // }));
-  }
-
-  // deleteQuotation(id: string) {
-  //   return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json')
   // }
 
   updateQuotation(quotation: any, id: string, cusId: string) {
@@ -212,68 +199,38 @@ export class SalesService {
           items: sellItems,
           invoiceId: ''
         };
-        return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
+        return this.http.patch(
+          environment.siteUrl + '/quotation/' + id + '.json',
+          data
+        );
       })
     );
   }
 
   getCountQuotation() {
-    return this.http.get<QuotationCount>(environment.siteUrl + '/quotationCount.json');
+    return this.http.get<QuotationCount>(
+      environment.siteUrl + '/quotationCount.json'
+    );
   }
 
   updateCountQuotation() {
     return this.getCountQuotation().pipe(
-      switchMap((c) => {
+      switchMap(c => {
         if (!c) {
-          return this.http.put<QuotationCount>(environment.siteUrl + '/quotationCount.json', { count: 1 });
+          return this.http.put<QuotationCount>(
+            environment.siteUrl + '/quotationCount.json',
+            { count: 1 }
+          );
         } else {
           const count = {
-            'count': c.count + 1
+            count: c.count + 1
           };
-          return this.http.patch<QuotationCount>(environment.siteUrl + '/quotationCount.json', count);
+          return this.http.patch<QuotationCount>(
+            environment.siteUrl + '/quotationCount.json',
+            count
+          );
         }
       })
     );
   }
 }
-
-
-
-  // updateQuotation(quotation: any, id: string) {
-  //   let data;
-
-  //   const customer = {
-  //     name: quotation.customerName,
-  //     address: quotation.addressTo
-  //   };
-  //   return this.http.patch<any>(environment.siteUrl + '/customer.json', customer).pipe(
-  //     withLatestFrom(this.itemsService.items),
-  //     switchMap(([res, items]) => {
-  //       const sellItems: SellItem[] = [];
-  //       quotation.allItem.forEach(itemInput => {
-  //         const item = items.find(it => it.name === itemInput.item);
-  //         const sellItem = new SellItem(item.id, itemInput.quantity);
-  //         sellItems.push(sellItem);
-  //       });
-  //       data = {
-  //         totalPrice: quotation.totalPrice,
-  //         // by: quotation.by,
-  //         customerId: res.name,
-  //         date: quotation.date,
-  //         expirationDate: quotation.expirationDate,
-  //         items: sellItems,
-  //         invoiceId: ''
-  //       };
-  //       return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
-  //     })
-  //   );
-  //   const data = {
-  //     addressTo: quotation.addressTo,
-  //     date: quotation.date,
-  //     expirationDate: quotation.expirationDate,
-  //     item: quotation.allItem,
-  //     quantity: quotation.quantity
-  //   };
-  //   return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
-//   }
-// }
