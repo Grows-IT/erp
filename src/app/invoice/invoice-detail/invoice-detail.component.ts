@@ -41,7 +41,9 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   date: any;
   expirationDate: any;
   tableTotal = [];
-  quantityList = [];
+  maxQuantityList = [];
+  maxValue: number;
+  quantityValue = [];
   // this.data is id
   items: Item[];
   dataInvoiceGroup = this.data;
@@ -57,9 +59,6 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // console.log('detail');
-    // console.log(this.dataInvoiceGroup.invoice.id);
-
     this.addForm.addControl('rows', this.rows);
 
     this.customerSubscription = this.cService.customers.subscribe(customers => {
@@ -161,10 +160,11 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   getMaxQuantity(item, index) {
-    if (!this.quantityList[index]) {
-      this.quantityList[index] = 0;
+    if (!this.maxQuantityList[index]) {
+      this.maxQuantityList[index] = 0;
     }
-    this.quantityList[index] = item.quantity;
+    this.maxQuantityList[index] = item.quantity;
+    this.setMaxItem(item.quantity);
   }
 
   getTotal(data) {
@@ -180,9 +180,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteTableSubInvoice(id, i, j) {
-    // this.dataInvoiceGroup.invoice.group[i].subInvoices.splice(j, 1);
     this.dataInvoiceGroup.invoice.group[i].subInvoices[j].status = 'cancel';
-    // console.log(this.dataInvoiceGroup.invoice);
     this.invoiceService.deleteTableSubInvoice(id, this.dataInvoiceGroup.invoice).pipe(
       tap(() => this.invoiceService.getAllInvoice())
     ).subscribe();
@@ -192,10 +190,27 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     this.rows.removeAt(rowIndex);
   }
 
+  checkMax(max: number, row, i: number) {
+    if (max <= row.value.quantity) {
+      return false;
+    }
+  }
+
+  setMaxItem(max) {
+    console.log(max);
+
+    this.maxValue = max;
+  }
+
+  getMaxItem() {
+    console.log(this.maxValue);
+    return this.maxValue;
+  }
+
   createItemFormGroup(): FormGroup {
     return new FormGroup({
       name: new FormControl(null, [Validators.required]),
-      quantity: new FormControl(null, [Validators.required]),
+      quantity: new FormControl(null, [Validators.required, Validators.max(this.getMaxItem())]),
     });
   }
 
