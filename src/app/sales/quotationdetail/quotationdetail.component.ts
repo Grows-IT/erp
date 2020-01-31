@@ -124,8 +124,8 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     return d.toDateString();
   }
 
-  delete(id: string) {
-    this.salesService.deleteQuotation(id).subscribe();
+  delete(id: string,invoiceId: string) {
+    this.salesService.deleteQuotation(id,invoiceId).subscribe();
     this.router.navigate(["/sales"]);
     this.dialogRef.close();
   }

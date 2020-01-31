@@ -14,6 +14,7 @@ interface InvoiceResData {
   items: SellItem[];
   subInvoice: string;
   count: number;
+  status: string;
   group?: InvoiceGroup[];
 }
 
@@ -69,6 +70,7 @@ export class InvoiceService {
               resData[key].type,
               allItem,
               resData[key].count,
+              resData[key].status,
               groups
             );
             invoices.push(invoice);
@@ -90,7 +92,8 @@ export class InvoiceService {
           'customerId': quotation.customerId,
           'items': quotation.items,
           'type': type,
-          'count': count.count
+          'count': count.count,
+          'status': "active",
         };
         return data;
       }),

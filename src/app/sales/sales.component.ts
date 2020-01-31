@@ -153,8 +153,8 @@ export class SalesComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  delete(id: string) {
-    this.salesService.deleteQuotation(id).pipe(
+  delete(id: string, invoiceId: string) {
+    this.salesService.deleteQuotation(id, invoiceId).pipe(
       switchMap(() => this.salesService.getQuotation())
     ).subscribe();
   }
