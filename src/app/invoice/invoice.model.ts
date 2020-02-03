@@ -14,13 +14,15 @@ export class Invoice {
 export class InvoiceGroup {
   constructor(
     public name: string,
-    public subInvoices: SubInvoice[]
+    public subInvoices: SubInvoice[],
+    public status: string
   ) { }
 
   toObject() {
     return {
       name: this.name,
-      subInvoices: []
+      subInvoices: [],
+      // status: 'active'
     };
   }
 }

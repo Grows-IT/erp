@@ -10,8 +10,8 @@
 </div>
 <div *ngIf="invoice" class="content">
   <h2>
-    Name : {{ getCustomer(invoice.customerId).name }} , Address :
-    {{ getCustomer(invoice.customerId).address }}
+    Name : {{ getCustomer(invoice.customerId).name }} ,
+    Address : {{ getCustomer(invoice.customerId).address }}
   </h2>
   <div>
     <div [formGroup]="addGroup" align="center">
@@ -25,18 +25,31 @@
   </div>
 </div>
 
-<mat-list class="content">
-  <!-- <mat-card *ngFor="let item of this.listGroupName"> -->
-  <mat-card *ngFor="let item of invoice.group;let i = index">
-    <!-- {{this.listGroupName|json}} -->
-    <!-- {{item|json}} -->
-    <button mat-button (click)="onClickOpenDetail(invoice, i)">Group Name : {{item.name}}</button>
+<mat-list class="content" *ngFor="let item of invoice.group;let i = index">
+  <!-- if active -->
+  <mat-card *ngIf="item.status === 'active'">
+    <button mat-button (click)="onClickOpenDetail(invoice, i)">
+      <b class="statusActive">●</b> Group Name : {{item.name}}
+    </button>
     <button mat-icon-button [matMenuTriggerFor]="more" aria-label="" style="float: right;">
       <mat-icon>more_vert</mat-icon>
     </button>
   </mat-card>
+  <!-- end if active -->
+
+  <!-- if group name not active -->
+  <mat-card *ngIf="item.status !== 'active'">
+    <button mat-button (click)="onClickOpenDetail(invoice, i)" disabled>
+      <b class="statusCancel">●</b> Group Name : {{item.name}}
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="more" aria-label="" style="float: right;" disabled>
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  </mat-card>
+  <!-- end if group name not active -->
+
   <mat-menu #more>
-    <button mat-menu-item>Delete</button>
-    <button mat-menu-item>Edit</button>
+    <button mat-menu-item (click)="deleteGroupName(invoice.id, i)">Delete</button>
+    <button mat-menu-item (click)="editGroupName(invoice.id, i)">Edit group name</button>
   </mat-menu>
 </mat-list>

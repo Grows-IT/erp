@@ -1,0 +1,13 @@
+<div style="padding: 15px 20px 25px;">
+  <button mat-button mat-dialog-close tabindex="-1" style="float: right;">
+    <i class="material-icons"> close </i>
+  </button>
+  <form [formGroup]="newNameGroup" align="center">
+    <mat-form-field appearance="outline">
+      <mat-label>New Group Name : </mat-label>
+      <input matInput formControlName="name" required />
+    </mat-form-field>
+    <button mat-raised-button color="primary" class="content" (click)="changeGroupName(newNameGroup.value)"
+      [disabled]="newNameGroup.invalid">Change</button>
+  </form>
+</div>

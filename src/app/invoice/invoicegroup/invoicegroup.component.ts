@@ -9,7 +9,8 @@ import { Customer } from 'src/app/customer/customer.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { InvoiceDetailComponent } from '../invoice-detail/invoice-detail.component';
 import { SharedService } from 'src/app/shared/shared.service';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
+import { ChangeNameDialogComponent } from '../change-name-dialog/change-name-dialog.component';
 
 @Component({
   selector: 'app-invoicegroup',
@@ -73,11 +74,33 @@ export class InvoicegroupComponent implements OnInit {
   }
 
   addGroupName(groupName) {
-    this.invoice.group.push(new InvoiceGroup(groupName.value.name, []));
+    this.invoice.group.push(new InvoiceGroup(groupName.value.name, [], 'active'));
     this.invoiceService.updateInvoice(this.invoice).subscribe();
+    this.addGroup.reset();
   }
 
   decode(id, count) {
     return this.sharedService.decode(id, count, false);
+  }
+
+  editGroupName(id, index) {
+    const dialogRef = this.dialog.open(ChangeNameDialogComponent, {
+      panelClass: 'nopadding-dialog',
+      width: '250px',
+      // height: '130px',
+      disableClose: false,
+      autoFocus: false,
+      data: { id, index }
+    });
+
+    dialogRef.afterClosed().pipe(
+      switchMap(() => this.invoiceService.getAllInvoice()),
+    ).subscribe();
+  }
+
+  deleteGroupName(invoiceId, index) {
+    this.invoiceService.deleteGroupName(invoiceId, index).pipe(
+      switchMap(() => this.invoiceService.getAllInvoice()),
+    ).subscribe();
   }
 }

@@ -56,6 +56,7 @@ import { FlowerplantComponent } from './flowerplant/flowerplant.component';
 import { FlowerplantdialogComponent } from './flowerplant/flowerplantdialog/flowerplantdialog.component';
 import { UsersmanagementComponent } from './usersmanagement/usersmanagement.component';
 import { UserdialogComponent } from './usersmanagement/userdialog/userdialog.component';
+import { ChangeNameDialogComponent } from './invoice/change-name-dialog/change-name-dialog.component';
 
 const materialComponent = [
   MatGridListModule,
@@ -107,7 +108,8 @@ const materialComponent = [
     FlowerplantComponent,
     FlowerplantdialogComponent,
     UsersmanagementComponent,
-    UserdialogComponent
+    UserdialogComponent,
+    ChangeNameDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -122,6 +124,12 @@ const materialComponent = [
   ],
   providers: [MatNativeDateModule],
   bootstrap: [AppComponent],
-  entryComponents: [QuotationDialogComponent, CustomerdialogComponent, FlowerplantdialogComponent, UserdialogComponent]
+  entryComponents: [
+    QuotationDialogComponent,
+    CustomerdialogComponent,
+    FlowerplantdialogComponent,
+    UserdialogComponent,
+    ChangeNameDialogComponent
+  ]
 })
-export class AppModule {}
+export class AppModule { }

@@ -57,9 +57,9 @@ export class InvoiceService {
                     });
                     return new SubInvoice(subinvoiceData.subInvoiceId, subinvoiceData.name, sellItems, subinvoiceData.status);
                   });
-                  return new InvoiceGroup(groupData.name, subInvoices);
+                  return new InvoiceGroup(groupData.name, subInvoices, groupData.status);
                 }
-                return new InvoiceGroup(groupData.name, []);
+                return new InvoiceGroup(groupData.name, [], groupData.status);
               });
             }
 
@@ -115,6 +115,8 @@ export class InvoiceService {
   }
 
   addGroupName(id, groupName) {
+    console.log(groupName);
+
     return this.http.patch(environment.siteUrl + '/invoices/' + id + '/group.json', groupName.value);
   }
 
@@ -168,6 +170,16 @@ export class InvoiceService {
     // delete inv.id;
     return this.http.patch(environment.siteUrl + '/invoices/' + id + '.json', invoice);
   }
+
+  deleteGroupName(id, index) {
+    return this.http.patch(environment.siteUrl + '/invoices/' + id + '/group/' + index + '.json', { status: 'cancel' });
+  }
+
+  changeGroupName(id, index, newName) {
+
+    return this.http.patch(environment.siteUrl + '/invoices/' + id + '/group/' + index + '.json', newName);
+  }
+
 }
 
 

@@ -5,6 +5,15 @@
 .content {
   margin: 0 30px;
 }
+
 mat-card {
   margin-bottom: 7px;
+}
+
+.statusActive {
+  color: #5fdba7;
+}
+
+.statusCancel {
+  color: red;
 }

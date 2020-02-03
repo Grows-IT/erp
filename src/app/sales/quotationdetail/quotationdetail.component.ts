@@ -124,8 +124,8 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     return d.toDateString();
   }
 
-  delete(id: string,invoiceId: string) {
-    this.salesService.deleteQuotation(id,invoiceId).subscribe();
+  delete(id: string, invoiceId: string) {
+    this.salesService.deleteQuotation(id, invoiceId).subscribe();
     this.router.navigate(["/sales"]);
     this.dialogRef.close();
   }
@@ -196,7 +196,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
         }
       ];
       this.total = (items[i].quantity * this.getItems(items[i].itemId).price),
-      this.listItem.push(product);
+        this.listItem.push(product);
       this.subTotal += this.total;
     }
   }

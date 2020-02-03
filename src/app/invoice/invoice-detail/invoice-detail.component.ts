@@ -42,7 +42,6 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   expirationDate: any;
   tableTotal = [];
   maxQuantityList = [];
-  maxValue: number;
   quantityValue = [];
   // this.data is id
   items: Item[];
@@ -164,7 +163,6 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
       this.maxQuantityList[index] = 0;
     }
     this.maxQuantityList[index] = item.quantity;
-    this.setMaxItem(item.quantity);
   }
 
   getTotal(data) {
@@ -196,21 +194,10 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  setMaxItem(max) {
-    console.log(max);
-
-    this.maxValue = max;
-  }
-
-  getMaxItem() {
-    console.log(this.maxValue);
-    return this.maxValue;
-  }
-
   createItemFormGroup(): FormGroup {
     return new FormGroup({
       name: new FormControl(null, [Validators.required]),
-      quantity: new FormControl(null, [Validators.required, Validators.max(this.getMaxItem())]),
+      quantity: new FormControl(null, [Validators.required]),
     });
   }
 
