@@ -77,7 +77,6 @@
             <mat-autocomplete #auto="matAutocomplete">
               <mat-option *ngFor="let item of items; let i = index" [value]="item.name">
                 {{item.name}}
-                {{i}}
               </mat-option>
             </mat-autocomplete>
             <!-- <input matInput [formControl]="allItem.get('item')" required> -->

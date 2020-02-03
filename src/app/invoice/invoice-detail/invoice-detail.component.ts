@@ -43,6 +43,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   tableTotal = [];
   maxQuantityList = [];
   quantityValue = [];
+  _quantity = [];
   // this.data is id
   items: Item[];
   dataInvoiceGroup = this.data;
@@ -149,6 +150,8 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   toggleShoing() {
+    this.maxQuantityList = [];
+    this._quantity = [];
     this.addForm.reset();
     this.rows.clear();
     this.isShowing = !this.isShowing;
@@ -186,10 +189,13 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
 
   onRemoveRow(rowIndex: number) {
     this.rows.removeAt(rowIndex);
+    this.maxQuantityList.splice(rowIndex, 1);
+    this._quantity.splice(rowIndex, 1);
   }
 
   checkMax(max: number, row, i: number) {
     if (max <= row.value.quantity) {
+      this._quantity[i] = max;
       return false;
     }
   }
