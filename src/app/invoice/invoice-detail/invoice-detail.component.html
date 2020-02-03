@@ -31,7 +31,7 @@
         <div class="form-group">
           <table id="addGroupTable">
             <tbody>
-              <tr *ngFor="let row of addForm.get('rows').controls; let i = index;">
+              <tr *ngFor="let row of addForm.get('rows')['controls']; let i = index;">
                 <td>
                   <mat-form-field appearance="outline">
                     <mat-label>Name : </mat-label>
@@ -52,7 +52,7 @@
                   </mat-form-field>
                 </td>
                 <td>
-                  <button mat-raised-button color="warn" (click)="onRemoveRow(i, row)">Remove</button>
+                  <button mat-raised-button color="warn" (click)="onRemoveRow(i)">Remove</button>
                 </td>
               </tr>
             </tbody>

@@ -68,7 +68,7 @@
   <div align="center">
   <mat-card formArrayName="allItem">
     <table>
-      <tr *ngFor="let allItem of quotation.controls.allItem.controls; let i = index">
+      <tr *ngFor="let allItem of quotation['controls'].allItem['controls']; let i = index">
         <td>
           <mat-form-field appearance="outline">
             <mat-label>Item</mat-label>
