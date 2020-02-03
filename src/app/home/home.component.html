@@ -1,33 +1,52 @@
 <mat-grid-list cols="4" rowHeight="100px">
   <mat-grid-tile [colspan]="4" [rowspan]="0.5">
     <h1 style="margin-right: 50%;">Home</h1>
-    <button mat-button [routerLink]="['/signin']">
+    <!-- <button mat-button [routerLink]="['/signin']">
       <h3>Username &nbsp;<mat-icon>account_circle</mat-icon></h3>
+    </button> -->
+    <button mat-button (click)="logout()" [routerLink]="['/signin']">
+      <h3>Log out &nbsp;<mat-icon>account_circle</mat-icon></h3>
     </button>
-    </mat-grid-tile>
+  </mat-grid-tile>
   <mat-grid-tile [colspan]="1" [rowspan]="4"></mat-grid-tile>
   <mat-grid-tile [colspan]="2" [rowspan]="1.5">
-    <button mat-button style="margin-left: 3%;" *ngFor="let menu of menu" routerLink ="{{menu.link}}">
+    <button
+      mat-button
+      style="margin-left: 3%;"
+      *ngFor="let menu of menu"
+      routerLink="{{ menu.link }}"
+    >
       <img mat-card-image src="{{ menu.img }}" />
       <h3>{{ menu.topicname }}</h3>
     </button></mat-grid-tile
   >
   <mat-grid-tile [colspan]="2" [rowspan]="1.5">
-    <button mat-button style="margin-left: 2%;" *ngFor="let menu of menu2" routerLink ="{{menu.link}}">
+    <button
+      mat-button
+      style="margin-left: 2%;"
+      *ngFor="let menu of menu2"
+      routerLink="{{ menu.link }}"
+    >
       <img mat-card-image src="{{ menu.img }}" />
       <h3>{{ menu.topicname }}</h3>
     </button></mat-grid-tile
   >
-  <mat-grid-tile [colspan]="4" [rowspan]="0.5">
-  <h1 style="margin-right: 50%;">Database</h1>
+  <div *ngIf="role === 'Admin'">
+    <mat-grid-tile [colspan]="4" [rowspan]="0.5">
+      <h1 style="margin-right: 50%;">Database</h1>
+    </mat-grid-tile>
+  </div>
+  <mat-grid-tile [colspan]="4" [rowspan]="2">
+    <div align="center" *ngIf="role === 'Admin'" style="width: 100%;">
+      <button
+        mat-button
+        style="margin-left: 2%;"
+        *ngFor="let menu of downmenu"
+        routerLink="{{ menu.link }}"
+      >
+        <img mat-card-image src="{{ menu.img }}" />
+        <h3>{{ menu.topicname }}</h3>
+      </button>
+    </div>
   </mat-grid-tile>
-  <mat-grid-tile [colspan]="4" [rowspan]="1.5"
-    >
-
-    <button mat-button style="margin-left: 2%;" *ngFor="let menu of downmenu" routerLink ="{{menu.link}}">
-      <img mat-card-image src="{{ menu.img }}" />
-      <h3>{{ menu.topicname }}</h3>
-    </button>
-  </mat-grid-tile>
-
 </mat-grid-list>
