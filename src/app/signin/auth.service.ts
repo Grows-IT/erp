@@ -110,15 +110,19 @@ export class AuthService {
 
   private saveUserToStorage(val: Auth) {
     localStorage.setItem('user', JSON.stringify(val));
-    localStorage.setItem('token', JSON.stringify(val.token));
+    localStorage.setItem('token', val.token);
+    localStorage.setItem('email', val.email);
   }
 
-  private getTokenFormStorage() {
+  getTokenFormStorage() {
     return of(localStorage.getItem('token'));
   }
 
   getUserFormStorage() {
     // return of(localStorage.getItem('auth'));
     return of(JSON.parse(localStorage.getItem('auth')) as User);
+  }
+  getCurrentEmail() {
+    return of(localStorage.getItem('email'));
   }
 }
