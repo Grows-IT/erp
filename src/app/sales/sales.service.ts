@@ -62,9 +62,9 @@ export class SalesService {
     let cusEmail: string;
     let count: number;
     let customer: Customer;
-    return this.auth.getUserFormStorage().pipe(
+    return this.auth.getCurrentEmail().pipe(
       switchMap(res => {
-        cusEmail = res.email;
+        cusEmail = res;
         return this.updateCountQuotation();
       }),
       switchMap(quotationCount => {
@@ -135,7 +135,6 @@ export class SalesService {
           return quotations;
         }),
         tap(quotations => {
-          // console.log(quotations);
           this._quotations.next(quotations);
         })
       );
@@ -155,30 +154,6 @@ export class SalesService {
     })
     );
   }
-  //   if (!invoiceId) {
-  //     return;
-  //   }
-  //   return this.http.delete(
-  //     environment.siteUrl + "/invoices/" + invoiceId + ".json"
-  //   );
-  // }
-
-    // return this.invoiceService.invoices.pipe(
-    //   switchMap(invoices => {
-    //     const invoice = invoices.find(inv => inv.quotationId === id);
-    //     console.log(invoice);
-    //     if (invoice !== null && invoice !== undefined) {
-    //       return this.http.delete(
-    //         environment.siteUrl + "/invoices/" + invoice.id + ".json"
-    //       );
-    //     }
-    //     return;
-    //   })
-    //   switchMap(() => {
-    //     return this.http.delete(environment.siteUrl + '/quotation/' + id + '.json');
-    //   })
-    // );
-  // }
 
   updateQuotation(quotation: any, id: string, cusId: string) {
     let data;

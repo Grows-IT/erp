@@ -15,6 +15,7 @@ interface InvoiceResData {
   subInvoice: string;
   count: number;
   status: string;
+  email: string;
   group?: InvoiceGroup[];
 }
 
@@ -71,6 +72,7 @@ export class InvoiceService {
               allItem,
               resData[key].count,
               resData[key].status,
+              resData[key].email,
               groups
             );
             invoices.push(invoice);
@@ -115,8 +117,6 @@ export class InvoiceService {
   }
 
   addGroupName(id, groupName) {
-    console.log(groupName);
-
     return this.http.patch(environment.siteUrl + '/invoices/' + id + '/group.json', groupName.value);
   }
 

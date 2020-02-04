@@ -7,6 +7,7 @@ export class Invoice {
     public items: SellItem[],
     public count: number,
     public status: string,
+    public email: string,
     public group?: InvoiceGroup[]
   ) { }
 }
@@ -22,7 +23,6 @@ export class InvoiceGroup {
     return {
       name: this.name,
       subInvoices: [],
-      // status: 'active'
     };
   }
 }
