@@ -5,6 +5,9 @@ import { Invoice, SellItem, InvoiceGroup, SubInvoice } from './invoice.model';
 import { BehaviorSubject } from 'rxjs';
 import { tap, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ItemsService } from '../items/items.service';
+import { UserService } from '../usersmanagement/user.service';
+import { AuthService } from '../signin/auth.service';
+import { User } from '../usersmanagement/user.model';
 
 interface InvoiceResData {
   id: string;
@@ -28,17 +31,31 @@ interface Count {
 })
 export class InvoiceService {
   private _invoice = new BehaviorSubject<Invoice[]>(null);
+  email: string;
+  role: string;
+  invs: Invoice[];
 
   get invoices() {
     return this._invoice.asObservable();
   }
 
-  constructor(private http: HttpClient, private itemsService: ItemsService) {
+  constructor(private http: HttpClient, private itemsService: ItemsService, private userService: UserService, private authService: AuthService) {
+    this.authService.getCurrentEmail().subscribe(email => this.email = email);
+    this.userService.getUser().pipe(
+      map(users => {
+        return users.find(user => {
+          if (user.email === this.email) {
+            this.role = user.role;
+          }
+        });
+      })
+    ).subscribe();
   }
 
   getAllInvoice() {
     return this.http.get<{ [key: string]: InvoiceResData }>(environment.siteUrl + '/invoices.json').pipe(
       withLatestFrom(this.itemsService.items),
+      // withLatestFrom(this.userService.users),
       map(([resData, items]) => {
         const invoices: Invoice[] = [];
         for (const key in resData) {
@@ -75,12 +92,18 @@ export class InvoiceService {
               resData[key].email,
               groups
             );
-            invoices.push(invoice);
+
+            if (this.role === 'Admin') {
+              invoices.push(invoice);
+            }
+            if (this.email === resData[key].email && this.role !== 'Admin') {
+              invoices.push(invoice);
+            }
           }
         }
         return invoices;
       }),
-      tap(invoices => {
+      tap((invoices) => {
         this._invoice.next(invoices);
       })
     );
@@ -96,6 +119,7 @@ export class InvoiceService {
           'type': type,
           'count': count.count,
           'status': "active",
+          'email': quotation.email,
         };
         return data;
       }),
@@ -176,7 +200,6 @@ export class InvoiceService {
   }
 
   changeGroupName(id, index, newName) {
-
     return this.http.patch(environment.siteUrl + '/invoices/' + id + '/group/' + index + '.json', newName);
   }
 
