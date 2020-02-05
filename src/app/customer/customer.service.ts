@@ -17,8 +17,7 @@ export class CustomerService {
     return this._customers.asObservable();
   }
 
-  constructor(private http: HttpClient, private db: AngularFireDatabase) {
-    this.customerDetail = db.list('quotation');
+  constructor(private http: HttpClient) {
   }
 
   addCustomer(customer: any) {
@@ -53,8 +52,6 @@ export class CustomerService {
     };
     return this.http.patch(environment.siteUrl + '/customer/' + id + '.json', data);
   }
-
-
 
   deleteCustomer(id: string) {
     return this.http.delete(environment.siteUrl + '/customer/' + id + '.json');

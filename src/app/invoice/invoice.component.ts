@@ -3,11 +3,11 @@ import { InvoiceService } from './invoice.service';
 import { SalesService } from '../sales/sales.service';
 import { Quotation } from '../sales/sales.model';
 import { trigger, state, transition, style, animate } from '@angular/animations';
-import { MatDialog } from '@angular/material';
+import { MatDialog, matFormFieldAnimations } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { Customer } from '../customer/customer.model';
 import { CustomerService } from '../customer/customer.service';
-import { tap, switchMap } from 'rxjs/operators';
+import { tap, switchMap, map } from 'rxjs/operators';
 import { Invoice } from './invoice.model';
 import { InvoicegroupComponent } from './invoicegroup/invoicegroup.component';
 import { Item } from '../items/items.model';
@@ -15,6 +15,9 @@ import { ItemsService } from '../items/items.service';
 import { SharedService } from '../shared/shared.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { AuthService } from '../signin/auth.service';
+import { UserService } from '../usersmanagement/user.service';
+import { User } from '../usersmanagement/user.model';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface InvoiceList {
@@ -55,6 +58,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   quotations: Quotation[];
   total: number;
   subTotal: number;
+  email: string;
+  users: User[];
 
   constructor(private invoiceService: InvoiceService, private salesService: SalesService, private cService: CustomerService,
     public dialog: MatDialog, private itemsService: ItemsService, private sharedService: SharedService) { }
@@ -120,19 +125,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     }
     return item;
   }
-
-  // getQuotation(quotationId: string) {
-  //   if (!this.quotations) {
-  //     return null;
-  //   }
-  //   const quotation = this.quotations.find(quo => quo.id === quotationId);
-  //   // console.log(allDate);
-
-  //   if (!quotation) {
-  //     return null;
-  //   }
-  //   return quotation;
-  // }
 
   formatDate(date: Date) {
     return date.toDateString();

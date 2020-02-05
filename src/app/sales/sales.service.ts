@@ -167,7 +167,6 @@ export class SalesService {
         });
         data = {
           totalPrice: quotation.totalPrice,
-          // by: quotation.by,
           customerId: cusId,
           date: quotation.date,
           expirationDate: quotation.expirationDate,
