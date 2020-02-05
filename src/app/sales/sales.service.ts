@@ -1,16 +1,18 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import 'rxjs/add/operator/map';
-import { map, tap, switchMap, withLatestFrom, reduce } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs';
-import { Quotation } from './sales.model';
-import { SellItem, Invoice } from '../invoice/invoice.model';
-import { ItemsService } from '../items/items.service';
-import { InvoiceService } from '../invoice/invoice.service';
-import { Customer } from 'src/app/customer/customer.model';
-import { CustomerService } from 'src/app/customer/customer.service';
-import { AuthService } from '../signin/auth.service';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { environment } from "src/environments/environment";
+import "rxjs/add/operator/map";
+import { map, tap, switchMap, withLatestFrom, reduce } from "rxjs/operators";
+import { BehaviorSubject, of } from "rxjs";
+import { Quotation } from "./sales.model";
+import { SellItem, Invoice } from "../invoice/invoice.model";
+import { ItemsService } from "../items/items.service";
+import { InvoiceService } from "../invoice/invoice.service";
+import { Customer } from "src/app/customer/customer.model";
+import { CustomerService } from "src/app/customer/customer.service";
+import { AuthService } from "../signin/auth.service";
+import { UserService } from "../usersmanagement/user.service";
+import { User } from "../usersmanagement/user.model";
 
 interface QuototationResData {
   status: string;
@@ -38,9 +40,11 @@ interface QuotationCount {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class SalesService {
+  email: any;
+  user: any;
   private _quotations = new BehaviorSubject<Quotation[]>(null);
 
   get quotations() {
@@ -52,9 +56,12 @@ export class SalesService {
     private itemsService: ItemsService,
     private invoiceService: InvoiceService,
     private cService: CustomerService,
-    private auth: AuthService
+    private auth: AuthService,
+    private uService: UserService
   ) {
     this.invoiceService.getAllInvoice().subscribe();
+    this.auth.getCurrentEmail().subscribe(res => (this.email = res));
+    // this.uService.getUser().subscribe(re => (this.user = of(re)));
   }
 
   addQuotation(inputs: any) {
@@ -83,16 +90,16 @@ export class SalesService {
           sellItems.push(sellItem);
         });
         data = {
-          status: 'active',
+          status: "active",
           email: cusEmail,
           customerId: customer.id,
           date: inputs.date,
           expirationDate: inputs.expirationDate,
           items: sellItems,
           count,
-          invoiceId: ''
+          invoiceId: ""
         };
-        return this.http.post(environment.siteUrl + '/quotation.json', data);
+        return this.http.post(environment.siteUrl + "/quotation.json", data);
       })
     );
   }
@@ -100,7 +107,7 @@ export class SalesService {
   getQuotation() {
     return this.http
       .get<{ [key: string]: QuototationResData }>(
-        environment.siteUrl + '/quotation.json'
+        environment.siteUrl + "/quotation.json"
       )
       .pipe(
         withLatestFrom(this.itemsService.items),
@@ -129,7 +136,54 @@ export class SalesService {
                 resData[key].invoiceId,
                 resData[key].count
               );
-              quotations.push(quotation);
+              if (resData[key].email === this.email) {
+                quotations.push(quotation);
+              }
+            }
+          }
+          return quotations;
+        }),
+        tap(quotations => {
+          this._quotations.next(quotations);
+        })
+      );
+  }
+
+  getQuote(role: any) {
+    return this.http
+      .get<{ [key: string]: QuototationResData }>(
+        environment.siteUrl + "/quotation.json"
+      )
+      .pipe(
+        withLatestFrom(this.itemsService.items),
+        map(([resData, items]) => {
+          const quotations: Quotation[] = [];
+          for (const key in resData) {
+            if (resData.hasOwnProperty(key)) {
+              const allItem: SellItem[] = [];
+              for (let i = 0; i < resData[key].items.length; i++) {
+                const item = new SellItem(
+                  resData[key].items[i].itemId,
+                  resData[key].items[i].quantity
+                );
+                allItem.push(item);
+              }
+
+              const quotation = new Quotation(
+                null,
+                resData[key].status,
+                resData[key].customerId,
+                resData[key].email,
+                key,
+                resData[key].date,
+                resData[key].expirationDate,
+                allItem,
+                resData[key].invoiceId,
+                resData[key].count
+              );
+              if (resData[key].email === this.email || role === 'Admin') {
+                quotations.push(quotation);
+              }
             }
           }
           return quotations;
@@ -141,18 +195,17 @@ export class SalesService {
   }
 
   deleteQuotation(id: string, invoiceId: string) {
-    const data = { status: 'canceled' };
-    return this.http.patch(
-      environment.siteUrl + '/quotation/' + id + '.json',
-      data
-    ).pipe(
-    switchMap(() => {
-      return this.http.patch(
-        environment.siteUrl + '/invoices/' + invoiceId + '.json',
-        data
+    const data = { status: "canceled" };
+    return this.http
+      .patch(environment.siteUrl + "/quotation/" + id + ".json", data)
+      .pipe(
+        switchMap(() => {
+          return this.http.patch(
+            environment.siteUrl + "/invoices/" + invoiceId + ".json",
+            data
+          );
+        })
       );
-    })
-    );
   }
 
   updateQuotation(quotation: any, id: string, cusId: string) {
@@ -172,10 +225,10 @@ export class SalesService {
           date: quotation.date,
           expirationDate: quotation.expirationDate,
           items: sellItems,
-          invoiceId: ''
+          invoiceId: ""
         };
         return this.http.patch(
-          environment.siteUrl + '/quotation/' + id + '.json',
+          environment.siteUrl + "/quotation/" + id + ".json",
           data
         );
       })
@@ -184,7 +237,7 @@ export class SalesService {
 
   getCountQuotation() {
     return this.http.get<QuotationCount>(
-      environment.siteUrl + '/quotationCount.json'
+      environment.siteUrl + "/quotationCount.json"
     );
   }
 
@@ -193,7 +246,7 @@ export class SalesService {
       switchMap(c => {
         if (!c) {
           return this.http.put<QuotationCount>(
-            environment.siteUrl + '/quotationCount.json',
+            environment.siteUrl + "/quotationCount.json",
             { count: 1 }
           );
         } else {
@@ -201,7 +254,7 @@ export class SalesService {
             count: c.count + 1
           };
           return this.http.patch<QuotationCount>(
-            environment.siteUrl + '/quotationCount.json',
+            environment.siteUrl + "/quotationCount.json",
             count
           );
         }
