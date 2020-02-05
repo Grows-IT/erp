@@ -58,13 +58,26 @@ style="width: 80%;" align="center">
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="expirationDate">
+  <!-- <ng-container matColumnDef="expirationDate">
     <th mat-header-cell *matHeaderCellDef> Expiration date </th>
     <td mat-cell *matCellDef="let element">
       <div *ngIf="element.status !== 'active'" class="disable">
         {{getExpirationDate(element.quotationId) | date}}</div>
         <div *ngIf="element.status === 'active'">
           {{getExpirationDate(element.quotationId) | date}}</div>
+    </td>
+  </ng-container> -->
+  <ng-container matColumnDef="receiptpdf">
+    <th mat-header-cell *matHeaderCellDef> RECEIPT PDF </th>
+    <td mat-cell *matCellDef="let element">
+      <div *ngIf="element.status == 'active'">
+      <button mat-button (click)="openReceiptPdf(element)" >
+        <img src="/assets/icons/pdfbw.svg">
+      </button></div>
+      <div *ngIf="element.status == 'canceled'">
+        <button mat-button (click)="openReceiptPdf(element)" [disabled]="element.status != 'active'">
+          <img src="/assets/icons/pdfdis.svg" style="width: 32px; height: 32px;">
+        </button></div>
     </td>
   </ng-container>
 

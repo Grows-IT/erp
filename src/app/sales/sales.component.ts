@@ -84,8 +84,8 @@ export class SalesComponent implements OnInit, OnDestroy {
     });
     this.itemsService.getAllItems().subscribe();
     this.cService.getAllCustomer().subscribe();
-    // this.salesService.getQuotation().subscribe();
-    this.salesService.getQuote(this.getRoles(this.email)).subscribe();
+    this.salesService.getQuotation().subscribe();
+    // this.salesService.getQuote(this.getRoles(this.email)).subscribe();
 
   }
 

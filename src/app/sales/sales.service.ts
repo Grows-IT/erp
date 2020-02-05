@@ -43,8 +43,8 @@ interface QuotationCount {
   providedIn: "root"
 })
 export class SalesService {
-  email: any;
-  user: any;
+  email: string;
+  role: string;
   private _quotations = new BehaviorSubject<Quotation[]>(null);
 
   get quotations() {
@@ -59,10 +59,21 @@ export class SalesService {
     private auth: AuthService,
     private uService: UserService
   ) {
-    this.invoiceService.getAllInvoice().subscribe();
-    this.auth.getCurrentEmail().subscribe(res => (this.email = res));
-    // this.uService.getUser().subscribe(re => (this.user = of(re)));
+
+    this.auth.getCurrentEmail().subscribe(email => this.email = email);
+    this.uService.getUser().pipe(
+      map(users => {
+        return users.find(user => {
+          if (user.email === this.email) {
+            this.role = user.role;
+            console.log(user);
+
+          }
+        });
+      })
+    ).subscribe();
   }
+    // this.uService.getUser().subscribe(re => (this.user = of(re)));
 
   addQuotation(inputs: any) {
     let data;
@@ -136,9 +147,16 @@ export class SalesService {
                 resData[key].invoiceId,
                 resData[key].count
               );
-              if (resData[key].email === this.email) {
+              if (this.role === 'Admin') {
                 quotations.push(quotation);
               }
+              console.log(this.role);
+
+              if (this.email === resData[key].email && this.role !== 'Admin') {
+                quotations.push(quotation);
+              }
+              // if (resData[key].email === this.email) {
+              // }
             }
           }
           return quotations;
@@ -149,50 +167,50 @@ export class SalesService {
       );
   }
 
-  getQuote(role: any) {
-    return this.http
-      .get<{ [key: string]: QuototationResData }>(
-        environment.siteUrl + "/quotation.json"
-      )
-      .pipe(
-        withLatestFrom(this.itemsService.items),
-        map(([resData, items]) => {
-          const quotations: Quotation[] = [];
-          for (const key in resData) {
-            if (resData.hasOwnProperty(key)) {
-              const allItem: SellItem[] = [];
-              for (let i = 0; i < resData[key].items.length; i++) {
-                const item = new SellItem(
-                  resData[key].items[i].itemId,
-                  resData[key].items[i].quantity
-                );
-                allItem.push(item);
-              }
+  // getQuote(role: any) {
+  //   return this.http
+  //     .get<{ [key: string]: QuototationResData }>(
+  //       environment.siteUrl + "/quotation.json"
+  //     )
+  //     .pipe(
+  //       withLatestFrom(this.itemsService.items),
+  //       map(([resData, items]) => {
+  //         const quotations: Quotation[] = [];
+  //         for (const key in resData) {
+  //           if (resData.hasOwnProperty(key)) {
+  //             const allItem: SellItem[] = [];
+  //             for (let i = 0; i < resData[key].items.length; i++) {
+  //               const item = new SellItem(
+  //                 resData[key].items[i].itemId,
+  //                 resData[key].items[i].quantity
+  //               );
+  //               allItem.push(item);
+  //             }
 
-              const quotation = new Quotation(
-                null,
-                resData[key].status,
-                resData[key].customerId,
-                resData[key].email,
-                key,
-                resData[key].date,
-                resData[key].expirationDate,
-                allItem,
-                resData[key].invoiceId,
-                resData[key].count
-              );
-              if (resData[key].email === this.email || role === 'Admin') {
-                quotations.push(quotation);
-              }
-            }
-          }
-          return quotations;
-        }),
-        tap(quotations => {
-          this._quotations.next(quotations);
-        })
-      );
-  }
+  //             const quotation = new Quotation(
+  //               null,
+  //               resData[key].status,
+  //               resData[key].customerId,
+  //               resData[key].email,
+  //               key,
+  //               resData[key].date,
+  //               resData[key].expirationDate,
+  //               allItem,
+  //               resData[key].invoiceId,
+  //               resData[key].count
+  //             );
+  //             if (resData[key].email === this.email || role === 'Admin') {
+  //               quotations.push(quotation);
+  //             }
+  //           }
+  //         }
+  //         return quotations;
+  //       }),
+  //       tap(quotations => {
+  //         this._quotations.next(quotations);
+  //       })
+  //     );
+  // }
 
   deleteQuotation(id: string, invoiceId: string) {
     const data = { status: "canceled" };
