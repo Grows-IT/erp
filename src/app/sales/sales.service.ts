@@ -54,7 +54,7 @@ export class SalesService {
     private cService: CustomerService,
     private auth: AuthService
   ) {
-    this.invoiceService.getAllInvoice().subscribe();
+    // this.invoiceService.getAllInvoice().subscribe();
   }
 
   addQuotation(inputs: any) {

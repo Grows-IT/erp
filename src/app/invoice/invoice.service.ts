@@ -41,15 +41,15 @@ export class InvoiceService {
 
   constructor(private http: HttpClient, private itemsService: ItemsService, private userService: UserService, private authService: AuthService) {
     this.authService.getCurrentEmail().subscribe(email => this.email = email);
-    this.userService.getUser().pipe(
-      map(users => {
-        return users.find(user => {
-          if (user.email === this.email) {
-            this.role = user.role;
-          }
-        });
-      })
-    ).subscribe();
+    // this.userService.getUser().pipe(
+    //   map(users => {
+    //     return users.find(user => {
+    //       if (user.email === this.email) {
+    //         this.role = user.role;
+    //       }
+    //     });
+    //   })
+    // ).subscribe();
   }
 
   getAllInvoice() {
@@ -96,6 +96,8 @@ export class InvoiceService {
             if (this.role === 'Admin') {
               invoices.push(invoice);
             }
+            console.log(this.role);
+
             if (this.email === resData[key].email && this.role !== 'Admin') {
               invoices.push(invoice);
             }
@@ -107,6 +109,19 @@ export class InvoiceService {
         this._invoice.next(invoices);
       })
     );
+  }
+
+  private getUser() {
+    this.userService.getUser().pipe(
+      map(users => {
+        users.find(user => {
+          if (user.email === this.email) {
+            this.role = user.role;
+            // return user.role;
+          }
+        });
+      })
+    ).subscribe();
   }
 
   createInvoice(quotation: any, type: string) {
