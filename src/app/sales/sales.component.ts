@@ -17,6 +17,9 @@ import { tap, switchMap } from 'rxjs/operators';
 import { ItemsService } from '../items/items.service';
 import { Item } from '../items/items.model';
 import { SharedService } from '../shared/shared.service';
+import { AuthService } from '../signin/auth.service';
+import { UserService } from '../usersmanagement/user.service';
+import { User } from '../usersmanagement/user.model';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 // export interface QuotationList {
@@ -54,29 +57,36 @@ export class SalesComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   customerSubscription: Subscription;
   customers: Customer[];
+  users: User[];
   total: number;
   subTotal: number;
+  email: any;
+  userSubscription: Subscription;
 
   constructor(public dialog: MatDialog, private salesService: SalesService, private router: Router, private cService: CustomerService,
-    private invoiceService: InvoiceService, private itemsService: ItemsService, private sharedService: SharedService) {
+    private invoiceService: InvoiceService, private itemsService: ItemsService, private sharedService: SharedService, public auth: AuthService, public uService: UserService) {
   }
 
   ngOnInit() {
+    this.auth.getCurrentEmail().subscribe(res => (this.email = res));
     this.subscription = this.salesService.quotations.subscribe(quotations => {
       this.quotations = quotations;
     });
     this.customerSubscription = this.cService.customers.subscribe(customers => {
       this.customers = customers;
     });
+    this.userSubscription = this.uService.users.subscribe(users => {
+      this.users = users;
+    });
+    this.uService.getUser().subscribe();
     this.itemsService.items.subscribe(items => {
       this.items = items;
     });
-    // this.customerSubscription = this.itemsService.items.subscribe(items => {
-    //   this.items = items;
-    // });
     this.itemsService.getAllItems().subscribe();
-    this.salesService.getQuotation().subscribe();
     this.cService.getAllCustomer().subscribe();
+    this.salesService.getQuotation().subscribe();
+    // this.salesService.getQuote(this.getRoles(this.email)).subscribe();
+
   }
 
   ngOnDestroy() {
@@ -98,6 +108,17 @@ export class SalesComponent implements OnInit, OnDestroy {
       return null;
     }
     return customer;
+  }
+
+  getRoles(email: string) {
+    const acc = this.users.find(em => em.email === email);
+    if (!acc) {
+      return null;
+    }
+    console.log(acc.role);
+    return acc.role;
+    // console.log(acc.role);
+
   }
 
   openQuotation() {
