@@ -1,11 +1,21 @@
 import { Injectable } from '@angular/core';
+import { UserService } from '../usersmanagement/user.service';
+import { AuthService } from '../signin/auth.service';
+import { map, tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
+  email: string;
+  private _role = new BehaviorSubject<string>(null);
 
-  constructor() { }
+  get role() {
+    return this._role.asObservable();
+  }
+
+  constructor(private userService: UserService, private authService: AuthService) { }
 
   decode(id, count, isQuotation) {
     const PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
@@ -25,4 +35,25 @@ export class SharedService {
     }
     return no;
   }
+
+  getRole() {
+    this.getEmail().subscribe(email => this.email = email);
+    return this.userService.getUser().pipe(
+      map(users => {
+        return users.find(user => {
+          if (user.email === this.email) {
+            return user;
+          }
+        });
+      }),
+      tap(user => {
+        this._role.next(user.role);
+      })
+    );
+  }
+
+  getEmail() {
+    return this.authService.getCurrentEmail();
+  }
+
 }
