@@ -13,6 +13,8 @@ import { CustomerService } from "src/app/customer/customer.service";
 import { AuthService } from "../signin/auth.service";
 import { UserService } from "../usersmanagement/user.service";
 import { User } from "../usersmanagement/user.model";
+import { SharedService } from '../shared/shared.service';
+import { async } from '@angular/core/testing';
 
 interface QuototationResData {
   status: string;
@@ -57,20 +59,14 @@ export class SalesService {
     private invoiceService: InvoiceService,
     private cService: CustomerService,
     private auth: AuthService,
-    private uService: UserService
+    private uService: UserService,
+    private sharedService: SharedService
   ) {
     this.auth.getCurrentEmail().subscribe(email => this.email = email);
-    this.uService.getUser().pipe(
-      map(users => {
-        return users.find(user => {
-          if (user.email === this.email) {
-            this.role = user.role;
-            console.log(user);
-
-          }
-        });
-      })
-    ).subscribe();
+    this.sharedService.role.subscribe(role => { this.role = role; });
+    this.sharedService.getRole().subscribe();
+    // this.uService.getUser().subscribe();
+    this.sharedService.getEmail().subscribe(email => this.email = email);
   }
 
   addQuotation(inputs: any) {
@@ -119,8 +115,8 @@ export class SalesService {
         environment.siteUrl + "/quotation.json"
       )
       .pipe(
-        withLatestFrom(this.itemsService.items),
-        map(([resData, items]) => {
+        // withLatestFrom(this.uService.users),
+        map((resData) => {
           const quotations: Quotation[] = [];
           for (const key in resData) {
             if (resData.hasOwnProperty(key)) {
@@ -145,16 +141,13 @@ export class SalesService {
                 resData[key].invoiceId,
                 resData[key].count
               );
+              console.log(this.role);
+              console.log(resData[key]);
               if (this.role === 'Admin') {
                 quotations.push(quotation);
-              }
-              console.log(this.role);
-
-              if (this.email === resData[key].email && this.role !== 'Admin') {
+              } else if (this.email === resData[key].email && this.role !== 'Admin') {
                 quotations.push(quotation);
               }
-              // if (resData[key].email === this.email) {
-              // }
             }
           }
           return quotations;

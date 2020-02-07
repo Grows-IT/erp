@@ -59,9 +59,9 @@ export class UsersmanagementComponent implements OnInit {
 
   delete(id: string, token: string) {
     this.uService.deleteUser(id).pipe(
-      switchMap(() => this.uService.getUser())
+      switchMap(() => this.uService.getUser()),
+      switchMap(() => this.authService.delete(token))
     ).subscribe();
-    this.authService.delete(token).subscribe();
   }
 
 }

@@ -85,8 +85,6 @@ export class SalesComponent implements OnInit, OnDestroy {
     this.itemsService.getAllItems().subscribe();
     this.cService.getAllCustomer().subscribe();
     this.salesService.getQuotation().subscribe();
-    // this.salesService.getQuote(this.getRoles(this.email)).subscribe();
-
   }
 
   ngOnDestroy() {
@@ -108,17 +106,6 @@ export class SalesComponent implements OnInit, OnDestroy {
       return null;
     }
     return customer;
-  }
-
-  getRoles(email: string) {
-    const acc = this.users.find(em => em.email === email);
-    if (!acc) {
-      return null;
-    }
-    console.log(acc.role);
-    return acc.role;
-    // console.log(acc.role);
-
   }
 
   openQuotation() {
@@ -159,7 +146,7 @@ export class SalesComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(QuotationdetailComponent, {
       panelClass: 'nopadding-dialog',
       width: '40vw',
-      height: '60vh',
+      height: '80vh',
       disableClose: false,
       autoFocus: false,
       data: item,

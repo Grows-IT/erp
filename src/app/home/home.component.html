@@ -31,13 +31,13 @@
       <h3>{{ menu.topicname }}</h3>
     </button></mat-grid-tile
   >
-  <div *ngIf="role === 'Admin'">
+  <div>
     <mat-grid-tile [colspan]="4" [rowspan]="0.5">
       <h1 style="margin-right: 50%;">Database</h1>
     </mat-grid-tile>
   </div>
   <mat-grid-tile [colspan]="4" [rowspan]="2">
-    <div align="center" *ngIf="role === 'Admin'" style="width: 100%;">
+    <div align="center" style="width: 150%;">
       <button
         mat-button
         style="margin-left: 2%;"
@@ -46,6 +46,15 @@
       >
         <img mat-card-image src="{{ menu.img }}" />
         <h3>{{ menu.topicname }}</h3>
+      </button>
+      <button
+        mat-button
+        *ngIf="role === 'Admin'"
+        style="margin-left: 2%;"
+        routerLink="usersmanagement"
+      >
+        <img mat-card-image src="assets/menu/gear.svg" />
+        <h3>User Management</h3>
       </button>
     </div>
   </mat-grid-tile>
