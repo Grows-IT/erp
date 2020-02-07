@@ -42,7 +42,7 @@ export interface InvoiceList {
 })
 export class InvoiceComponent implements OnInit, OnDestroy {
   // invoices: Quotation[];
-  invoicesCol: string[] = ['no', 'groups', 'customerName', 'addressTo', 'date', 'receiptpdf', 'pdf', 'delete'];
+  invoicesCol: string[] = ['no', 'groups', 'customerName', 'addressTo', 'date', 'invoicepdf', 'receiptpdf', 'delete'];
   // invoicesCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'item', 'quantity', 'pdf', 'delete'];
   customerSubscription: Subscription;
   invoiceSubscription: Subscription;
@@ -60,11 +60,14 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   subTotal: number;
   email: string;
   users: User[];
+  role: string;
+
 
   constructor(private invoiceService: InvoiceService, private salesService: SalesService, private cService: CustomerService,
     public dialog: MatDialog, private itemsService: ItemsService, private sharedService: SharedService) { }
 
   ngOnInit() {
+    this.sharedService.getRole().subscribe(user => this.role = user.role);
     this.quotationSubscription = this.salesService.quotations.subscribe(quotations => {
       this.quotations = quotations;
     });
@@ -127,20 +130,27 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   formatDate(date: Date) {
+    this.date = date.toDateString();
     return date.toDateString();
   }
 
-  getDate(quotationId: string) {
+  getDate(quotationId: string, createDate?: boolean) {
     if (!this.quotations) {
       return null;
     }
+
+    // if (createDate) {
+    //   const date = new Date();
+    //   return this.formatDate(date);
+    // }
+
     const quotation = this.quotations.find(quo => quo.id === quotationId);
-    const date = new Date(quotation.date);
+    this.date = new Date(quotation.date);
 
     if (!quotation) {
       return null;
     }
-    return this.formatDate(date);
+    return this.formatDate(this.date);
   }
 
   getExpirationDate(quotationId: string) {
@@ -155,7 +165,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     }
     return this.formatDate(date);
   }
-
 
   delete(invoiceId, quotationId) {
     this.invoiceService.deleteInvoice(invoiceId, quotationId).pipe(
@@ -177,7 +186,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   decode(id, count) {
-    return this.sharedService.decode(id, count, false);
+    return this.sharedService.decode(id, count, 'I');
   }
 
   getListItem(items) {
@@ -222,26 +231,12 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     }
   }
 
-  openReceiptPdf(item: any){
+  openReceiptPdf(item: any) {
     this.subTotal = 0;
     console.log(item);
     this.getListItem(item.items);
 
     const documentDefinition = {
-      // header: {
-      //   columns: [
-      //     { text: 'HEADER LEFT', style: 'documentHeaderLeft' },
-      //     { text: 'HEADER CENTER', style: 'documentHeaderCenter' },
-      //     { text: 'HEADER RIGHT', style: 'documentHeaderRight' }
-      //   ]
-      // },
-      // footer: {
-      //   columns: [
-      //     { text: 'FOOTER LEFT', style: 'documentFooterLeft' },
-      //     { text: 'FOOTER CENTER', style: 'documentFooterCenter' },
-      //     { text: 'FOOTER RIGHT', style: 'documentFooterRight' }
-      //   ]
-      // },
       content: [
         // Header
         {
@@ -267,7 +262,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
                       },
                       {
-                        text: this.sharedService.decode(item.id, item.count, false),
+                        text: this.sharedService.decode(item.id, item.count, 'R'),
                         style: 'invoiceSubValue',
                         width: 100
 
@@ -282,7 +277,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
                         width: '*'
                       },
                       {
-                        text: this.getDate(item.quotationId),
+                        text: this.getDate(item.quotationId, true),
                         style: 'invoiceSubValue',
                         width: 100
                       }
@@ -637,20 +632,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     this.getListItem(item.items);
 
     const documentDefinition = {
-      // header: {
-      //   columns: [
-      //     { text: 'HEADER LEFT', style: 'documentHeaderLeft' },
-      //     { text: 'HEADER CENTER', style: 'documentHeaderCenter' },
-      //     { text: 'HEADER RIGHT', style: 'documentHeaderRight' }
-      //   ]
-      // },
-      // footer: {
-      //   columns: [
-      //     { text: 'FOOTER LEFT', style: 'documentFooterLeft' },
-      //     { text: 'FOOTER CENTER', style: 'documentFooterCenter' },
-      //     { text: 'FOOTER RIGHT', style: 'documentFooterRight' }
-      //   ]
-      // },
       content: [
         // Header
         {
@@ -676,7 +657,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
                       },
                       {
-                        text: this.sharedService.decode(item.id, item.count, false),
+                        text: this.sharedService.decode(item.id, item.count, 'I'),
                         style: 'invoiceSubValue',
                         width: 100
 

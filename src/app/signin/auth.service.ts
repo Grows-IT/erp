@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, of } from 'rxjs';
-import { tap, first, switchMap, catchError, map } from 'rxjs/operators';
+import { tap, first, switchMap, catchError, map, withLatestFrom } from 'rxjs/operators';
 import { stringify } from 'querystring';
 import { UserService } from '../usersmanagement/user.service';
 import { User } from '../usersmanagement/user.model';
+import CryptoJS from 'crypto-js';
 
 export class Auth {
   constructor(
     public email: string,
-    public token: string
+    public token: string,
   ) { }
 }
 
@@ -20,6 +21,7 @@ export class Auth {
 export class AuthService {
   private _user = new BehaviorSubject<Auth>(null);
   private _token = new BehaviorSubject<string>(null);
+  private sessionLogin;
 
   get user() {
     return this._user.asObservable();
@@ -37,16 +39,50 @@ export class AuthService {
       returnSecureToken: true
     };
 
+    // return this.http.post<{ email: string, idToken: string }>(environment.authLoginUtl + environment.firebase.apiKey, data).pipe(
+    //   tap(val => {
+    //     console.log(val);
+    //     const authen = new Auth(val.email, val.idToken, null);
+    //     this.saveUserToStorage(authen);
+    //     // console.log(this.getTokenFormStorage());
+    //     this._token.next(authen.token);
+    //     this._user.next(authen);
+    //   })
+    // );
+
     return this.http.post<{ email: string, idToken: string }>(environment.authLoginUtl + environment.firebase.apiKey, data).pipe(
-      tap(val => {
-        console.log(val);
-        const authen = new Auth(val.email, val.idToken);
-        this.saveUserToStorage(authen);
-        // console.log(this.getTokenFormStorage());
+      switchMap((val) => {
+        this.sessionLogin = val;
+        return this.userService.getUser();
+      }),
+      tap((users) => {
+        const user = users.find(u => u.email === this.sessionLogin.email);
+        const authen = new Auth(this.sessionLogin.email, this.sessionLogin.idToken);
+        this.saveUserToStorage(authen, user.role);
         this._token.next(authen.token);
-        this._user.next(authen);
+        this._user.next(user);
       })
     );
+
+    // Password12!
+
+    // return this.userService.getUser().pipe(
+    //   map(users => {
+    //     this.u = users.find(user => user.email === form.email);
+    //     return this.http.post<{ email: string, idToken: string }>(environment.authLoginUtl + environment.firebase.apiKey, data).pipe(
+    //       tap(val => {
+    //         console.log(val);
+    //         console.log(this.u);
+
+    //         const authen = new Auth(val.email, val.idToken, this.u.role);
+    //         this.saveUserToStorage(authen);
+    //         // console.log(this.getTokenFormStorage());
+    //         this._token.next(authen.token);
+    //         this._user.next(this.u);
+    //       })
+    //     );
+    //   }),
+    // );
   }
 
   signup(form) {
@@ -85,7 +121,7 @@ export class AuthService {
   }
 
 
-  delete(token){
+  delete(token) {
     const data = {
       idToken: token
     };
@@ -108,10 +144,11 @@ export class AuthService {
   }
 
 
-  private saveUserToStorage(val: Auth) {
+  private saveUserToStorage(val: Auth, role: string) {
     localStorage.setItem('user', JSON.stringify(val));
     localStorage.setItem('token', val.token);
     localStorage.setItem('email', val.email);
+    localStorage.setItem('role', CryptoJS.SHA1(role));
   }
 
   getTokenFormStorage() {
@@ -122,7 +159,12 @@ export class AuthService {
     // return of(localStorage.getItem('auth'));
     return of(JSON.parse(localStorage.getItem('auth')) as User);
   }
+
   getCurrentEmail() {
     return of(localStorage.getItem('email'));
+  }
+
+  getRoleFormStorage() {
+    return of(localStorage.getItem('role'));
   }
 }

@@ -17,7 +17,7 @@ export class SharedService {
 
   constructor(private userService: UserService, private authService: AuthService) { }
 
-  decode(id, count, isQuotation) {
+  decode(id, count, key) {
     const PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
     id = id.substring(0, 8);
     let timestamp = 0;
@@ -27,12 +27,7 @@ export class SharedService {
     }
     const zeroPad = (num, places) => String(num).padStart(places, '0');
     const date = new Date(timestamp);
-    let no;
-    if (isQuotation) {
-      no = 'Q' + date.getDate() + date.getMonth() + 1 + date.getFullYear().toString().substr(-2) + zeroPad(count, 5);
-    } else {
-      no = 'I' + date.getDate() + date.getMonth() + 1 + date.getFullYear().toString().substr(-2) + zeroPad(count, 5);
-    }
+    const no = key + date.getDate() + date.getMonth() + 1 + date.getFullYear().toString().substr(-2) + zeroPad(count, 5);
     return no;
   }
 

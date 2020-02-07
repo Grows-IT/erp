@@ -229,7 +229,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   decode(id, count) {
-    return this.sharedService.decode(id, count, true);
+    return this.sharedService.decode(id, count, 'Q');
   }
 
   formatDate(date: Date, expirationDate: Date) {
@@ -284,7 +284,7 @@ export class SalesComponent implements OnInit, OnDestroy {
 
                       },
                       {
-                        text: this.sharedService.decode(item.id, item.count, true),
+                        text: this.sharedService.decode(item.id, item.count, 'Q'),
                         style: 'quotationSubValue',
                         width: 100
 

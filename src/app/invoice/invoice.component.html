@@ -1,17 +1,20 @@
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <h1 align="center">Invoice <img src="/assets/icons/invoice.svg" style="width: 50px; padding-top: 30px;"></h1>
 <div align="center" class="space">
   <mat-spinner *ngIf="!invoices"></mat-spinner>
 </div>
 <table mat-table *ngIf="invoices" [dataSource]="invoices" multiTemplateDataRows matSort class="mat-elevation-z8"
-style="width: 80%;" align="center">
-<ng-container matColumnDef="no">
-  <th mat-header-cell *matHeaderCellDef> NO. </th>
-  <td mat-cell *matCellDef="let element">
-    <div *ngIf="element.status !== 'active'" class="disable">
-      {{decode(element.id, element.count)}}</div>
+  style="width: 80%;" align="center">
+  <ng-container matColumnDef="no">
+    <th mat-header-cell *matHeaderCellDef> NO. </th>
+    <td mat-cell *matCellDef="let element">
+      <div *ngIf="element.status !== 'active'" class="disable">
+        {{decode(element.id, element.count)}}</div>
       <div *ngIf="element.status === 'active'">
         {{decode(element.id, element.count)}}</div>
-  </td>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="groups">
@@ -21,21 +24,21 @@ style="width: 80%;" align="center">
         <button mat-button (click)="openDetail(element.id)">
           <img src="/assets/icons/profiles.svg">
         </button></div>
-        <div *ngIf="element.status == 'canceled'">
-          <button mat-button (click)="openDetail(element)" [disabled]="element.status != 'active'">
-            <img src="/assets/icons/profiledis.svg" style="width: 32px; height: 32px;">
-          </button></div>
+      <div *ngIf="element.status == 'canceled'">
+        <button mat-button (click)="openDetail(element)" [disabled]="element.status != 'active'">
+          <img src="/assets/icons/profiledis.svg" style="width: 32px; height: 32px;">
+        </button></div>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="customerName">
     <th mat-header-cell *matHeaderCellDef> CustomerName </th>
     <td mat-cell *matCellDef="let element">
-    <div *ngIf="element.status !== 'active'" class="disable">
-      {{getCustomerName(element.customerId)}}</div>
+      <div *ngIf="element.status !== 'active'" class="disable">
+        {{getCustomerName(element.customerId)}}</div>
       <div *ngIf="element.status === 'active'">
         {{getCustomerName(element.customerId)}}</div>
-  </td>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="addressTo">
@@ -43,8 +46,8 @@ style="width: 80%;" align="center">
     <td mat-cell *matCellDef="let element">
       <div *ngIf="element.status !== 'active'" class="disable">
         {{getCustomerAddress(element.customerId)}}</div>
-        <div *ngIf="element.status === 'active'">
-          {{getCustomerAddress(element.customerId)}}</div>
+      <div *ngIf="element.status === 'active'">
+        {{getCustomerAddress(element.customerId)}}</div>
     </td>
   </ng-container>
 
@@ -52,34 +55,37 @@ style="width: 80%;" align="center">
     <th mat-header-cell *matHeaderCellDef> Date </th>
     <td mat-cell *matCellDef="let element">
       <div *ngIf="element.status !== 'active'" class="disable">
-        {{getDate(element.quotationId) | date}}</div>
-        <div *ngIf="element.status === 'active'">
-          {{getDate(element.quotationId) | date}}</div>
+        {{getDate(element.quotationId) | date}}
+      </div>
+      <div *ngIf="element.status === 'active'">
+        {{getDate(element.quotationId) | date}}
+      </div>
     </td>
   </ng-container>
 
-  <!-- <ng-container matColumnDef="expirationDate">
-    <th mat-header-cell *matHeaderCellDef> Expiration date </th>
-    <td mat-cell *matCellDef="let element">
-      <div *ngIf="element.status !== 'active'" class="disable">
-        {{getExpirationDate(element.quotationId) | date}}</div>
-        <div *ngIf="element.status === 'active'">
-          {{getExpirationDate(element.quotationId) | date}}</div>
-    </td>
-  </ng-container> -->
   <ng-container matColumnDef="receiptpdf">
-    <th mat-header-cell *matHeaderCellDef> RECEIPT PDF </th>
+    <th mat-header-cell *matHeaderCellDef> Receip PDF </th>
     <td mat-cell *matCellDef="let element">
       <div *ngIf="element.status == 'active'">
-      <button mat-button (click)="openReceiptPdf(element)" >
-        <img src="/assets/icons/pdfbw.svg">
-      </button></div>
+        <div *ngIf="element.receiptpdf">
+          <button mat-button (click)="openReceiptPdf(element)">
+            <img src="/assets/icons/pdfbw.svg">
+          </button></div>
+      </div>
+      <div *ngIf="!element.receiptpdf">
+        {{role}}
+        <button mat-button [disabled]="role !== 'Admin'">
+          <i class="material-icons"> add</i>
+        </button>
+
+      </div>
       <div *ngIf="element.status == 'canceled'">
         <button mat-button (click)="openReceiptPdf(element)" [disabled]="element.status != 'active'">
           <img src="/assets/icons/pdfdis.svg" style="width: 32px; height: 32px;">
         </button></div>
     </td>
   </ng-container>
+
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef> Delete </th>
     <td mat-cell *matCellDef="let element">
@@ -89,13 +95,13 @@ style="width: 80%;" align="center">
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="pdf">
-    <th mat-header-cell *matHeaderCellDef> PDF </th>
+  <ng-container matColumnDef="invoicepdf">
+    <th mat-header-cell *matHeaderCellDef> Invoice PDF </th>
     <td mat-cell *matCellDef="let element">
       <div *ngIf="element.status == 'active'">
-      <button mat-button (click)="opnePdf(element)" >
-        <img src="/assets/icons/pdfbw.svg">
-      </button></div>
+        <button mat-button (click)="opnePdf(element)">
+          <img src="/assets/icons/pdfbw.svg">
+        </button></div>
       <div *ngIf="element.status == 'canceled'">
         <button mat-button (click)="opnePdf(element)" [disabled]="element.status != 'active'">
           <img src="/assets/icons/pdfdis.svg" style="width: 32px; height: 32px;">

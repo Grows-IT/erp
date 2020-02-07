@@ -139,7 +139,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
   }
 
   decode(id) {
-    return this.sharedService.decode(id, this.quotation.count, true);
+    return this.sharedService.decode(id, this.quotation.count, 'Q');
   }
 
   edit(quotation) {
@@ -231,7 +231,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
                         width: "*"
                       },
                       {
-                        text: this.sharedService.decode(item.id, item.count, true),
+                        text: this.sharedService.decode(item.id, item.count, 'Q'),
                         style: "quotationSubValue",
                         width: 100
                       }

@@ -80,7 +80,7 @@ export class InvoicegroupComponent implements OnInit {
   }
 
   decode(id, count) {
-    return this.sharedService.decode(id, count, false);
+    return this.sharedService.decode(id, count, 'I');
   }
 
   editGroupName(id, index) {

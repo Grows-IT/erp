@@ -8,7 +8,8 @@ export class Invoice {
     public count: number,
     public status: string,
     public email: string,
-    public group?: InvoiceGroup[]
+    public receip: Date,
+    public group?: InvoiceGroup[],
   ) { }
 }
 

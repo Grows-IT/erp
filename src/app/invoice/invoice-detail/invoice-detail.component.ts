@@ -236,7 +236,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   decode(id, count) {
-    return this.sharedService.decode(id, count, false);
+    return this.sharedService.decode(id, count, 'I');
   }
 
   formatDate(date: Date) {

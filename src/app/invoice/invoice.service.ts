@@ -3,12 +3,11 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Invoice, SellItem, InvoiceGroup, SubInvoice } from './invoice.model';
 import { BehaviorSubject } from 'rxjs';
-import { tap, map, switchMap, withLatestFrom } from 'rxjs/operators';
-import { ItemsService } from '../items/items.service';
+import { tap, map, switchMap } from 'rxjs/operators';
+import { SharedService } from '../shared/shared.service';
 import { UserService } from '../usersmanagement/user.service';
 import { AuthService } from '../signin/auth.service';
-import { User } from '../usersmanagement/user.model';
-import { SharedService } from '../shared/shared.service';
+import CryptoJS from 'crypto-js';
 
 interface InvoiceResData {
   id: string;
@@ -20,6 +19,7 @@ interface InvoiceResData {
   count: number;
   status: string;
   email: string;
+  receip: Date;
   group?: InvoiceGroup[];
 }
 
@@ -34,24 +34,27 @@ export class InvoiceService {
   private _invoice = new BehaviorSubject<Invoice[]>(null);
   email: string;
   role: string;
-  invs: Invoice[];
 
   get invoices() {
     return this._invoice.asObservable();
   }
 
-  constructor(private http: HttpClient, private itemsService: ItemsService, private userService: UserService, private authService: AuthService,
-    private sharedService: SharedService) {
-    this.sharedService.role.subscribe(role => { this.role = role; });
-    this.sharedService.getRole().subscribe();
-    this.sharedService.getEmail().subscribe(email => this.email = email);
+  constructor(private http: HttpClient, private userService: UserService, private sharedService: SharedService, private authService: AuthService) {
+    this.sharedService.getEmail().subscribe(email => {
+      this.email = email;
+    });
   }
 
   getAllInvoice() {
     return this.http.get<{ [key: string]: InvoiceResData }>(environment.siteUrl + '/invoices.json').pipe(
-      withLatestFrom(this.itemsService.items),
-      // withLatestFrom(this.userService.users),
-      map(([resData, items]) => {
+      map(resData => {
+        this.authService.getRoleFormStorage().subscribe(role => {
+          this.role = role;
+        });
+
+        return resData;
+      }),
+      map((resData) => {
         const invoices: Invoice[] = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
@@ -85,14 +88,15 @@ export class InvoiceService {
               resData[key].count,
               resData[key].status,
               resData[key].email,
+              resData[key].receip,
               groups
             );
+            console.log(this.role);
 
-            if (this.role === 'Admin') {
+
+            if (this.role === '4e7afebcfbae000b22c7c85e5560f89a2a0280b4') {
               invoices.push(invoice);
-            }
-
-            if (this.email === resData[key].email && this.role !== 'Admin') {
+            } else if (this.email === resData[key].email && this.role !== '4e7afebcfbae000b22c7c85e5560f89a2a0280b4') {
               invoices.push(invoice);
             }
           }
@@ -116,6 +120,7 @@ export class InvoiceService {
           'count': count.count,
           'status': "active",
           'email': quotation.email,
+          'receip': null
         };
         return data;
       }),
