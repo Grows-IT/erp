@@ -110,11 +110,11 @@ export class HomeComponent implements OnInit {
       "assets/menu/employee.svg",
       "employee"
     );
-    const setting = new Menu(
-      "Users management",
-      "assets/menu/gear.svg",
-      "usersmanagement"
-    );
+    // const setting = new Menu(
+    //   "Users management",
+    //   "assets/menu/gear.svg",
+    //   "usersmanagement"
+    // );
     this.menu = [sales, invoice, CRM, qualitycon, account];
     this.menu2 = [pricelist, report, purchase, truck];
     this.downmenu = [
@@ -124,7 +124,7 @@ export class HomeComponent implements OnInit {
       customers,
       flowerplant,
       employee,
-      setting
+      // setting
     ];
     // this.role = this.getRole();
     // console.log(this.role);

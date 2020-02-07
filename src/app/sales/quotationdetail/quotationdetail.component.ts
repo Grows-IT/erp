@@ -111,7 +111,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
   invoiceDetail(id) {
     const dialogRef = this.dialog.open(InvoicegroupComponent, {
       panelClass: "nopadding-dialog",
-      width: "80vw",
+      width: "40vw",
       height: "70vh",
       disableClose: true,
       autoFocus: false,
@@ -145,7 +145,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
   edit(quotation) {
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       panelClass: "removespace",
-      width: "60vw",
+      width: "40vw",
       height: "70vh",
       disableClose: true,
       autoFocus: false,
