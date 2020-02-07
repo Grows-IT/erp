@@ -19,7 +19,8 @@ interface InvoiceResData {
   count: number;
   status: string;
   email: string;
-  receip: Date;
+  isReceip: boolean;
+  createdReceipDate: Date;
   group?: InvoiceGroup[];
 }
 
@@ -88,7 +89,8 @@ export class InvoiceService {
               resData[key].count,
               resData[key].status,
               resData[key].email,
-              resData[key].receip,
+              resData[key].isReceip,
+              resData[key].createdReceipDate,
               groups
             );
             console.log(this.role);
@@ -120,7 +122,7 @@ export class InvoiceService {
           'count': count.count,
           'status': "active",
           'email': quotation.email,
-          'receip': null
+          'receip': false
         };
         return data;
       }),
@@ -204,6 +206,13 @@ export class InvoiceService {
     return this.http.patch(environment.siteUrl + '/invoices/' + id + '/group/' + index + '.json', newName);
   }
 
+  addReceip(id) {
+    const data = {
+      isReceip: true,
+      createdReceipDate: new Date()
+    };
+    return this.http.patch(environment.siteUrl + '/invoices/' + id + '.json', data);
+  }
 }
 
 

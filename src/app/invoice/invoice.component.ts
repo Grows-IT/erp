@@ -168,9 +168,13 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   delete(invoiceId, quotationId) {
     this.invoiceService.deleteInvoice(invoiceId, quotationId).pipe(
-      switchMap(() => {
-        return this.invoiceService.getAllInvoice();
-      })
+      switchMap(() => this.invoiceService.getAllInvoice())
+    ).subscribe();
+  }
+
+  addReceip(id) {
+    this.invoiceService.addReceip(id).pipe(
+      switchMap(() => this.invoiceService.getAllInvoice())
     ).subscribe();
   }
 
@@ -253,6 +257,22 @@ export class InvoiceComponent implements OnInit, OnDestroy {
               },
               {
                 stack: [
+                  {
+                    columns: [
+                      {
+                        text: 'Referent #',
+                        style: 'invoiceSubTitle',
+                        width: '*'
+
+                      },
+                      {
+                        text: this.sharedService.decode(item.id, item.count, 'I'),
+                        style: 'invoiceSubValue',
+                        width: 100
+
+                      }
+                    ]
+                  },
                   {
                     columns: [
                       {

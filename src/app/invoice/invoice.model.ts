@@ -8,7 +8,8 @@ export class Invoice {
     public count: number,
     public status: string,
     public email: string,
-    public receip: Date,
+    public isReceip: boolean,
+    public createdReceipDate: Date,
     public group?: InvoiceGroup[],
   ) { }
 }
