@@ -14,9 +14,13 @@
       mat-button
       style="margin-left: 3%;"
       *ngFor="let menu of menu"
-      routerLink="{{ menu.link }}"
+      [routerLink]="menu.link"
+      [disabled]="menu.status === 'disabled'"
     >
-      <img mat-card-image src="{{ menu.img }}" />
+    <div *ngIf="menu.status === 'disabled'">
+      <img mat-card-image src="{{ menu.img }}" style="opacity: 40%;"/></div>
+      <div *ngIf="menu.status === 'active'">
+      <img mat-card-image src="{{ menu.img }}"/></div>
       <h3>{{ menu.topicname }}</h3>
     </button></mat-grid-tile
   >
@@ -25,9 +29,13 @@
       mat-button
       style="margin-left: 2%;"
       *ngFor="let menu of menu2"
-      routerLink="{{ menu.link }}"
+      [routerLink]="menu.link"
+      [disabled]="menu.status === 'disabled'"
     >
-      <img mat-card-image src="{{ menu.img }}" />
+    <div *ngIf="menu.status === 'disabled'">
+      <img mat-card-image src="{{ menu.img }}" style="opacity: 40%;"/></div>
+      <div *ngIf="menu.status === 'active'">
+      <img mat-card-image src="{{ menu.img }}"/></div>
       <h3>{{ menu.topicname }}</h3>
     </button></mat-grid-tile
   >
@@ -42,9 +50,13 @@
         mat-button
         style="margin-left: 2%;"
         *ngFor="let menu of downmenu"
-        routerLink="{{ menu.link }}"
+        [routerLink]="menu.link"
+        [disabled]="menu.status === 'disabled'"
       >
-        <img mat-card-image src="{{ menu.img }}" />
+      <div *ngIf="menu.status === 'disabled'">
+        <img mat-card-image src="{{ menu.img }}" style="opacity: 40%;"/></div>
+        <div *ngIf="menu.status === 'active'">
+        <img mat-card-image src="{{ menu.img }}"/></div>
         <h3>{{ menu.topicname }}</h3>
       </button>
       <button
@@ -53,7 +65,8 @@
         style="margin-left: 2%;"
         routerLink="usersmanagement"
       >
-        <img mat-card-image src="assets/menu/gear.svg" />
+      <div>
+        <img mat-card-image src="assets/menu/gear.svg" /></div>
         <h3>User Management</h3>
       </button>
     </div>

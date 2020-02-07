@@ -63,8 +63,8 @@ export class SalesService {
     private sharedService: SharedService
   ) {
     this.auth.getCurrentEmail().subscribe(email => this.email = email);
-    this.sharedService.role.subscribe(role => { this.role = role; });
-    this.sharedService.getRole().subscribe();
+    // this.sharedService.role.subscribe(role => { this.role = role; });
+    // this.sharedService.getRole().subscribe();
     // this.uService.getUser().subscribe();
     this.sharedService.getEmail().subscribe(email => this.email = email);
   }
@@ -115,6 +115,12 @@ export class SalesService {
         environment.siteUrl + "/quotation.json"
       )
       .pipe(
+        map(resData => {
+          this.auth.getRoleFormStorage().subscribe(role => {
+            this.role = role;
+          });
+          return resData;
+        }),
         // withLatestFrom(this.uService.users),
         map((resData) => {
           const quotations: Quotation[] = [];
@@ -143,9 +149,9 @@ export class SalesService {
               );
               console.log(this.role);
               console.log(resData[key]);
-              if (this.role === 'Admin') {
+              if (this.role === '4e7afebcfbae000b22c7c85e5560f89a2a0280b4') {
                 quotations.push(quotation);
-              } else if (this.email === resData[key].email && this.role !== 'Admin') {
+              } else if (this.email === resData[key].email && this.role !== '4e7afebcfbae000b22c7c85e5560f89a2a0280b4') {
                 quotations.push(quotation);
               }
             }
