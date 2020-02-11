@@ -39,17 +39,6 @@ export class AuthService {
       returnSecureToken: true
     };
 
-    // return this.http.post<{ email: string, idToken: string }>(environment.authLoginUtl + environment.firebase.apiKey, data).pipe(
-    //   tap(val => {
-    //     console.log(val);
-    //     const authen = new Auth(val.email, val.idToken, null);
-    //     this.saveUserToStorage(authen);
-    //     // console.log(this.getTokenFormStorage());
-    //     this._token.next(authen.token);
-    //     this._user.next(authen);
-    //   })
-    // );
-
     return this.http.post<{ email: string, idToken: string }>(environment.authLoginUtl + environment.firebase.apiKey, data).pipe(
       switchMap((val) => {
         this.sessionLogin = val;
@@ -63,26 +52,6 @@ export class AuthService {
         this._user.next(user);
       })
     );
-
-    // Password12!
-
-    // return this.userService.getUser().pipe(
-    //   map(users => {
-    //     this.u = users.find(user => user.email === form.email);
-    //     return this.http.post<{ email: string, idToken: string }>(environment.authLoginUtl + environment.firebase.apiKey, data).pipe(
-    //       tap(val => {
-    //         console.log(val);
-    //         console.log(this.u);
-
-    //         const authen = new Auth(val.email, val.idToken, this.u.role);
-    //         this.saveUserToStorage(authen);
-    //         // console.log(this.getTokenFormStorage());
-    //         this._token.next(authen.token);
-    //         this._user.next(this.u);
-    //       })
-    //     );
-    //   }),
-    // );
   }
 
   signup(form) {
@@ -102,14 +71,6 @@ export class AuthService {
         };
         return this.userService.addUser(user);
       })
-      // tap(val => {
-      //   console.log(val);
-      //   const authen = new Auth(val.email, val.idToken);
-      //   this.saveUserToStorage(authen);
-      //   // console.log(this.getTokenFormStorage());
-      //   this._token.next(authen.token);
-      //   this._user.next(authen);
-      // }),
     );
   }
 
