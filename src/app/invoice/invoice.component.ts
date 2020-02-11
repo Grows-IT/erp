@@ -173,7 +173,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   addReceip(id) {
-    this.invoiceService.addReceip(id).pipe(
+    this.invoiceService.addReceipt(id).pipe(
       switchMap(() => this.invoiceService.getAllInvoice())
     ).subscribe();
   }
