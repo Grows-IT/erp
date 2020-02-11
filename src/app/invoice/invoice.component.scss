@@ -1,5 +1,6 @@
 table {
   width: 100%;
+  margin-bottom: 40px;
 }
 
 // tr.detail-row {
@@ -23,7 +24,6 @@ tr.element-row:not(.expanded-row):active {
   display: flex;
 }
 
-.space{
+.space {
   padding-top: 30px;
 }
-

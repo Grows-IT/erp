@@ -7,7 +7,6 @@ import { tap, map, switchMap } from 'rxjs/operators';
 import { SharedService } from '../shared/shared.service';
 import { UserService } from '../usersmanagement/user.service';
 import { AuthService } from '../signin/auth.service';
-import CryptoJS from 'crypto-js';
 
 interface InvoiceResData {
   id: string;

@@ -13,8 +13,9 @@
     <mat-grid-tile colspan="2" rowspan="4">
       <mat-form-field appearance="outline">
         <mat-label>Customer Name</mat-label>
-        <textarea matInput rows="2" formControlName="customerName" type="text" [matAutocomplete]="auto1" required></textarea>
-        <mat-autocomplete #auto1="matAutocomplete" >
+        <textarea matInput rows="2" formControlName="customerName" type="text" [matAutocomplete]="auto1"
+          required></textarea>
+        <mat-autocomplete #auto1="matAutocomplete">
           <mat-option *ngFor="let cusname of filteredOptions | async;" [value]="cusname">
             {{cusname}}
           </mat-option>
@@ -37,7 +38,7 @@
       <mat-form-field appearance="outline">
         <mat-label>To (Customer's address)</mat-label>
         <textarea matInput rows="8" formControlName="addressTo" type="text" [matAutocomplete]="auto"></textarea>
-        <mat-autocomplete #auto="matAutocomplete" >
+        <mat-autocomplete #auto="matAutocomplete">
           <mat-option value="{{autoAddress()}}">
             <!-- {{cus.address}} -->
             {{autoAddress()}}
@@ -66,42 +67,42 @@
   <h1 align="center">Items</h1>
 
   <div align="center">
-  <mat-card formArrayName="allItem">
-    <table>
-      <tr *ngFor="let allItem of quotation['controls'].allItem['controls']; let i = index">
-        <td>
-          <mat-form-field appearance="outline">
-            <mat-label>Item</mat-label>
-            <input type="text" matInput [formControl]="allItem.get('item')"
-              [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option *ngFor="let item of items; let i = index" [value]="item.name">
-                {{item.name}}
-              </mat-option>
-            </mat-autocomplete>
-            <!-- <input matInput [formControl]="allItem.get('item')" required> -->
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field appearance="outline">
-            <mat-label>Quantity</mat-label>
-            <input matInput min="0" [formControl]="allItem.get('quantity')" type="number" required>
-          </mat-form-field>
-        </td>
-        <td>
-          <button type="button" mat-raised-button (click)="removeUnit(i)">
-            Remove
-          </button>
-        </td>
-      </tr>
-    </table>
-    <div align="center">
-      <button mat-button>
-        <i class="material-icons md-48" (click)="onAddRow()">add_circle_outline</i>
-      </button></div>
-  </mat-card>
-  <!-- <h3>Total price: </h3> -->
-</div>
+    <mat-card formArrayName="allItem">
+      <table>
+        <tr *ngFor="let allItem of quotation['controls'].allItem['controls']; let i = index">
+          <td>
+            <mat-form-field appearance="outline">
+              <mat-label>Item</mat-label>
+              <input type="text" matInput [formControl]="allItem.get('item')" [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let item of items; let i = index" [value]="item.name">
+                  {{item.name}}
+                </mat-option>
+              </mat-autocomplete>
+              <!-- <input matInput [formControl]="allItem.get('item')" required> -->
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="outline">
+              <mat-label>Quantity</mat-label>
+              <input matInput min="0" [formControl]="allItem.get('quantity')" type="number" required>
+            </mat-form-field>
+          </td>
+          <td>
+            <button type="button" mat-raised-button (click)="removeUnit(i)">
+              Remove
+            </button>
+          </td>
+        </tr>
+      </table>
+      <div align="center">
+        <button mat-button>
+          <i class="material-icons md-48" (click)="onAddRow()">add_circle_outline</i>
+        </button>
+      </div>
+    </mat-card>
+    <!-- <h3>Total price: </h3> -->
+  </div>
 
   <mat-dialog-actions align="center">
     <button *ngIf="!data" mat-raised-button color="primary" (click)="onConfirmClick(0)" tabindex="1"
