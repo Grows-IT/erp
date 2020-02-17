@@ -37,13 +37,19 @@
     <mat-grid-tile colspan="4" rowspan="4">
       <mat-form-field appearance="outline">
         <mat-label>To (Customer's address)</mat-label>
-        <textarea matInput rows="8" formControlName="addressTo" type="text" [matAutocomplete]="auto"></textarea>
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option value="{{autoAddress()}}">
-            <!-- {{cus.address}} -->
+
+        <mat-select formControlName="addressTo">
+          <mat-option [value]="autoAddress()">
             {{autoAddress()}}
           </mat-option>
-        </mat-autocomplete>
+        </mat-select>
+
+        <!-- <textarea matInput rows="8" formControlName="addressTo" type="text" [matAutocomplete]="auto"></textarea>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option value="{{autoAddress()}}">
+            {{autoAddress()}}
+          </mat-option>
+        </mat-autocomplete> -->
       </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile colspan="4" rowspan="2">
