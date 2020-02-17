@@ -92,8 +92,7 @@ export class InvoiceService {
               resData[key].createdReceiptDate,
               groups
             );
-            console.log(this.role);
-
+            // console.log(this.role);
 
             if (this.role === '4e7afebcfbae000b22c7c85e5560f89a2a0280b4') {
               invoices.push(invoice);

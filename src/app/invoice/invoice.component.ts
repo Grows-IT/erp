@@ -244,7 +244,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   openReceiptPdf(item: any) {
     this.subTotal = 0;
-    console.log(item);
+    // console.log(item);
     this.getListItem(item.items);
 
     const documentDefinition = {
@@ -655,7 +655,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   opnePdf(item: any) {
     this.subTotal = 0;
-    console.log(item);
+    // console.log(item);
     this.getListItem(item.items);
 
     const documentDefinition = {

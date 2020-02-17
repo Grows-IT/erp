@@ -151,8 +151,8 @@ export class SalesService {
                 resData[key].invoiceId,
                 resData[key].count
               );
-              console.log(this.role);
-              console.log(resData[key]);
+              // console.log(this.role);
+              // console.log(resData[key]);
               if (this.role === '4e7afebcfbae000b22c7c85e5560f89a2a0280b4') {
                 quotations.push(quotation);
               } else if (

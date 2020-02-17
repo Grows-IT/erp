@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit {
       )
       .subscribe(role => this.role = role);
     // this.auth.getTokenFormStorage().subscribe(res => (this.token = res));
-    console.log(this.email);
+    // console.log(this.email);
 
     const sales = new Menu('Sales', 'assets/menu/Sale.svg', 'sales', 'active');
     const invoice = new Menu('Invoice', 'assets/menu/invoice.svg', 'invoice', 'active');
