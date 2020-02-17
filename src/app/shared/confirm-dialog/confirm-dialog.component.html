@@ -1,0 +1,14 @@
+<mat-spinner *ngIf="!data"></mat-spinner>
+<div *ngIf="data">
+  <mat-toolbar class="allbg">
+    <span style="color: white;">Are you sure?</span>
+    <span class="space"></span>
+    <button mat-button mat-dialog-close tabindex="-1" style="color: white;">
+      <i class="material-icons"> close </i>
+    </button>
+  </mat-toolbar>
+  <mat-dialog-actions align="center" style="padding: 40px 0;">
+    <button mat-raised-button color="warn" (click)="delete()">Delete</button>
+    <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
+  </mat-dialog-actions>
+</div>

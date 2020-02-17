@@ -18,6 +18,7 @@ import { InvoicegroupComponent } from 'src/app/invoice/invoicegroup/invoicegroup
 import { InvoiceService } from 'src/app/invoice/invoice.service';
 import { Invoice } from 'src/app/invoice/invoice.model';
 import { SharedService } from 'src/app/shared/shared.service';
+import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-quotationdetail',
@@ -125,9 +126,19 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
   }
 
   delete(id: string, invoiceId: string) {
-    this.salesService.deleteQuotation(id, invoiceId).subscribe();
-    this.router.navigate(['/sales']);
-    this.dialogRef.close();
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      panelClass: 'nopadding-dialog',
+      width: '400px',
+      height: '200px',
+      disableClose: true,
+      autoFocus: false,
+      data: { id, invoiceId, 'from': 'quotation' }
+    });
+    // this.salesService.deleteQuotation(id, invoiceId).subscribe();
+    this.dialogRef.close(() => {
+      this.router.navigate(['/sales']);
+
+    });
   }
 
   showItem() {

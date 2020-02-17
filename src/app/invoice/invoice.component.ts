@@ -15,9 +15,8 @@ import { ItemsService } from '../items/items.service';
 import { SharedService } from '../shared/shared.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { AuthService } from '../signin/auth.service';
-import { UserService } from '../usersmanagement/user.service';
 import { User } from '../usersmanagement/user.model';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export interface InvoiceList {
@@ -167,9 +166,17 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   delete(invoiceId, quotationId) {
-    this.invoiceService.deleteInvoice(invoiceId, quotationId).pipe(
-      switchMap(() => this.invoiceService.getAllInvoice())
-    ).subscribe();
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      panelClass: 'nopadding-dialog',
+      width: '400px',
+      height: '200px',
+      disableClose: true,
+      autoFocus: false,
+      data: { invoiceId, quotationId, 'from': 'invoice' }
+    });
+    // this.invoiceService.deleteInvoice(invoiceId, quotationId).pipe(
+    //   switchMap(() => this.invoiceService.getAllInvoice())
+    // ).subscribe();
   }
 
   addReceip(id) {

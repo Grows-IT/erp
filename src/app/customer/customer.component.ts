@@ -5,6 +5,7 @@ import { switchMap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomerdialogComponent } from './customerdialog/customerdialog.component';
 import { Subscription } from 'rxjs';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-customer',
@@ -66,9 +67,17 @@ export class CustomerComponent implements OnInit {
   }
 
   delete(id: string) {
-    this.cService.deleteCustomer(id).pipe(
-      switchMap(() => this.cService.getAllCustomer())
-    ).subscribe();
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      panelClass: 'nopadding-dialog',
+      width: '400px',
+      height: '200px',
+      disableClose: true,
+      autoFocus: false,
+      data: { id, 'from': 'customer' }
+    });
+    // this.cService.deleteCustomer(id).pipe(
+    //   switchMap(() => this.cService.getAllCustomer())
+    // ).subscribe();
   }
 
 

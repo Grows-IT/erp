@@ -20,6 +20,7 @@ import { SharedService } from '../shared/shared.service';
 import { AuthService } from '../signin/auth.service';
 import { UserService } from '../usersmanagement/user.service';
 import { User } from '../usersmanagement/user.model';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 // export interface QuotationList {
@@ -142,14 +143,16 @@ export class SalesComponent implements OnInit, OnDestroy {
     this.router.navigate(['/quotationdetail'], item);
   }
 
-  quotationDetail(item) {
+  quotationDetail(id) {
+    console.log(id);
+
     const dialogRef = this.dialog.open(QuotationdetailComponent, {
       panelClass: 'nopadding-dialog',
       width: '40vw',
       height: '80vh',
       disableClose: false,
       autoFocus: false,
-      data: item,
+      data: id,
     });
   }
 
@@ -162,9 +165,17 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   delete(id: string, invoiceId: string) {
-    this.salesService.deleteQuotation(id, invoiceId).pipe(
-      switchMap(() => this.salesService.getQuotation())
-    ).subscribe();
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      panelClass: 'nopadding-dialog',
+      width: '400px',
+      height: '200px',
+      disableClose: true,
+      autoFocus: false,
+      data: { id, invoiceId, 'from': 'quotation' }
+    });
+    // this.salesService.deleteQuotation(id, invoiceId).pipe(
+    //   switchMap(() => this.salesService.getQuotation())
+    // ).subscribe();
   }
 
   getListItem(items) {

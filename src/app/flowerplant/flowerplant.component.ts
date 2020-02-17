@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { FlowerplantdialogComponent } from './flowerplantdialog/flowerplantdialog.component';
 import { switchMap } from 'rxjs/operators';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-flowerplant',
@@ -55,8 +56,17 @@ export class FlowerplantComponent implements OnInit {
   }
 
   delete(id: string) {
-    this.itemsService.deleteItem(id).pipe(
-      switchMap(() => this.itemsService.getAllItems())
-    ).subscribe();
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      panelClass: 'nopadding-dialog',
+      width: '400px',
+      height: '200px',
+      disableClose: true,
+      autoFocus: false,
+      data: { id, 'from': 'flowerPlant' }
+    });
+    dialogRef.beforeClosed();
+    // this.itemsService.deleteItem(id).pipe(
+    //   switchMap(() => this.itemsService.getAllItems())
+    // ).subscribe();
   }
 }

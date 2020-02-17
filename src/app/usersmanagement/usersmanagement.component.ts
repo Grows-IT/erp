@@ -6,6 +6,7 @@ import { UserService } from './user.service';
 import { Subscription } from 'rxjs';
 import { User } from './user.model';
 import { switchMap } from 'rxjs/operators';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 
 
 @Component({
@@ -58,10 +59,18 @@ export class UsersmanagementComponent implements OnInit {
 
 
   delete(id: string, token: string) {
-    this.uService.deleteUser(id).pipe(
-      switchMap(() => this.uService.getUser()),
-      switchMap(() => this.authService.delete(token))
-    ).subscribe();
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      panelClass: 'nopadding-dialog',
+      width: '400px',
+      height: '200px',
+      disableClose: true,
+      autoFocus: false,
+      data: { id, token, 'from': 'user' }
+    });
+    // this.uService.deleteUser(id).pipe(
+    //   switchMap(() => this.uService.getUser()),
+    //   switchMap(() => this.authService.delete(token))
+    // ).subscribe();
   }
 
 }
