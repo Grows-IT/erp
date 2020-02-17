@@ -1,1 +1,64 @@
-<p>employee works!</p>
+<div align="center" class="space">
+  <mat-spinner *ngIf="!employee"></mat-spinner>
+</div>
+<div *ngIf="employee">
+  <h1 align="center">Employee <img src="/assets/menu/employee.svg" style="width: 50px; position: absolute; margin-left: 20px;"></h1>
+  <div align="center">
+    <mat-form-field class="example-full-width">
+      <mat-label>Search</mat-label>
+      <input matInput placeholder="Ex. employee" value="">
+    </mat-form-field>
+  </div>
+
+  <button mat-button style="right: 20%; position: absolute; top: 100px;" (click)="createEmployee()">
+    <img src="/assets/icons/add.svg">
+  </button>
+  <table mat-table *ngIf="employee" [dataSource]="employee" matSort class="mat-elevation-z8" style="width: 80%;"
+    align="center">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="department">
+      <th mat-header-cell *matHeaderCellDef> Department </th>
+      <td mat-cell *matCellDef="let element">
+        {{element.department}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> Position </th>
+      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef> Edit </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button>
+          <i class="material-icons"> edit </i>
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="profile">
+      <th mat-header-cell *matHeaderCellDef> Profile </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button>
+          <i class="material-icons">account_circle</i>
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef> Delete </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button (click)="delete()">
+          <i class="material-icons"> delete </i>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="employeeCol"></tr>
+    <tr mat-row *matRowDef="let row; columns: employeeCol;"></tr>
+  </table>
+</div>
