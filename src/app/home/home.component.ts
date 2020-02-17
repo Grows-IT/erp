@@ -119,7 +119,7 @@ export class HomeComponent implements OnInit {
       'Employee',
       'assets/menu/employee.svg',
       'employee',
-      'disabled'
+      'active'
     );
     // const setting = new Menu(
     //   'Users management',
