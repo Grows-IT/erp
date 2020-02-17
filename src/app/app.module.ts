@@ -59,6 +59,8 @@ import { UserdialogComponent } from './usersmanagement/userdialog/userdialog.com
 import { ChangeNameDialogComponent } from './invoice/change-name-dialog/change-name-dialog.component';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 import { EmployeeComponent } from './employee/employee.component';
+import { EmployeeprofileComponent } from './employee/employeeprofile/employeeprofile.component';
+import { EmployeedialogComponent } from './employee/employeedialog/employeedialog.component';
 
 const materialComponent = [
   MatGridListModule,
@@ -113,7 +115,9 @@ const materialComponent = [
     UserdialogComponent,
     ChangeNameDialogComponent,
     ConfirmDialogComponent,
-    EmployeeComponent
+    EmployeeComponent,
+    EmployeeprofileComponent,
+    EmployeedialogComponent
   ],
   imports: [
     BrowserModule,
@@ -134,7 +138,9 @@ const materialComponent = [
     FlowerplantdialogComponent,
     UserdialogComponent,
     ChangeNameDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    EmployeeprofileComponent,
+    EmployeedialogComponent
   ]
 })
 export class AppModule { }
