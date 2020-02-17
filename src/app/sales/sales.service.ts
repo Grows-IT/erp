@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 import { map, tap, switchMap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { Quotation } from './sales.model';
-import { SellItem, Invoice } from '../invoice/invoice.model';
+import { SellItem } from '../invoice/invoice.model';
 import { ItemsService } from '../items/items.service';
 import { InvoiceService } from '../invoice/invoice.service';
 import { Customer } from 'src/app/customer/customer.model';
@@ -60,11 +60,11 @@ export class SalesService {
     private uService: UserService,
     private sharedService: SharedService
   ) {
-    this.auth.getCurrentEmail().subscribe(email => this.email = email);
+    this.auth.getCurrentEmail().subscribe(email => (this.email = email));
     // this.sharedService.role.subscribe(role => { this.role = role; });
     // this.sharedService.getRole().subscribe();
     // this.uService.getUser().subscribe();
-    this.sharedService.getEmail().subscribe(email => this.email = email);
+    this.sharedService.getEmail().subscribe(email => (this.email = email));
   }
 
   addQuotation(inputs: any) {
@@ -83,26 +83,32 @@ export class SalesService {
       }),
       switchMap(customers => {
         customer = customers.find(cus => cus.name === inputs.customerName);
+
         return this.itemsService.items;
       }),
       switchMap(items => {
-        const sellItems: SellItem[] = [];
-        inputs.allItem.forEach(itemInput => {
-          const item = items.find(it => it.name === itemInput.item);
-          const sellItem = new SellItem(item.id, itemInput.quantity);
-          sellItems.push(sellItem);
-        });
-        data = {
-          status: 'active',
-          email: cusEmail,
-          customerId: customer.id,
-          date: inputs.date,
-          expirationDate: inputs.expirationDate,
-          items: sellItems,
-          count,
-          invoiceId: ''
-        };
-        return this.http.post(environment.siteUrl + '/quotation.json', data);
+        // console.log(customer);
+        if (customer === undefined) {
+          return;
+        } else {
+          const sellItems: SellItem[] = [];
+          inputs.allItem.forEach(itemInput => {
+            const item = items.find(it => it.name === itemInput.item);
+            const sellItem = new SellItem(item.id, itemInput.quantity);
+            sellItems.push(sellItem);
+          });
+          data = {
+            status: 'active',
+            email: cusEmail,
+            customerId: customer.id,
+            date: inputs.date,
+            expirationDate: inputs.expirationDate,
+            items: sellItems,
+            count,
+            invoiceId: ''
+          };
+          return this.http.post(environment.siteUrl + '/quotation.json', data);
+        }
       })
     );
   }
@@ -120,7 +126,7 @@ export class SalesService {
           return resData;
         }),
         // withLatestFrom(this.uService.users),
-        map((resData) => {
+        map(resData => {
           const quotations: Quotation[] = [];
           for (const key in resData) {
             if (resData.hasOwnProperty(key)) {
@@ -149,7 +155,10 @@ export class SalesService {
               console.log(resData[key]);
               if (this.role === '4e7afebcfbae000b22c7c85e5560f89a2a0280b4') {
                 quotations.push(quotation);
-              } else if (this.email === resData[key].email && this.role !== '4e7afebcfbae000b22c7c85e5560f89a2a0280b4') {
+              } else if (
+                this.email === resData[key].email &&
+                this.role !== '4e7afebcfbae000b22c7c85e5560f89a2a0280b4'
+              ) {
                 quotations.push(quotation);
               }
             }
