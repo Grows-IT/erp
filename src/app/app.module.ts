@@ -61,6 +61,8 @@ import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.c
 import { EmployeeComponent } from './employee/employee.component';
 import { EmployeeprofileComponent } from './employee/employeeprofile/employeeprofile.component';
 import { EmployeedialogComponent } from './employee/employeedialog/employeedialog.component';
+import { DepartmentmanagementComponent } from './departmentmanagement/departmentmanagement.component';
+import { DepartmentdialogComponent } from './departmentmanagement/departmentdialog/departmentdialog.component';
 
 const materialComponent = [
   MatGridListModule,
@@ -117,7 +119,9 @@ const materialComponent = [
     ConfirmDialogComponent,
     EmployeeComponent,
     EmployeeprofileComponent,
-    EmployeedialogComponent
+    EmployeedialogComponent,
+    DepartmentmanagementComponent,
+    DepartmentdialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -140,7 +144,8 @@ const materialComponent = [
     ChangeNameDialogComponent,
     ConfirmDialogComponent,
     EmployeeprofileComponent,
-    EmployeedialogComponent
+    EmployeedialogComponent,
+    DepartmentdialogComponent
   ]
 })
 export class AppModule { }

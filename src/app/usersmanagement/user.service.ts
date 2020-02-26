@@ -18,13 +18,14 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   addUser(user: any) {
-    // const users = {
-    //   email: user.email,
-    //   password: user.password,
-    //   role: user.role,
-    //   status: user.status
-    // };
-    return this.http.post<User>(environment.siteUrl + '/users.json', user);
+    const users = {
+      email: user.email,
+      password: user.password,
+      role: user.role,
+      status: user.status
+    };
+    return this.http.post('http://localhost:3333/user', users);
+    // return this.http.post<User>(environment.siteUrl + '/users.json', user);
   }
 
   getUser() {

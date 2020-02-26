@@ -31,20 +31,21 @@ export class ItemsService {
     const items = {
       name: item.name,
       price: item.price,
-      availableQuntity: item.quantity
+      availableQuantity: item.quantity
     };
-    return this.http.post<any>(environment.siteUrl + '/items.json', items);
+    return this.http.post('http://localhost:3333/items', items);
+    // return this.http.post<any>(environment.siteUrl + '/items.json', items);
   }
 
   getAllItems() {
-    return this.http.get<{ [key: string]: ItemResData }>(environment.siteUrl + '/items.json').pipe(
+    return this.http.get('http://localhost:3333/items').pipe(
       map((resItem) => {
-        // console.log(resItem);
+        console.log(resItem);
         const items: Item[] = [];
 
         for (const key in resItem) {
           if (resItem.hasOwnProperty(key)) {
-            const item = new Item(key, resItem[key].name, resItem[key].price, resItem[key].availableQuntity);
+            const item = new Item(resItem[key].itemId, resItem[key].name, resItem[key].price, resItem[key].availableQuantity);
             items.push(item);
           }
         }
@@ -61,12 +62,20 @@ export class ItemsService {
     data = {
       name: item.name,
       price: item.price,
-      availableQuntity: item.quantity
+      availableQuantity: item.quantity,
+      itemId: id
     };
-    return this.http.patch(environment.siteUrl + '/items/' + id + '.json', data);
+    return this.http.patch('http://localhost:3333/items', data);
+    // return this.http.patch(environment.siteUrl + '/items/' + id + '.json', data);
   }
 
   deleteItem(id: string) {
-    return this.http.delete(environment.siteUrl + '/items/' + id + '.json');
+    let data;
+    data = {
+      itemId: id
+    };
+    console.log(data);
+    return this.http.post('http://localhost:3333/deleteitem/', data);
+    // return this.http.delete(environment.siteUrl + '/items/' + id + '.json');
   }
 }

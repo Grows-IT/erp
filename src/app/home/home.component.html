@@ -69,6 +69,15 @@
         <img mat-card-image src="assets/menu/gear.svg" /></div>
         <h3>User Management</h3>
       </button>
+      <button
+        mat-button
+        *ngIf="role === 'Admin'"
+        routerLink="departmentmanagement"
+      >
+      <div>
+        <img mat-card-image src="assets/menu/team.svg" /></div>
+        <h3>Department Management</h3>
+      </button>
     </div>
   </mat-grid-tile>
 </mat-grid-list>

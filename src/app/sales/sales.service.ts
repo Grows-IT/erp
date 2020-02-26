@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import 'rxjs/add/operator/map';
 import { map, tap, switchMap } from 'rxjs/operators';
@@ -65,6 +65,10 @@ export class SalesService {
     // this.sharedService.getRole().subscribe();
     // this.uService.getUser().subscribe();
     this.sharedService.getEmail().subscribe(email => (this.email = email));
+  }
+
+  test(){
+    return this.http.get('http://localhost:3333/invoice');
   }
 
   addQuotation(inputs: any) {
