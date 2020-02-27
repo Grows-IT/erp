@@ -226,8 +226,8 @@ export class SalesComponent implements OnInit, OnDestroy {
     }
   }
 
-  decode(id, count) {
-    return this.sharedService.decode(id, count, 'Q');
+  decode(id) {
+    return this.sharedService.decode(id, 'Q');
   }
 
   formatDate(date: Date, expirationDate: Date) {

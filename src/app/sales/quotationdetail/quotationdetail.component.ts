@@ -149,9 +149,9 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  decode(id) {
-    return this.sharedService.decode(id, this.quotation.count, 'Q');
-  }
+  // decode(id) {
+  //   return this.sharedService.decode(id, this.quotation.count, 'Q');
+  // }
 
   edit(quotation) {
     const dialogRef = this.dialog.open(QuotationDialogComponent, {

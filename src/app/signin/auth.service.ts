@@ -11,7 +11,7 @@ import CryptoJS from 'crypto-js';
 export class Auth {
   constructor(
     public email: string,
-    public token: string,
+    // public token: string,
   ) { }
 }
 
@@ -21,8 +21,12 @@ export class Auth {
 export class AuthService {
   private _user = new BehaviorSubject<Auth>(null);
   private _token = new BehaviorSubject<string>(null);
+  private _email = new BehaviorSubject<string>(null);
   private sessionLogin;
 
+  get email() {
+    return this._user.asObservable();
+  }
   get user() {
     return this._user.asObservable();
   }
@@ -32,24 +36,38 @@ export class AuthService {
 
   constructor(private http: HttpClient, private userService: UserService) { }
 
+  // login(form) {
+  //   const data = {
+  //     email: form.email,
+  //     password: form.password,
+  //     returnSecureToken: true
+  //   };
+
+  //   return this.http.post<{ email: string, idToken: string }>(environment.authLoginUtl + environment.firebase.apiKey, data).pipe(
+  //     switchMap((val) => {
+  //       this.sessionLogin = val;
+  //       return this.userService.getUser();
+  //     }),
+  //     tap((users) => {
+  //       const user = users.find(u => u.email === this.sessionLogin.email);
+  //       const authen = new Auth(this.sessionLogin.email, this.sessionLogin.idToken);
+  //       this.saveUserToStorage(authen, user.role);
+  //       this._token.next(authen.token);
+  //       this._user.next(user);
+  //     })
+  //   );
+  // }
   login(form) {
     const data = {
       email: form.email,
       password: form.password,
-      returnSecureToken: true
     };
-
-    return this.http.post<{ email: string, idToken: string }>(environment.authLoginUtl + environment.firebase.apiKey, data).pipe(
-      switchMap((val) => {
-        this.sessionLogin = val;
-        return this.userService.getUser();
-      }),
-      tap((users) => {
-        const user = users.find(u => u.email === this.sessionLogin.email);
-        const authen = new Auth(this.sessionLogin.email, this.sessionLogin.idToken);
-        this.saveUserToStorage(authen, user.role);
-        this._token.next(authen.token);
-        this._user.next(user);
+    return this.http.post<{ email: string, role: string }>('http://localhost:3333/login', data).pipe(
+      tap((user) => {
+        // console.log(user);
+        // const authen = new Auth(user.email);
+        this.saveUserToStorage(user.email);
+        this._email.next(user.email);
       })
     );
   }
@@ -76,8 +94,9 @@ export class AuthService {
 
 
   logout() {
-    this._user.next(null);
-    this._token.next(null);
+    this._email.next(null);
+    // this._user.next(null);
+    // this._token.next(null);
     localStorage.clear();
   }
 
@@ -90,36 +109,50 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    return this.token.pipe(
+    // return this.token.pipe(
+    //   first(),
+    //   switchMap(token => {
+    //     if (!token) {
+    //       return this.getTokenFormStorage().pipe(
+
+    //         catchError(() => of(null)),
+    //         map(storedtoken => !!storedtoken)
+    //       );
+    //     }
+    //     return of(!!token);
+    //   })
+    // );
+
+    return this.email.pipe(
       first(),
-      switchMap(token => {
-        if (!token) {
-          return this.getTokenFormStorage().pipe(
+      switchMap(email => {
+        if (!email) {
+          return this.getCurrentEmail().pipe(
             catchError(() => of(null)),
-            map(storedtoken => !!storedtoken)
+            map(storedEmail => !!storedEmail)
           );
         }
-        return of(!!token);
+        return of(!!email);
       })
     );
   }
 
 
-  private saveUserToStorage(val: Auth, role: string) {
-    localStorage.setItem('user', JSON.stringify(val));
-    localStorage.setItem('token', val.token);
-    localStorage.setItem('email', val.email);
-    localStorage.setItem('role', CryptoJS.SHA1(role));
+  private saveUserToStorage(email) {
+    // localStorage.setItem('user', JSON.stringify(val));
+    // localStorage.setItem('token', val.token);
+    localStorage.setItem('email', email);
+    // localStorage.setItem('role', CryptoJS.SHA1(role));
   }
 
-  getTokenFormStorage() {
-    return of(localStorage.getItem('token'));
-  }
+  // getTokenFormStorage() {
+  //   return of(localStorage.getItem('token'));
+  // }
 
-  getUserFormStorage() {
-    // return of(localStorage.getItem('auth'));
-    return of(JSON.parse(localStorage.getItem('auth')) as User);
-  }
+  // getUserFormStorage() {
+  //   // return of(localStorage.getItem('auth'));
+  //   return of(JSON.parse(localStorage.getItem('auth')) as User);
+  // }
 
   getCurrentEmail() {
     return of(localStorage.getItem('email'));
