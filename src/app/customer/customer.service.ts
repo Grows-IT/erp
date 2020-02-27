@@ -26,34 +26,57 @@ export class CustomerService {
       name: customer.customerName,
       address: customer.addressTo
     };
-    return this.http.post<any>(environment.siteUrl + '/customer.json', cus);
+    return this.http.post('http://localhost:3333/customer', cus);
+    // return this.http.post<any>(environment.siteUrl + '/customer.json', cus);
   }
 
   getAllCustomer() {
-    return this.http.get<Customer[]>(environment.siteUrl + '/customer.json').pipe(
-      map((res) => {
-        // console.log(Object.keys(res));
-        const customers = Object.keys(res).map((id, i) => {
-          return new Customer(id, res[Object.keys(res)[i]].name, res[Object.keys(res)[i]].address);
-        });
-        return customers;
-      }),
-      tap(customers => {
-        this._customers.next(customers);
-      })
-    );
+    return this.http.get('http://localhost:3333/customer').pipe(
+        map((res) => {
+          // console.log(Object.keys(res));
+          const customers = Object.keys(res).map((id, i) => {
+            return new Customer(res[Object.keys(res)[i]].customerId, res[Object.keys(res)[i]].customerName, res[Object.keys(res)[i]].address);
+          });
+          return customers;
+        }),
+        tap(customers => {
+          this._customers.next(customers);
+        })
+      );
+
+    // return this.http.get<Customer[]>(environment.siteUrl + '/customer.json').pipe(
+    //   map((res) => {
+    //     // console.log(Object.keys(res));
+    //     const customers = Object.keys(res).map((id, i) => {
+    //       return new Customer(id, res[Object.keys(res)[i]].name, res[Object.keys(res)[i]].address);
+    //     });
+    //     return customers;
+    //   }),
+    //   tap(customers => {
+    //     this._customers.next(customers);
+    //   })
+    // );
   }
 
   updateCustomer(customer: any, id: string) {
     let data;
     data = {
       name: customer.customerName,
-      address: customer.addressTo
+      address: customer.addressTo,
+      cusId: id
     };
-    return this.http.patch(environment.siteUrl + '/customer/' + id + '.json', data);
+    return this.http.patch('http://localhost:3333/customer', data);
+    // return this.http.patch(environment.siteUrl + '/customer/' + id + '.json', data);
   }
 
   deleteCustomer(id: string) {
-    return this.http.delete(environment.siteUrl + '/customer/' + id + '.json');
+    let data;
+    data = {
+      cusId: id
+    };
+    console.log(data);
+
+    return this.http.post('http://localhost:3333/deletecustomer/', data);
+    // return this.http.delete(environment.siteUrl + '/customer/' + id + '.json');
   }
 }

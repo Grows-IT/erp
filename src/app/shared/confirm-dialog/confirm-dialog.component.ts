@@ -7,6 +7,7 @@ import { SalesService } from 'src/app/sales/sales.service';
 import { ItemsService } from 'src/app/items/items.service';
 import { UserService } from 'src/app/usersmanagement/user.service';
 import { AuthService } from 'src/app/signin/auth.service';
+import { DepartmentService } from 'src/app/departmentmanagement/departmentmanagement.service';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -16,7 +17,7 @@ import { AuthService } from 'src/app/signin/auth.service';
 export class ConfirmDialogComponent implements OnInit {
   constructor(public dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data: any, private invoiceService: InvoiceService,
     private cService: CustomerService, private salesService: SalesService, private itemsService: ItemsService, private uService: UserService,
-    private authService: AuthService) { }
+    private authService: AuthService, private dService: DepartmentService) { }
 
   ngOnInit() {
   }
@@ -42,6 +43,10 @@ export class ConfirmDialogComponent implements OnInit {
       this.uService.deleteUser(this.data.id).pipe(
         switchMap(() => this.uService.getUser()),
         switchMap(() => this.authService.delete(this.data.token))
+      ).subscribe();
+    } else if (this.data.from === 'department') {
+      this.dService.deleteDepartment(this.data.id).pipe(
+        switchMap(() => this.dService.getAllDepartments()),
       ).subscribe();
     }
     this.dialog.closeAll();

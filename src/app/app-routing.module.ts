@@ -14,6 +14,7 @@ import { CustomerComponent } from './customer/customer.component';
 import { FlowerplantComponent } from './flowerplant/flowerplant.component';
 import { UsersmanagementComponent } from './usersmanagement/usersmanagement.component';
 import { EmployeeComponent } from './employee/employee.component';
+import { DepartmentmanagementComponent } from './departmentmanagement/departmentmanagement.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,11 @@ const routes: Routes = [
   {
     path: 'flowerplant',
     component: FlowerplantComponent,
+    canActivate: [SigninGuard],
+  },
+  {
+    path: 'departmentmanagement',
+    component: DepartmentmanagementComponent,
     canActivate: [SigninGuard],
   },
   {

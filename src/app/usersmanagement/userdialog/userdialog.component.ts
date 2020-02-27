@@ -79,9 +79,23 @@ export class UserdialogComponent implements OnInit {
       option.toLowerCase().indexOf(val.toLowerCase()) === 0);
   }
 
+  // signup(type) {
+  //   if (type === 0) {
+  //     this.authService.signup(this.user.value).pipe(
+  //       switchMap(() => this.uService.getUser())
+  //     ).subscribe();
+  //     this.dialogRef.close();
+  //   } else if (type === 1) {
+  //     this.uService.updateUser(this.user.value, this.data.id).pipe(
+  //       switchMap(() => this.uService.getUser())
+  //     ).subscribe();
+  //     this.dialogRef.close();
+  //   }
+  // }
+
   signup(type) {
     if (type === 0) {
-      this.authService.signup(this.user.value).pipe(
+      this.uService.addUser(this.user.value).pipe(
         switchMap(() => this.uService.getUser())
       ).subscribe();
       this.dialogRef.close();
@@ -91,14 +105,6 @@ export class UserdialogComponent implements OnInit {
       ).subscribe();
       this.dialogRef.close();
     }
-    // this.authService.signup(this.user.value).pipe(
-    //     switchMap(() => this.uService.getUser())
-    //   ).subscribe();
-    // this.dialogRef.close();
-
-    // this.uService.addUser(this.user.value).pipe(
-    //   switchMap(() => this.uService.getUser())
-    // ).subscribe()
   }
 
 

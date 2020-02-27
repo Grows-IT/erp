@@ -86,6 +86,10 @@ export class SalesComponent implements OnInit, OnDestroy {
     this.itemsService.getAllItems().subscribe();
     this.cService.getAllCustomer().subscribe();
     this.salesService.getQuotation().subscribe();
+
+    this.salesService.test().subscribe((response: any) => {
+      console.log('completed');
+    });
   }
 
   ngOnDestroy() {
