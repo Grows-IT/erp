@@ -30,17 +30,23 @@ export class DepartmentmanagementComponent implements OnInit {
   openDepartment() {
     const dialogRef = this.dialog.open(DepartmentdialogComponent, {
       panelClass: 'nopadding-dialog',
-      width: '30vw',
+      width: '40vw',
       height: '60vh',
       disableClose: false,
       autoFocus: false,
     });
+
+    dialogRef.afterClosed().pipe(
+      switchMap(() => {
+        return this.dService.getAllDepartments();
+      })
+    ).subscribe();
   }
 
   editDepartment(department) {
     const dialogRef = this.dialog.open(DepartmentdialogComponent, {
       panelClass: 'nopadding-dialog',
-      width: '30vw',
+      width: '40vw',
       height: '60vh',
       disableClose: false,
       autoFocus: false,

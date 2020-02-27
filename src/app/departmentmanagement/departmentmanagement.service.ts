@@ -27,9 +27,13 @@ export class DepartmentService {
   addDepartment(department: any) {
 
     const departments = {
-      position: department.position,
+      position: JSON.stringify(department.position),
       department: department.department,
+      // length: department.position.length
     };
+
+    console.log(departments);
+
     return this.http.post('http://localhost:3333/department', departments);
     // return this.http.post<any>(environment.siteUrl + '/items.json', items);
   }
@@ -59,8 +63,10 @@ export class DepartmentService {
     let data;
     data = {
       departmentId: id,
-      position: department.position,
+      position: JSON.stringify(department.position),
       department: department.department,
+      // position: department.position,
+      // department: department.department,
     };
     console.log(department.department);
 

@@ -10,20 +10,47 @@
 
 <form [formGroup] = "department" novalidate>
 <mat-grid-list cols="8" rowHeight="55px">
-  <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="2"></mat-grid-tile>
   <mat-grid-tile colspan="4" rowspan="2">
     <mat-form-field appearance="outline">
       <mat-label>Depertment</mat-label>
       <textarea matInput rows="2" formControlName="department"></textarea>
     </mat-form-field>
   </mat-grid-tile>
-  <mat-grid-tile colspan="4" rowspan="2">
+</mat-grid-list>
+  <!-- <mat-grid-tile colspan="4" rowspan="2">
     <mat-form-field appearance="outline">
       <mat-label>Position</mat-label>
       <textarea matInput rows="2" formControlName="position"></textarea>
     </mat-form-field>
-  </mat-grid-tile>
-</mat-grid-list>
+  </mat-grid-tile> -->
+  <div align="center">
+    <mat-card formArrayName="position">
+      <table>
+        <tr *ngFor="let position of department['controls'].position['controls']; let i = index">
+          <td>
+            <mat-form-field appearance="outline">
+              <mat-label>Position</mat-label>
+              <input matInput [formControl]="position.get('position')" required>
+            </mat-form-field>
+          </td>
+          <td>
+            <button type="button" mat-raised-button (click)="removeUnit(i)">
+              Remove
+            </button>
+          </td>
+        </tr>
+      </table>
+      <div align="center">
+        <button mat-button>
+          <i class="material-icons md-48" (click)="onAddRow()">add_circle_outline</i>
+        </button>
+      </div>
+    </mat-card>
+    <!-- <h3>Total price: </h3> -->
+  </div>
+
+
 
 <mat-dialog-actions align="center">
   <button *ngIf="!data" mat-raised-button color="primary" (click)="onConfirmClick(0)" tabindex="1"
