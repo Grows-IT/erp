@@ -74,11 +74,11 @@ export class DepartmentdialogComponent implements OnInit {
     if (!departs) {
       return null;
     }
-    const st = JSON.stringify(departs).replace('["', "");
-    const st2 = st.replace('"]', "");
+    const string = JSON.stringify(departs).replace('["', "");
+    const string2 = string.replace('"]', "");
 
-    const sp = st2.split(",");
-    return sp;
+    const splitdata = string2.split(",");
+    return splitdata;
   }
 
   private viewDepartmentFormGroup(i) {
