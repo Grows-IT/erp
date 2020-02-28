@@ -45,7 +45,7 @@ export class ItemsService {
 
         for (const key in resItem) {
           if (resItem.hasOwnProperty(key)) {
-            const item = new Item(resItem[key].itemId, resItem[key].name, resItem[key].price, resItem[key].availableQuantity);
+            const item = new Item(resItem[key].itemId, resItem[key].itemName, resItem[key].price, resItem[key].availableQuantity);
             items.push(item);
           }
         }

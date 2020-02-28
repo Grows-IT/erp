@@ -40,7 +40,9 @@ export class SubInvoice {
 
 export class SellItem {
   constructor(
+    // public itemId: string,
+    // public quantity: number
     public itemId: string,
-    public quantity: number
+    public quantity: string
   ) { }
 }

@@ -2,16 +2,15 @@ import { SellItem } from '../invoice/invoice.model';
 
 export class Quotation {
   constructor(
-    public totalPrice: number,
     public status: string,
     public customerId: string,
     public email: string,
-    public id: string,
+    public quotationId: string,
     public date: Date,
     public expirationDate: Date,
-    public items: SellItem[],
+    // public items: SellItem[],
     public invoiceId: string,
-    public count: number,
+    // public count: number,
   ) { }
 }
 

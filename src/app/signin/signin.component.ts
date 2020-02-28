@@ -34,7 +34,7 @@ export class SigninComponent implements OnInit {
       () => {
         this.router.navigate(['']);
       }, (err) => {
-        this.err = err;
+        this.err = err.error.text;
       });
   }
 

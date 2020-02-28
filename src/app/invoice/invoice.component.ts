@@ -143,7 +143,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     //   return this.formatDate(date);
     // }
 
-    const quotation = this.quotations.find(quo => quo.id === quotationId);
+    const quotation = this.quotations.find(quo => quo.quotationId === quotationId);
     this.date = new Date(quotation.date);
 
     if (!quotation) {
@@ -156,7 +156,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     if (!this.quotations) {
       return null;
     }
-    const quotation = this.quotations.find(quo => quo.id === quotationId);
+    const quotation = this.quotations.find(quo => quo.quotationId === quotationId);
     const date = new Date(quotation.expirationDate);
 
     if (!quotation) {
@@ -197,7 +197,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   decode(id, count) {
-    return this.sharedService.decode(id, count, 'I');
+    return this.sharedService.decode(id, 'I');
   }
 
   getListItem(items) {
@@ -273,7 +273,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
                       },
                       {
-                        text: this.sharedService.decode(item.id, item.count, 'I'),
+                        text: this.sharedService.decode(item.id, 'I'),
                         style: 'invoiceSubValue',
                         width: 100
 
@@ -289,7 +289,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
                       },
                       {
-                        text: this.sharedService.decode(item.id, item.count, 'R'),
+                        text: this.sharedService.decode(item.id, 'R'),
                         style: 'invoiceSubValue',
                         width: 100
 
@@ -684,7 +684,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
                       },
                       {
-                        text: this.sharedService.decode(item.id, item.count, 'I'),
+                        text: this.sharedService.decode(item.id, 'I'),
                         style: 'invoiceSubValue',
                         width: 100
 
