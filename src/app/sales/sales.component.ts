@@ -86,10 +86,6 @@ export class SalesComponent implements OnInit, OnDestroy {
     this.itemsService.getAllItems().subscribe();
     this.cService.getAllCustomer().subscribe();
     this.salesService.getQuotation().subscribe();
-
-    this.salesService.test().subscribe((response: any) => {
-      console.log('completed');
-    });
   }
 
   ngOnDestroy() {
@@ -286,7 +282,7 @@ export class SalesComponent implements OnInit, OnDestroy {
 
                       },
                       {
-                        text: this.sharedService.decode(item.id, item.count, 'Q'),
+                        text: this.sharedService.decode(item.id, 'Q'),
                         style: 'quotationSubValue',
                         width: 100
 

@@ -236,7 +236,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   decode(id, count) {
-    return this.sharedService.decode(id, count, 'I');
+    return this.sharedService.decode(id, 'I');
   }
 
   formatDate(date: Date) {
@@ -247,7 +247,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     if (!this.quotations) {
       return null;
     }
-    const quotation = this.quotations.find(quo => quo.id === quotationId);
+    const quotation = this.quotations.find(quo => quo.quotationId === quotationId);
     const date = new Date(quotation.date);
 
     if (!quotation) {
@@ -261,7 +261,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     if (!this.quotations) {
       return null;
     }
-    const quotation = this.quotations.find(quo => quo.id === quotationId);
+    const quotation = this.quotations.find(quo => quo.quotationId === quotationId);
     const date = new Date(quotation.expirationDate);
 
     if (!quotation) {

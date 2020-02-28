@@ -1,16 +1,16 @@
-import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { DepartmentService } from "src/app/departmentmanagement/departmentmanagement.service";
-import { Department } from "src/app/departmentmanagement/departmentmanagement.model";
-import { Subscription } from "rxjs";
-import { FormGroup, Validators, FormBuilder, FormArray } from "@angular/forms";
-import { switchMap } from "rxjs/operators";
-import { ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { DepartmentService } from 'src/app/departmentmanagement/departmentmanagement.service';
+import { Department } from 'src/app/departmentmanagement/departmentmanagement.model';
+import { Subscription } from 'rxjs';
+import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { switchMap } from 'rxjs/operators';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
-  selector: "app-departmentdialog",
-  templateUrl: "./departmentdialog.component.html",
-  styleUrls: ["./departmentdialog.component.scss"]
+  selector: 'app-departmentdialog',
+  templateUrl: './departmentdialog.component.html',
+  styleUrls: ['./departmentdialog.component.scss']
 })
 export class DepartmentdialogComponent implements OnInit {
   departments: Department[];
@@ -24,7 +24,7 @@ export class DepartmentdialogComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     public dialogRef: MatDialogRef<DepartmentdialogComponent>,
     private dService: DepartmentService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.departmentSubscription = this.dService.department.subscribe(
@@ -41,13 +41,13 @@ export class DepartmentdialogComponent implements OnInit {
         // position: [this.data.position, [Validators.required]],
       });
       for (let i = 0; i < this.getPosition(this.data.department).length; i++) {
-        const control = this.department.controls["position"] as FormArray;
+        const control = this.department.controls['position'] as FormArray;
         control.push(this.viewDepartmentFormGroup(i));
         // console.log(control.push(this.viewDepartmentFormGroup(0)));
       }
     } else {
       this.department = this.fb.group({
-        department: ["", [Validators.required]],
+        department: ['', [Validators.required]],
         position: this.fb.array([this.createDepartmentFormGroup()])
         // position: ['', [Validators.required]],
       });
@@ -63,10 +63,10 @@ export class DepartmentdialogComponent implements OnInit {
   }
 
   getPosition(department: string) {
-    let departs = [];
+    const departs = [];
     const depart = this.departments.find(dep => {
       if (dep.department === department) {
-        let deppo = dep.position;
+        const deppo = dep.position;
         departs.push(deppo);
       }
     });
@@ -74,10 +74,10 @@ export class DepartmentdialogComponent implements OnInit {
     if (!departs) {
       return null;
     }
-    const st = JSON.stringify(departs).replace('["', "");
-    const st2 = st.replace('"]', "");
+    const st = JSON.stringify(departs).replace("['", '');
+    const st2 = st.replace("']", '');
 
-    const sp = st2.split(",");
+    const sp = st2.split(',');
     return sp;
   }
 
@@ -95,17 +95,17 @@ export class DepartmentdialogComponent implements OnInit {
 
   private createDepartmentFormGroup() {
     return this.fb.group({
-      position: ["", [Validators.required]]
+      position: ['', [Validators.required]]
     });
   }
 
   onAddRow() {
-    const control = this.department.controls["position"] as FormArray;
+    const control = this.department.controls['position'] as FormArray;
     control.push(this.createDepartmentFormGroup());
   }
 
   removeUnit(i: number) {
-    const control = this.department.controls["position"] as FormArray;
+    const control = this.department.controls['position'] as FormArray;
     control.removeAt(i);
   }
 

@@ -73,7 +73,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
       if (quotations === null) {
         return;
       }
-      this.quotation = quotations.find(q => q.id === this.data);
+      this.quotation = quotations.find(q => q.quotationId === this.data);
     });
     this.salesService.getQuotation().subscribe();
     this.invoiceService.getAllInvoice().subscribe();
@@ -242,7 +242,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
                         width: '*'
                       },
                       {
-                        text: this.sharedService.decode(item.id, item.count, 'Q'),
+                        text: this.sharedService.decode(item.id, 'Q'),
                         style: 'quotationSubValue',
                         width: 100
                       }

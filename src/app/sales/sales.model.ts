@@ -3,7 +3,7 @@ import { SellItem } from '../invoice/invoice.model';
 export class Quotation {
   constructor(
     public status: string,
-    public customerName: string,
+    public customerId: string,
     public email: string,
     public quotationId: string,
     public date: Date,

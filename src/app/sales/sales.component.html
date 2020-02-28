@@ -18,9 +18,9 @@
     <th mat-header-cell *matHeaderCellDef> Customer name</th>
     <td mat-cell *matCellDef="let element">
       <div *ngIf="element.status !== 'active'" class="disable">
-        {{element.customerName}}</div>
+        {{getCustomer(element.customerId).name}}</div>
       <div *ngIf="element.status === 'active'">
-        {{element.customerName}}</div>
+        {{getCustomer(element.customerId).name}}</div>
     </td>
   </ng-container>
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import 'rxjs/add/operator/map';
 import { map, tap, switchMap } from 'rxjs/operators';
@@ -22,7 +22,7 @@ interface QuototationResData {
   email: string;
   expirationDate: Date;
   invoiceId: string;
-  // items: SellItem[];
+  items: SellItem;
   quantity: number;
 }
 
@@ -113,16 +113,41 @@ export class SalesService {
   // }
 
   addQuotation(inputs: any) {
-    console.log(inputs);
-    // let email;
-    // return this.auth.getCurrentEmail().pipe(
-    //   switchMap(res => {
-    //     console.log(res);
-    //     email = res;
+    let createdEmail;
+    let customer;
+    return this.auth.getCurrentEmail().pipe(
+      switchMap(res => {
+        createdEmail = res;
+        return this.cService.customers;
+      }),
+      switchMap(customers => {
+        customer = customers.find(cus => cus.name === inputs.customerName);
+        return this.itemsService.items;
+      }),
+      switchMap(items => {
+        const sellItemsId: string[] = [];
+        const sellItemsQuantity: string[] = [];
+        inputs.allItem.forEach(itemInput => {
+          const item = items.find(it => it.name === itemInput.item);
+          sellItemsId.push(item.id);
+          sellItemsQuantity.push(itemInput.quantity);
+        });
+        // console.log(sellItemsQuantity);
+        // console.log(sellItemsId);
 
-    //     return this.itemsService.;
-    //   })
-    // )
+        const sellItems: SellItem = new SellItem(JSON.stringify(sellItemsId).replace(/[\[\]']+/g, ''), JSON.stringify(sellItemsQuantity).replace(/[\[\]']+/g, ''));
+        const data = {
+          status: 'active',
+          email: createdEmail,
+          customerId: customer.id,
+          date: inputs.date,
+          expirationDate: inputs.expirationDate,
+          items: sellItems,
+          invoiceId: ''
+        };
+        return this.http.post('http://localhost:3333/quotation', data);
+      })
+    );
 
 
 
@@ -179,7 +204,7 @@ export class SalesService {
           // console.log(res);
           const quotation = new Quotation(
             res[i].quotationStatus,
-            res[i].customerName,
+            res[i].customerId,
             res[i].email,
             res[i].quotationId,
             res[i].date,
