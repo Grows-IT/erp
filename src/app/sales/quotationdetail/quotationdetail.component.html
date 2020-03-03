@@ -112,16 +112,16 @@
       <mat-spinner *ngIf="!quotation"></mat-spinner>
     </div>
     <div *ngIf="quotation">
-      <div *ngFor="let quotation of quotation.items">
+      <div *ngFor = "let itemm of getAll(quotation.itemId, quotation.itemQuantity);let i = index">
         <mat-grid-list cols="6" rowHeight="30px">
           <mat-grid-tile colspan="3" rowspan="2">
             <h4 style="color: darkcyan; display: inline-block;">
-              {{ getItems(quotation.itemId).name}}
+              {{ itemm.name }}
             </h4>
           </mat-grid-tile>
           <mat-grid-tile colspan="3" rowspan="2">
             <h4 style="color: darkcyan; display: inline-block;">
-              {{ quotation.quantity }}
+              {{ itemm.quantity }}
             </h4></mat-grid-tile
           >
         </mat-grid-list>

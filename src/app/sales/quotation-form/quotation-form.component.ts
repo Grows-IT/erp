@@ -1,34 +1,43 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormArray, FormBuilder } from '@angular/forms';
-import { SalesService } from '../sales.service';
-import { QuotationDialogComponent } from '../quotation-dialog/quotation-dialog.component';
-import { MatDialogRef } from '@angular/material';
-import { ItemsService } from 'src/app/items/items.service';
-import { Item } from 'src/app/items/items.model';
-import { CustomerService } from 'src/app/customer/customer.service';
-import { Customer } from 'src/app/customer/customer.model';
-import { Subscription, Observable } from 'rxjs';
-import { switchMap, startWith, map } from 'rxjs/operators';
-import { UserService } from 'src/app/usersmanagement/user.service';
-import { AuthService } from 'src/app/signin/auth.service';
-import { ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
+import { FormGroup, Validators, FormArray, FormBuilder } from "@angular/forms";
+import { SalesService } from "../sales.service";
+import { QuotationDialogComponent } from "../quotation-dialog/quotation-dialog.component";
+import { MatDialogRef } from "@angular/material";
+import { ItemsService } from "src/app/items/items.service";
+import { Item } from "src/app/items/items.model";
+import { CustomerService } from "src/app/customer/customer.service";
+import { Customer } from "src/app/customer/customer.model";
+import { Subscription, Observable } from "rxjs";
+import { switchMap, startWith, map } from "rxjs/operators";
+import { UserService } from "src/app/usersmanagement/user.service";
+import { AuthService } from "src/app/signin/auth.service";
+import { ChangeDetectorRef } from "@angular/core";
+import { SharedService } from "src/app/shared/shared.service";
+
+interface SellItemsResData {
+  sellItemId: string;
+  itemId: string;
+  sellQuantity: string;
+}
 
 @Component({
-  selector: 'app-quotation-form',
-  templateUrl: './quotation-form.component.html',
-  styleUrls: ['./quotation-form.component.scss']
+  selector: "app-quotation-form",
+  templateUrl: "./quotation-form.component.html",
+  styleUrls: ["./quotation-form.component.scss"]
 })
 export class QuotationFormComponent implements OnInit {
   customerSubscription: Subscription;
   customers: Customer[];
   data: any;
   quotation: FormGroup;
+  sellItem: SellItemsResData[];
   items: Item[];
   itemName: string;
   Total: number;
   filteredOptions: Observable<string[]>;
   addQ: Subscription;
   address: string;
+  shareSubscription: Subscription;
 
   constructor(
     private salesService: SalesService,
@@ -38,8 +47,9 @@ export class QuotationFormComponent implements OnInit {
     private cService: CustomerService,
     private uService: UserService,
     private auth: AuthService,
-    private cdRef: ChangeDetectorRef
-  ) { }
+    private cdRef: ChangeDetectorRef,
+    private sharedService: SharedService
+  ) {}
 
   ngOnInit() {
     this.customerSubscription = this.cService.customers.subscribe(customers => {
@@ -68,26 +78,23 @@ export class QuotationFormComponent implements OnInit {
         allItem: this.fb.array([])
       });
 
-      for (let i = 0; i < this.data.items.length; i++) {
-        const control = <FormArray>this.quotation.controls['allItem'];
+      for (let i = 0; i < this.getItems().length; i++) {
+        const control = <FormArray>this.quotation.controls["allItem"];
         control.push(this.viewItemFormGroup(i));
       }
     } else {
       this.quotation = this.fb.group({
-        customerName: ['', [Validators.required]],
-        addressTo: ['', [Validators.required]],
-        date: ['', [Validators.required]],
-        expirationDate: ['', [Validators.required]],
+        customerName: ["", [Validators.required]],
+        addressTo: ["", [Validators.required]],
+        date: ["", [Validators.required]],
+        expirationDate: ["", [Validators.required]],
         allItem: this.fb.array([this.createItemFormGroup()])
       });
-
-      this.filteredOptions = this.quotation
-        .get('customerName')
-        .valueChanges.pipe(
-          startWith(''),
-          map(val => this.filter(val))
-        );
     }
+    this.filteredOptions = this.quotation.get("customerName").valueChanges.pipe(
+      startWith(""),
+      map(val => this.filter(val))
+    );
   }
 
   // tslint:disable-next-line: use-lifecycle-interface
@@ -103,7 +110,7 @@ export class QuotationFormComponent implements OnInit {
   }
 
   autoAddress() {
-    const cusNames = this.quotation.get('customerName').value;
+    const cusNames = this.quotation.get("customerName").value;
     const findCus = this.customers.find(cus => cus.name === cusNames);
     if (!findCus) {
       return null;
@@ -119,12 +126,56 @@ export class QuotationFormComponent implements OnInit {
     return customer;
   }
 
-  getItems(itemId: string) {
-    const product = this.items.find(pro => pro.id === itemId);
-    if (!product) {
+  // getItems(itemId: string) {
+  //   const product = this.items.find(pro => pro.id === itemId);
+  //   if (!product) {
+  //     return null;
+  //   }
+  //   return product;
+  // }
+
+  getItems() {
+    this.data = this.dialogRef.componentInstance.data;
+
+    const prod = this.data.itemId.split(",");
+
+    let items = [];
+    for (let i = 0; i < prod.length; i++) {
+      const product2 = this.items.find(pro2 => pro2.id == prod[i]);
+      items.push(product2);
+    }
+    if (!this.data.itemId) {
       return null;
     }
-    return product;
+
+    return items;
+
+    // this.data = this.dialogRef.componentInstance.data;
+    // console.log(this.data);
+
+    // const product = this.sellItem.find(pro => pro.sellItemId === sellItemId);
+    // const prod = product.itemId.split(",");
+
+    // let items = [];
+    // for (let i = 0; i < prod.length; i++) {
+    //   const product2 = this.items.find(pro2 => pro2.id == prod[i]);
+    //   items.push(product2);
+    // }
+    // if (!product) {
+    //   return null;
+    // }
+    // return items;
+  }
+
+  getQuantity() {
+    this.data = this.dialogRef.componentInstance.data;
+    // const quantity = this.sellItem.find(quan => quan.sellItemId === sellItemId);
+    const cutquan = this.data.itemQuantity.split(",");
+    if (!this.data.itemQuantity) {
+      return null;
+    }
+
+    return cutquan;
   }
 
   private viewItemFormGroup(i) {
@@ -132,17 +183,20 @@ export class QuotationFormComponent implements OnInit {
 
     return this.fb.group({
       item: [
-        this.getItems(this.data.items[i].itemId).name,
+        this.getItems()[i].name,
         [Validators.required]
       ],
-      quantity: [this.data.items[i].quantity, [Validators.required]]
+      quantity: [
+        this.getQuantity()[i],
+        [Validators.required]
+      ]
     });
   }
 
   private createItemFormGroup() {
     return this.fb.group({
-      item: ['', [Validators.required]],
-      quantity: ['', [Validators.required]]
+      item: ["", [Validators.required]],
+      quantity: ["", [Validators.required]]
     });
   }
 
@@ -151,25 +205,30 @@ export class QuotationFormComponent implements OnInit {
   }
 
   onAddRow() {
-    const control = <FormArray>this.quotation.controls['allItem'];
+    const control = <FormArray>this.quotation.controls["allItem"];
     control.push(this.createItemFormGroup());
   }
 
   removeUnit(i: number) {
-    const control = <FormArray>this.quotation.controls['allItem'];
+    const control = <FormArray>this.quotation.controls["allItem"];
     control.removeAt(i);
   }
 
   onConfirmClick(status) {
-    const cusNames = this.quotation.get('customerName').value;
-    const findCus = this.customers.find(cus => cus.name === cusNames);
+    this.data = this.dialogRef.componentInstance.data;
+    // const cusNames = this.quotation.get("customerId").value;
+    // const findCus = this.customers.find(cus => cus.id === this.data.customerName);
+    // console.log(findCus);
 
     if (status === 0) {
-      this.salesService.addQuotation(this.quotation.value)
+      this.salesService
+        .addQuotation(this.quotation.value)
         .pipe(switchMap(() => this.salesService.getQuotation()))
-        .subscribe().unsubscribe();
+        .subscribe()
+        .unsubscribe();
     } else if (status === 1) {
-      this.salesService.updateQuotation(this.quotation.value, this.data.id, findCus.id)
+      this.salesService
+        .updateQuotation(this.quotation.value, this.data.quotationId, this.data.sellItemId)
         .pipe(switchMap(() => this.salesService.getQuotation()))
         .subscribe();
     }
