@@ -4,6 +4,11 @@ export class Quotation {
   constructor(
     public status: string,
     public customerId: string,
+    public sellItemId: string,
+    public itemId: string,
+    public itemQuantity: string,
+    public userId: string,
+    public companyId: string,
     public email: string,
     public quotationId: string,
     public date: Date,
