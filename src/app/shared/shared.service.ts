@@ -3,19 +3,20 @@ import { UserService } from '../usersmanagement/user.service';
 import { AuthService } from '../signin/auth.service';
 import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
   email: string;
-  private _role = new BehaviorSubject<string>(null);
+  // private _role = new BehaviorSubject<string>(null);
 
-  get role() {
-    return this._role.asObservable();
-  }
+  // get role() {
+  //   return this._role.asObservable();
+  // }
 
-  constructor(private userService: UserService, private authService: AuthService) { }
+  constructor(private userService: UserService, private authService: AuthService, private http: HttpClient) { }
 
   decode(id, key) {
     // const PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
@@ -31,21 +32,22 @@ export class SharedService {
     return no;
   }
 
-  getRole() {
-    this.getEmail().subscribe(email => this.email = email);
-    return this.userService.getUser().pipe(
-      map(users => {
-        return users.find(user => {
-          if (user.email === this.email) {
-            return user;
-          }
-        });
-      }),
-      tap(user => {
-        this._role.next(user.role);
-      })
-    );
-  }
+  // getRole() {
+  //   this.getEmail().subscribe(email => this.email = email);
+  //   return this.userService.getUser().pipe(
+  //     map(users => {
+  //       return users.find(user => {
+  //         if (user.email === this.email) {
+  //           console.log(user);
+  //           return user.role;
+  //         }
+  //       });
+  //     }),
+  //     tap(role => {
+  //       this._role.next(role);
+  //     })
+  //   );
+  // }
 
   getEmail() {
     return this.authService.getCurrentEmail();

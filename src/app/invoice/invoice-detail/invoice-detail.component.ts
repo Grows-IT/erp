@@ -169,15 +169,15 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   getTotal(data) {
-    for (let i = 0; data.invoice.group[data.index].subInvoices.length > i; i++) {
-      for (let j = 0; j < data.invoice.group[data.index].subInvoices[i].sellItems.length; j++) {
-        if (!this.tableTotal[i]) {
-          this.tableTotal[i] = 0;
-        }
-        const item = this.getItems(data.invoice.group[data.index].subInvoices[i].sellItems[j]);
-        this.tableTotal[i] += item.price * data.invoice.group[data.index].subInvoices[i].sellItems[j].quantity;
-      }
-    }
+    // for (let i = 0; data.invoice.group[data.index].subInvoices.length > i; i++) {
+    //   for (let j = 0; j < data.invoice.group[data.index].subInvoices[i].sellItems.length; j++) {
+    //     if (!this.tableTotal[i]) {
+    //       this.tableTotal[i] = 0;
+    //     }
+    //     const item = this.getItems(data.invoice.group[data.index].subInvoices[i].sellItems[j]);
+    //     this.tableTotal[i] += item.price * data.invoice.group[data.index].subInvoices[i].sellItems[j].quantity;
+    //   }
+    // }
   }
 
   deleteTableSubInvoice(id, i, j) {
@@ -216,21 +216,23 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
       name: this.addForm.value.name,
       sellItem: this.rows.value
     };
+    console.log(data);
+
     const invoiceId = this.decode(this.dataInvoiceGroup.invoice.id, this.dataInvoiceGroup.invoice.count);
     const sellItems: SellItem[] = data.sellItem.map(val => new SellItem(this.getItemsToId(val.name).id, val.quantity));
 
-    this.invoiceService.updateCountSubInvoice().pipe(
-      tap(subInvoiceCount => {
-        this.dataInvoiceGroup.invoice.group[this.dataInvoiceGroup.index].subInvoices.push(
-          new SubInvoice(invoiceId + '' + subInvoiceCount.count, data.name, sellItems, 'active')
-        );
-      }),
-      switchMap(() => {
-        return this.invoiceService.updateInvoice(this.dataInvoiceGroup.invoice);
-      }),
-      tap(() => this.invoiceService.getAllInvoice()),
-      tap(() => this.getTotal(this.dataInvoiceGroup)),
-    ).subscribe();
+    // this.invoiceService.updateCountSubInvoice().pipe(
+    //   tap(subInvoiceCount => {
+    //     this.dataInvoiceGroup.invoice.group[this.dataInvoiceGroup.index].subInvoices.push(
+    //       new SubInvoice(invoiceId + '' + subInvoiceCount.count, data.name, sellItems, 'active')
+    //     );
+    //   }),
+    //   switchMap(() => {
+    //     return this.invoiceService.updateInvoice(this.dataInvoiceGroup.invoice);
+    //   }),
+    //   tap(() => this.invoiceService.getAllInvoice()),
+    //   tap(() => this.getTotal(this.dataInvoiceGroup)),
+    // ).subscribe();
 
     this.toggleShoing();
   }

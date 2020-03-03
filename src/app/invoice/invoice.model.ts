@@ -3,14 +3,24 @@ export class Invoice {
     public id: string,
     public quotationId: string,
     public customerId: string,
-    public type: string,
+    // public type: string,
     public items: SellItem[],
-    public count: number,
+    // public count: number,
     public status: string,
     public email: string,
-    public isReceipt: boolean,
+    // public isReceipt: boolean,
     public createdReceiptDate: Date,
     public group?: InvoiceGroup[],
+  ) { }
+}
+
+export class Group {
+  constructor(
+    public id: string,
+    public subInvoice: number,
+    public invoiceId: number,
+    public groupName: string,
+    public invoiceGroupStatus: string,
   ) { }
 }
 

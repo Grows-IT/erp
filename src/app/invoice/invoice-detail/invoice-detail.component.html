@@ -1,17 +1,20 @@
-<mat-spinner *ngIf="!invoices"></mat-spinner>
-<div *ngIf="invoices">
+<mat-spinner *ngIf="!dataInvoiceGroup"></mat-spinner>
+<div *ngIf="dataInvoiceGroup">
   <mat-toolbar class="allbg">
-    <span style="color: white;">Invoice : {{decode(dataInvoiceGroup.invoice.id, dataInvoiceGroup.invoice.count)}} ,
+    <span style="color: white;">Invoice : {{decode(dataInvoiceGroup.item.invoiceGroupId)}} ,
     </span>
-    <span style="color: white;"> Group Name : {{dataInvoiceGroup.invoice.group[dataInvoiceGroup.index].name}}</span>
+    <span style="color: white;"> Group Name : {{dataInvoiceGroup.item.groupName}}</span>
     <span class="space"></span>
+    <span>
+
+    </span>
     <button mat-button mat-dialog-close tabindex="-1" style="color: white;">
       <i class="material-icons"> close </i>
     </button>
   </mat-toolbar>
 </div>
 
-<div *ngIf="invoices" class="content">
+<div *ngIf="dataInvoiceGroup" class="content">
   <h2>Name : {{getCustomer(dataInvoiceGroup.invoice.customerId).name}} ,
     Address : {{getCustomer(dataInvoiceGroup.invoice.customerId).address}}</h2>
   <button mat-raised-button color="primary" style="margin-bottom: 10px;" (click)="toggleShoing()">Add invoice</button>
@@ -38,6 +41,7 @@
                     <input matInput [formControl]="row.get('name')" [matAutocomplete]="autoName" required>
                     <mat-autocomplete #autoName="matAutocomplete">
                       <mat-option *ngFor="let item of dataInvoiceGroup.invoice.items" [value]="getItems(item).name"
+                      {{item}}
                         (click)="getMaxQuantity(item, i)" name="item.itemId">
                         <span>{{getItems(item).name}}</span>
                       </mat-option>
@@ -68,6 +72,7 @@
         <button mat-raised-button class="btn" color="warn" (click)="toggleShoing()">cancel</button>
       </div>
     </mat-card>
+    {{dataInvoiceGroup|json}}
     <br />
     <!-- invoices[dataInvoiceGroup.index] -->
     <div *ngFor="let subInv of dataInvoiceGroup.invoice.group; let i = index">

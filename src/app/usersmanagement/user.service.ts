@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
-import { User } from "./user.model";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "src/environments/environment";
-import { map, tap } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { User } from './user.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class UserService {
   private _user = new BehaviorSubject<User[]>(null);
@@ -29,22 +29,22 @@ export class UserService {
   }
 
   getUser() {
-    return this.http.get<User[]>(environment.siteUrl + '/users.json').pipe(
+    return this.http.get<User[]>('http://localhost:3333/user').pipe(
       map(res => {
         if (!res) {
           return;
         }
-        // console.log(Object.keys(res));
-        const users = Object.keys(res).map((id, i) => {
-          return new User(
-            id,
-            res[Object.keys(res)[i]].email,
-            res[Object.keys(res)[i]].token,
-            res[Object.keys(res)[i]].role,
-            res[Object.keys(res)[i]].status,
-          );
-        });
-        return users;
+        console.log(res);
+        // const users = Object.keys(res).map((id, i) => {
+        //   return new User(
+        //     id,
+        //     res[Object.keys(res)[i]].email,
+        //     // res[Object.keys(res)[i]].token,
+        //     res[Object.keys(res)[i]].role,
+        //     res[Object.keys(res)[i]].status,
+        //   );
+        // });
+        return res;
       }),
       tap(users => {
         this._user.next(users);

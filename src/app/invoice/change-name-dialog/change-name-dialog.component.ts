@@ -29,7 +29,7 @@ export class ChangeNameDialogComponent implements OnInit {
   }
 
   changeGroupName(newName) {
-    this.invoiceService.changeGroupName(this._data.id, this._data.index, newName).pipe(
+    this.invoiceService.changeGroupName(this._data.id, newName.name).pipe(
       tap(() => this.dialogRef.close())
     ).subscribe();
   }

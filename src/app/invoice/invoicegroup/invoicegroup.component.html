@@ -1,7 +1,7 @@
 <mat-spinner *ngIf="!invoice"></mat-spinner>
 <div *ngIf="invoice">
   <mat-toolbar class="allbg">
-    <span style="color: white;">Invoice : {{decode(invoice.id, invoice.count)}}</span>
+    <span style="color: white;">Invoice : {{decode(invoice.id)}}</span>
     <span class="space"></span>
     <button mat-button mat-dialog-close tabindex="-1" style="color: white;">
       <i class="material-icons"> close </i>
@@ -24,12 +24,11 @@
     </div>
   </div>
 </div>
-
-<mat-list class="content" *ngFor="let item of invoice.group;let i = index">
+<mat-list class="content" *ngFor="let item of listGroupName;">
   <!-- if active -->
-  <mat-card *ngIf="item.status === 'active'">
-    <button mat-button (click)="onClickOpenDetail(invoice, i)">
-      <b class="statusActive">●</b> Group Name : {{item.name}}
+  <mat-card *ngIf="item.invoiceGroupStatus === 'active'">
+    <button mat-button (click)="onClickOpenDetail(invoice, item)">
+      <b class="statusActive">●</b> Group Name : {{item.groupName}}
     </button>
     <button mat-icon-button [matMenuTriggerFor]="more" aria-label="" style="float: right;">
       <mat-icon>more_vert</mat-icon>
@@ -38,9 +37,9 @@
   <!-- end if active -->
 
   <!-- if group name not active -->
-  <mat-card *ngIf="item.status !== 'active'">
-    <button mat-button (click)="onClickOpenDetail(invoice, i)" disabled>
-      <b class="statusCancel">●</b> Group Name : {{item.name}}
+  <mat-card *ngIf="item.invoiceGroupStatus !== 'active'">
+    <button mat-button (click)="onClickOpenDetail(invoice)" disabled>
+      <b class="statusCancel">●</b> Group Name : {{item.groupName}}
     </button>
     <button mat-icon-button [matMenuTriggerFor]="more" aria-label="" style="float: right;" disabled>
       <mat-icon>more_vert</mat-icon>
@@ -49,7 +48,7 @@
   <!-- end if group name not active -->
 
   <mat-menu #more>
-    <button mat-menu-item (click)="editGroupName(invoice.id, i)">Edit group name</button>
-    <button mat-menu-item (click)="deleteGroupName(invoice.id, i)">Delete</button>
+    <button mat-menu-item (click)="editGroupName(item.invoiceGroupId)">Edit group name</button>
+    <button mat-menu-item (click)="deleteGroupName(item.invoiceGroupId)">Delete</button>
   </mat-menu>
 </mat-list>

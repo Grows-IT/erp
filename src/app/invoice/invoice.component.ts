@@ -40,9 +40,7 @@ export interface InvoiceList {
   ],
 })
 export class InvoiceComponent implements OnInit, OnDestroy {
-  // invoices: Quotation[];
   invoicesCol: string[] = ['no', 'groups', 'customerName', 'addressTo', 'date', 'invoicepdf', 'receiptpdf', 'delete'];
-  // invoicesCol: string[] = ['no', 'addressTo', 'date', 'expirationDate', 'item', 'quantity', 'pdf', 'delete'];
   customerSubscription: Subscription;
   invoiceSubscription: Subscription;
   itemSubscription: Subscription;
@@ -66,7 +64,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     public dialog: MatDialog, private itemsService: ItemsService, private sharedService: SharedService) { }
 
   ngOnInit() {
-    this.sharedService.getRole().subscribe(user => this.role = user.role);
+    // this.sharedService.getRole().subscribe(user => this.role = user.role);
+    this.invoiceService.getAllInvoice().subscribe();
     this.quotationSubscription = this.salesService.quotations.subscribe(quotations => {
       this.quotations = quotations;
     });
@@ -82,7 +81,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     this.itemSubscription = this.itemsService.items.subscribe(items => {
       this.items = items;
     });
-
+    this.invoiceService.getAllInvoice().subscribe();
     this.itemsService.getAllItems().subscribe();
     this.cService.getAllCustomer().subscribe();
     this.invoiceService.getAllInvoice().subscribe();

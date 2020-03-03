@@ -40,7 +40,7 @@ export class ItemsService {
   getAllItems() {
     return this.http.get('http://localhost:3333/items').pipe(
       map((resItem) => {
-        console.log(resItem);
+        // console.log(resItem);
         const items: Item[] = [];
 
         for (const key in resItem) {
