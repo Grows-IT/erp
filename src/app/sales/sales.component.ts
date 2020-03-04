@@ -94,11 +94,31 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   getItems(itemId: string) {
-    const item = this.items.find(it => it.id === itemId);
-    if (!item) {
+    const prod = itemId.split(",");
+
+    let items = [];
+    for (let i = 0; i < prod.length; i++) {
+      const product2 = this.items.find(pro2 => pro2.id == prod[i]);
+      items.push(product2);
+    }
+    if (!itemId) {
       return null;
     }
-    return item;
+    return items;
+    // const item = this.items.find(it => it.id === itemId);
+    // if (!item) {
+    //   return null;
+    // }
+    // return item;
+  }
+
+  getQuantity(quantity: string) {
+
+    const cutquan = quantity.split(",");
+    if (!quantity) {
+      return null;
+    }
+    return cutquan;
   }
 
   getCustomer(customerId: string) {
@@ -180,14 +200,15 @@ export class SalesComponent implements OnInit, OnDestroy {
     // ).subscribe();
   }
 
-  getListItem(items) {
+  getListItem(itemId, itemQuantity) {
+    const allListitems = this.getItems(itemId);
     this.total = 0;
     this.listItem = [];
-    for (let i = 0; i < items.length; i++) {
+    for (let i = 0; i < allListitems.length; i++) {
       const product = [
         [
           {
-            text: this.getItems(items[i].itemId).name,
+            text: this.getItems(itemId)[i].name,
             style: 'itemTitle'
           },
           {
@@ -196,15 +217,11 @@ export class SalesComponent implements OnInit, OnDestroy {
           }
         ],
         {
-          text: items[i].quantity.toLocaleString(),
+          text: this.getQuantity(itemQuantity)[i].toLocaleString(),
           style: 'itemNumber'
         },
         {
-          text: this.getItems(items[i].itemId).price.toLocaleString(),
-          style: 'itemNumber'
-        },
-        {
-          text: '0%',
+          text: this.getItems(itemId)[i].price,
           style: 'itemNumber'
         },
         {
@@ -212,11 +229,15 @@ export class SalesComponent implements OnInit, OnDestroy {
           style: 'itemNumber'
         },
         {
-          text: (items[i].quantity * this.getItems(items[i].itemId).price).toLocaleString(),
+          text: '0%',
+          style: 'itemNumber'
+        },
+        {
+          text: (<any>this.getQuantity(itemQuantity)[i] * this.getItems(itemId)[i].price).toLocaleString(),
           style: 'itemTotal'
         }
       ];
-      this.total = (items[i].quantity * this.getItems(items[i].itemId).price),
+      this.total = (<any>this.getQuantity(itemQuantity)[i] * this.getItems(itemId)[i].price),
       this.listItem.push(product);
       this.subTotal += this.total;
       // this.listItem = this.item;
@@ -241,7 +262,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   opnePdf(item: any) {
     this.subTotal = 0;
     this.formatDate(new Date(item.date), new Date(item.expirationDate));
-    this.getListItem(item.items);
+    this.getListItem(item.itemId, item.itemQuantity);
     console.log(this.listItem);
 
     const documentDefinition = {
@@ -284,7 +305,7 @@ export class SalesComponent implements OnInit, OnDestroy {
 
                       },
                       {
-                        text: this.sharedService.decode(item.id, 'Q'),
+                        text: this.sharedService.decode(item.quotationId, 'Q'),
                         style: 'quotationSubValue',
                         width: 100
 

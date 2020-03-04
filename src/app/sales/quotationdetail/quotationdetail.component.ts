@@ -235,11 +235,11 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
           style: "itemNumber"
         },
         {
-          text: "100",
+          text: this.getItems(itemId)[i].price,
           style: "itemNumber"
         },
         {
-          text: "0%",
+          text: "7%",
           style: "itemNumber"
         },
         {
@@ -248,15 +248,13 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
         },
         {
           text:
-            //  ( items[i].quantity * this.getItems(items[i].itemId).price
-            // ).toLocaleString(),
-            "500",
-          style: "itemTotal"
+             ( this.getItems(itemId)[i].price * <any>this.getQuantity(itemQuantity)[i]),
+            style: "itemTotal"
         }
       ];
-      // (this.total = items[i].quantity * this.getItems(items[i].itemId).price),
-      //   this.listItem.push(product);
-      // this.subTotal += this.total;
+      (this.total = this.getItems(itemId)[i].price * <any>this.getQuantity(itemQuantity)[i]),
+        this.listItem.push(product);
+      this.subTotal += this.total;
     }
   }
 
@@ -294,7 +292,7 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
                         width: "*"
                       },
                       {
-                        text: this.sharedService.decode(item.id, "Q"),
+                        text: this.sharedService.decode(this.quotation.quotationId, "Q"),
                         style: "quotationSubValue",
                         width: 100
                       }
