@@ -21,14 +21,14 @@ export class UserdialogComponent implements OnInit {
   userSubscription: Subscription;
 
   roles = [
-    'Admin',
-    'Approval',
-    'User'
+    'admin',
+    'approval',
+    'user'
   ];
 
   status = [
-    'Active',
-    'Inactive'
+    'active',
+    'inactive'
   ];
 
   filteredRole: Observable<string[]>;
@@ -44,6 +44,7 @@ export class UserdialogComponent implements OnInit {
 
     if (this.data !== null && this.data !== undefined) {
     this.user = this.fb.group({
+      name: [this.data.name, [Validators.required]],
       email: [this.data.email, [Validators.required]],
       password: [this.data.password],
       role: [this.data.role, [Validators.required]],
@@ -51,6 +52,7 @@ export class UserdialogComponent implements OnInit {
     });
   } else {
     this.user = this.fb.group({
+      name: ['', [Validators.required]],
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
       role: ['', [Validators.required]],
@@ -103,6 +105,8 @@ export class UserdialogComponent implements OnInit {
       this.uService.updateUser(this.user.value, this.data.id).pipe(
         switchMap(() => this.uService.getUser())
       ).subscribe();
+      console.log(this.user.value);
+
       this.dialogRef.close();
     }
   }

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { UserService } from '../usersmanagement/user.service';
-import { User } from '../usersmanagement/user.model';
-import { Subscription } from 'rxjs';
-import { AuthService } from '../signin/auth.service';
-import { switchMap, map, tap } from 'rxjs/operators';
+import { Component, OnInit } from "@angular/core";
+import { UserService } from "../usersmanagement/user.service";
+import { User } from "../usersmanagement/user.model";
+import { Subscription } from "rxjs";
+import { AuthService } from "../signin/auth.service";
+import { switchMap, map, tap } from "rxjs/operators";
 // import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 class Menu {
@@ -16,9 +16,9 @@ class Menu {
 }
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.scss"]
 })
 export class HomeComponent implements OnInit {
   cusEmail: string;
@@ -40,6 +40,7 @@ export class HomeComponent implements OnInit {
     this.userSubscription = this.uService.users.subscribe(user => {
       this.users = user;
     });
+    // this.uService.getUser().subscribe();
     this.uService.getUser().pipe(
         map(res => {
           const role = res.find(it => it.email === this.email);
@@ -56,70 +57,85 @@ export class HomeComponent implements OnInit {
     // this.auth.getTokenFormStorage().subscribe(res => (this.token = res));
     // console.log(this.email);
 
-    const sales = new Menu('Sales', 'assets/menu/Sale.svg', 'sales', 'active');
-    const invoice = new Menu('Invoice', 'assets/menu/invoice.svg', 'invoice', 'active');
-    const CRM = new Menu('CRM', 'assets/menu/crm.svg', 'CRM', 'disabled');
+    const sales = new Menu("Sales", "assets/menu/Sale.svg", "sales", "active");
+    const invoice = new Menu(
+      "Invoice",
+      "assets/menu/invoice.svg",
+      "invoice",
+      "active"
+    );
+    const CRM = new Menu("CRM", "assets/menu/crm.svg", "CRM", "disabled");
     const qualitycon = new Menu(
-      'Quanlity Control',
-      'assets/menu/quality-control.svg',
-      'qualitycon',
-      'disabled'
+      "Quanlity Control",
+      "assets/menu/quality-control.svg",
+      "qualitycon",
+      "disabled"
     );
     const account = new Menu(
-      'Accounting',
-      'assets/menu/accounting.svg',
-      'account',
-      'disabled'
+      "Accounting",
+      "assets/menu/accounting.svg",
+      "account",
+      "disabled"
     );
     const pricelist = new Menu(
-      'Price list',
-      'assets/menu/price list.svg',
-      'pricelist',
-      'disabled'
+      "Price list",
+      "assets/menu/price list.svg",
+      "pricelist",
+      "disabled"
     );
-    const report = new Menu('Report', 'assets/menu/report.svg', 'report', 'disabled');
+    const report = new Menu(
+      "Report",
+      "assets/menu/report.svg",
+      "report",
+      "disabled"
+    );
     const purchase = new Menu(
-      'Purchase',
-      'assets/menu/purchase.svg',
-      'purchase',
-      'disabled'
+      "Purchase",
+      "assets/menu/purchase.svg",
+      "purchase",
+      "disabled"
     );
     const truck = new Menu(
-      'Truck & GPS',
-      'assets/menu/vehicle truck.svg',
-      'truck',
-      'disabled'
+      "Truck & GPS",
+      "assets/menu/vehicle truck.svg",
+      "truck",
+      "disabled"
     );
-    const airlines = new Menu('Airlines', 'assets/menu/plane.svg', 'truck', 'disabled');
+    const airlines = new Menu(
+      "Airlines",
+      "assets/menu/plane.svg",
+      "truck",
+      "disabled"
+    );
     const shipping = new Menu(
-      'Shipping Agents',
-      'assets/menu/shipping.svg',
-      'shipping',
-      'disabled'
+      "Shipping Agents",
+      "assets/menu/shipping.svg",
+      "shipping",
+      "disabled"
     );
     const suppliers = new Menu(
-      'Suppliers',
-      'assets/menu/suppliers.svg',
-      'suppliers',
-      'disabled'
+      "Suppliers",
+      "assets/menu/suppliers.svg",
+      "suppliers",
+      "disabled"
     );
     const customers = new Menu(
-      'Customers',
-      'assets/menu/customers2.svg',
-      'customers',
-      'active'
+      "Customers",
+      "assets/menu/customers2.svg",
+      "customers",
+      "active"
     );
     const flowerplant = new Menu(
-      'Flowers & Plant',
-      'assets/menu/flowerplant.svg',
-      'flowerplant',
-      'active'
+      "Flowers & Plant",
+      "assets/menu/flowerplant.svg",
+      "flowerplant",
+      "active"
     );
     const employee = new Menu(
-      'Employee',
-      'assets/menu/employee.svg',
-      'employee',
-      'disabled'
+      "Employee",
+      "assets/menu/employee.svg",
+      "employee",
+      "disabled"
     );
     // const setting = new Menu(
     //   'Users management',
@@ -134,11 +150,22 @@ export class HomeComponent implements OnInit {
       suppliers,
       customers,
       flowerplant,
-      employee,
+      employee
       // setting
     ];
     // this.role = this.getRole();
     // console.log(this.role);
+  }
+
+  getRole() {
+    const user = this.users.find(us => us.email === this.email);
+    // console.log(user);
+
+    if (!user) {
+      return null;
+    }
+    this.role = user.role;
+    return user.role;
   }
 
   logout() {

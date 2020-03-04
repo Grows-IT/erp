@@ -33,8 +33,8 @@ export class UsersmanagementComponent implements OnInit {
   openUser() {
     const dialogRef = this.dialog.open(UserdialogComponent, {
       panelClass: 'nopadding-dialog',
-      width: '30vw',
-      height: '75vh',
+      width: '35vw',
+      height: '85vh',
       disableClose: false,
       autoFocus: false,
     });
@@ -43,8 +43,8 @@ export class UsersmanagementComponent implements OnInit {
   editCustomer(user) {
     const dialogRef = this.dialog.open(UserdialogComponent, {
       panelClass: 'nopadding-dialog',
-      width: '30vw',
-      height: '75vh',
+      width: '35vw',
+      height: '85vh',
       disableClose: false,
       autoFocus: false,
       data: user,

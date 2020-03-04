@@ -34,7 +34,7 @@ export class FlowerplantdialogComponent implements OnInit {
       this.item = this.fb.group({
         name: [this.data.name, [Validators.required]],
         price: [this.data.price, [Validators.required]],
-        quantity: [this.data.availableQuntity, [Validators.required]]
+        quantity: [this.data.availableQuantity, [Validators.required]]
       });
     } else {
       this.item = this.fb.group({
