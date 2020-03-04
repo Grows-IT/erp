@@ -157,8 +157,6 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   createInvoice(item) {
-    console.log(item);
-
     this.invoiceService.createInvoice(item).pipe(
       switchMap(() => {
         return this.salesService.getQuotation();

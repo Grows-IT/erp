@@ -5,6 +5,7 @@
 <div align="center" class="space">
   <mat-spinner *ngIf="!invoices"></mat-spinner>
 </div>
+{{invoices|json}}
 <table mat-table *ngIf="invoices" [dataSource]="invoices" multiTemplateDataRows matSort class="mat-elevation-z8"
   style="width: 80%;" align="center">
   <ng-container matColumnDef="no">

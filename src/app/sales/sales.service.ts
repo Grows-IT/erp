@@ -218,6 +218,8 @@ export class SalesService {
             // allItem,
             res[i].invoiceId
           );
+          // console.log(quotation);
+
           quotations.push(quotation);
         }
         return quotations;

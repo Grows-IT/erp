@@ -78,7 +78,8 @@
   <ng-container matColumnDef="createInvoice">
     <th mat-header-cell *matHeaderCellDef> Create Invoice </th>
     <td mat-cell *matCellDef="let element">
-      <button mat-button (click)="createInvoice(element)" [disabled]="element.invoiceId != '' || element.status != 'active'">
+      <!-- {{element|json}} -->
+      <button mat-button (click)="createInvoice(element)" [disabled]="element.invoiceId != 0 || element.status != 'active'">
         <i class="material-icons"> add</i>
       </button>
     </td>

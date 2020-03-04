@@ -7,6 +7,7 @@ import { tap, map, switchMap } from 'rxjs/operators';
 import { SharedService } from '../shared/shared.service';
 import { UserService } from '../usersmanagement/user.service';
 import { AuthService } from '../signin/auth.service';
+import { SalesService } from '../sales/sales.service';
 
 interface InvoiceResData {
   id: string;
@@ -125,29 +126,21 @@ export class InvoiceService {
     const invoices: Invoice[] = [];
     return this.http.get<any>('http://localhost:3333/invoice').pipe(
       map(res => {
-        // console.log(res);
-        // let isReceipt: boolean;
-        // if (res.createReceiptDate) {
-        //   isReceipt = true;
-        // } else {
-        //   isReceipt = false;
-        // }
+        console.log(res);
         for (let i = 0; i < res.length; i++) {
           const invoice = new Invoice(
-            res[0].invoiceId,
-            res[0].quotationId,
-            res[0].customerId,
-            null,
+            res[i].invoiceId,
+            res[i].quotationId,
+            res[i].customerId,
+            res[i].sellItemId,
             // sellItems,
-            res[0].invoiceStatus,
-            res[0].email,
-            res[0].createdReceiptDate,
-            res[0].group
+            res[i].invoiceStatus,
+            res[i].email,
+            res[i].createdReceiptDate,
+            res[i].group
           );
           invoices.push(invoice);
         }
-        // console.log(invoices);
-
         return invoices;
       }),
       tap((invoices) => {
@@ -157,21 +150,19 @@ export class InvoiceService {
   }
 
   createInvoice(quotation: any) {
-    console.log(quotation);
-
     const data = {
-      'quotationId': quotation.id,
+      'quotationId': quotation.quotationId,
       'customerId': quotation.customerId,
-      'items': quotation.items,
+      'items': quotation.itemId,
       'status': "active",
       'email': quotation.email,
-      // 'isReceipt': false
+      'companyId': quotation.companyId,
+      'userId': quotation.userId,
+      'sellItemId': quotation.sellItemId
     };
-    console.log(data);
-
     return this.http.post('http://localhost:3333/invoice', data).pipe(
-      switchMap((inv: { invoiceId: string }) => {
-        return this.http.patch('http://localhost:3333/updateQuotation', { 'invoiceId': inv.invoiceId, 'quotationId': quotation.id });
+      switchMap((inv: any) => {
+        return this.http.patch('http://localhost:3333/updateQuotation', { 'invoiceId': inv.insertId, 'quotationId': quotation.quotationId });
       })
     );
   }

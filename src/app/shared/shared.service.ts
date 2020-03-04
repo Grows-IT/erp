@@ -34,15 +34,7 @@ export class SharedService {
   ) { }
 
   decode(id, key) {
-    // const PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
-    // id = id.substring(0, 8);
-    // let timestamp = 0;
-    // for (let i = 0; i < id.length; i++) {
-    //   const c = id.charAt(i);
-    //   timestamp = timestamp * 64 + PUSH_CHARS.indexOf(c);
-    // }
     const zeroPad = (num, places) => String(num).padStart(places, "0");
-    // const date = new Date(timestamp);
     const no = key + zeroPad(id, 6);
     return no;
   }
