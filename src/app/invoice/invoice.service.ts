@@ -55,7 +55,7 @@ export class InvoiceService {
     const invoices: Invoice[] = [];
     return this.http.get<any>('http://localhost:3333/invoice').pipe(
       map(res => {
-        console.log(res);
+        // console.log(res);
         for (let i = 0; i < res.length; i++) {
           const invoice = new Invoice(
             res[i].invoiceId,

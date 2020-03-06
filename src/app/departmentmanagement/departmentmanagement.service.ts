@@ -47,7 +47,7 @@ export class DepartmentService {
         for (const key in resDepartment) {
           if (resDepartment.hasOwnProperty(key)) {
             // tslint:disable-next-line: max-line-length
-            const department = new Department(resDepartment[key].departmentId, resDepartment[key].position, resDepartment[key].department);
+            const department = new Department(resDepartment[key].departmentId, resDepartment[key].position, resDepartment[key].department, resDepartment[key].companyId, resDepartment[key].companyName );
             departments.push(department);
           }
         }

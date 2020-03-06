@@ -76,8 +76,8 @@
           </td>
           <td>
             <mat-form-field appearance="outline">
-              <mat-label>Quantity</mat-label>
-              <input matInput min="0" [formControl]="allItem.get('quantity')" type="number" required>
+              <mat-label>Quantity (max: {{getMax(i)}})</mat-label>
+              <input matInput min="0" max = "{{getMax(i)}}"[formControl]="allItem.get('quantity')" type="number" required>
             </mat-form-field>
           </td>
           <td>

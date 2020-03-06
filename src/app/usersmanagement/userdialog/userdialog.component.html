@@ -9,20 +9,23 @@
 
 <form [formGroup] = "user" novalidate>
   <mat-grid-list cols="8" rowHeight="55px">
-    <mat-grid-tile colspan="2" rowspan="10"></mat-grid-tile>
-    <div *ngIf="!data">
+    <mat-grid-tile colspan="2" rowspan="3"></mat-grid-tile>
+
       <mat-grid-tile colspan="4" rowspan="2">
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
           <textarea matInput rows="2" type="text" formControlName="name"></textarea>
         </mat-form-field>
       </mat-grid-tile>
+  </mat-grid-list>
+  <mat-grid-list cols="8" rowHeight="55px">
     <mat-grid-tile colspan="4" rowspan="2">
       <mat-form-field appearance="outline">
         <mat-label>E-mail</mat-label>
         <textarea matInput rows="2" type="email" formControlName="email"></textarea>
       </mat-form-field>
     </mat-grid-tile>
+    <div *ngIf="!data">
     <mat-grid-tile colspan="4" rowspan="2">
       <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
@@ -32,24 +35,65 @@
     </div>
     <mat-grid-tile colspan="4" rowspan="2">
       <mat-form-field appearance="outline">
+        <mat-label>Department</mat-label>
+        <textarea matInput rows="2" formControlName="department" type="text" [matAutocomplete]="auto1"
+          required></textarea>
+        <mat-autocomplete #auto1="matAutocomplete">
+          <mat-option *ngFor="let option of filteredDepartment | async;" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+        <!-- <mat-select formControlName="department">
+          <mat-option *ngFor="let option of filteredDepartment | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-select> -->
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="4" rowspan="2">
+      <mat-form-field appearance="outline">
+        <mat-label>Position</mat-label>
+        <mat-select formControlName="position">
+          <mat-option *ngFor="let option of allPosition()" [value]="option">
+            {{option}}
+          </mat-option>
+          <!-- <mat-option *ngFor="let option of filteredPosition | async" [value]="option">
+            {{option}}
+          </mat-option> -->
+        </mat-select>
+        <!-- <textarea matInput rows="2" type="text" formControlName="position"></textarea> -->
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="4" rowspan="2">
+      <mat-form-field appearance="outline">
         <mat-label>Role</mat-label>
-        <textarea type="text"  matInput rows="2" formControlName="role"[matAutocomplete]="auto" required></textarea>
+        <mat-select formControlName="role">
+          <mat-option *ngFor="let option of filteredRole | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-select>
+        <!-- <textarea type="text"  matInput rows="2" formControlName="role"[matAutocomplete]="auto" required></textarea>
         <mat-autocomplete #auto="matAutocomplete" >
           <mat-option *ngFor="let option of filteredRole | async" [value]="option">
             {{option}}
           </mat-option>
-        </mat-autocomplete>
+        </mat-autocomplete> -->
       </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile colspan="4" rowspan="2">
       <mat-form-field appearance="outline">
         <mat-label>Status</mat-label>
-        <textarea matInput rows="2" formControlName="status" type="text" [matAutocomplete]="auto1" required></textarea>
+        <mat-select formControlName="status">
+          <mat-option *ngFor="let option of filteredStatus | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-select>
+        <!-- <textarea matInput rows="2" formControlName="status" type="text" [matAutocomplete]="auto1" required></textarea>
         <mat-autocomplete #auto1="matAutocomplete" >
           <mat-option *ngFor="let option of filteredStatus | async" [value]="option">
             {{option}}
           </mat-option>
-        </mat-autocomplete>
+        </mat-autocomplete> -->
       </mat-form-field>
     </mat-grid-tile>
   </mat-grid-list>

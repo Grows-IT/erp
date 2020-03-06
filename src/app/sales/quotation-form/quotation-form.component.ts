@@ -123,6 +123,25 @@ export class QuotationFormComponent implements OnInit {
     return customer;
   }
 
+  getMax(i) {
+    const allItem = this.quotation.get("allItem").value;
+    const it = this.items.find(m => m.name === allItem[i].item);
+    return it.availableQuantity;
+
+    // return allItem[i].item;
+
+    // const length = allItem.length;
+    // for(let i)
+  }
+
+  // getItems(itemId: string) {
+  //   const product = this.items.find(pro => pro.id === itemId);
+  //   if (!product) {
+  //     return null;
+  //   }
+  //   return product;
+  // }
+
   getItems() {
     this.data = this.dialogRef.componentInstance.data;
 
@@ -154,14 +173,8 @@ export class QuotationFormComponent implements OnInit {
     this.data = this.dialogRef.componentInstance.data;
 
     return this.fb.group({
-      item: [
-        this.getItems()[i].name,
-        [Validators.required]
-      ],
-      quantity: [
-        this.getQuantity()[i],
-        [Validators.required]
-      ]
+      item: [this.getItems()[i].name, [Validators.required]],
+      quantity: [this.getQuantity()[i], [Validators.required]]
     });
   }
 
@@ -197,7 +210,11 @@ export class QuotationFormComponent implements OnInit {
         .unsubscribe();
     } else if (status === 1) {
       this.salesService
-        .updateQuotation(this.quotation.value, this.data.quotationId, this.data.sellItemId)
+        .updateQuotation(
+          this.quotation.value,
+          this.data.quotationId,
+          this.data.sellItemId
+        )
         .pipe(switchMap(() => this.salesService.getQuotation()))
         .subscribe();
     }

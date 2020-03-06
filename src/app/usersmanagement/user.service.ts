@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, observable } from "rxjs";
 import { User } from "./user.model";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
@@ -17,15 +17,18 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  addUser(user: any) {
+  addUser(user: any, companyName) {
     const users = {
       name: user.name,
       email: user.email,
       password: user.password,
       role: user.role,
-      status: user.status
+      status: user.status,
+      department: user.department,
+      position: user.position,
+      company: companyName
     };
-    console.log(user.role);
+    console.log(companyName);
 
     return this.http.post("http://localhost:3333/user", users);
     // return this.http.post<User>(environment.siteUrl + '/users.json', user);
@@ -39,8 +42,13 @@ export class UserService {
           return new User(
             res[Object.keys(res)[i]].userId,
             res[Object.keys(res)[i]].email,
+            res[Object.keys(res)[i]].name,
+            res[Object.keys(res)[i]].departmentId,
+            res[Object.keys(res)[i]].companyId,
             res[Object.keys(res)[i]].role,
-            res[Object.keys(res)[i]].userStatus
+            res[Object.keys(res)[i]].userStatus,
+            res[Object.keys(res)[i]].position,
+            res[Object.keys(res)[i]].department,
           );
         });
         return customers;
@@ -72,18 +80,34 @@ export class UserService {
   }
 
   updateUser(user: any, id: string) {
-    let data;
-    data = {
+    const users = {
+      name: user.name,
+      email: user.email,
+      department: user.department,
+      position: user.position,
       role: user.role,
-      status: user.status
+      status: user.status,
+      userId: id
     };
-    return this.http.patch(
-      environment.siteUrl + "/users/" + id + ".json",
-      data
-    );
+    console.log(user.role);
+
+    return this.http.patch("http://localhost:3333/user", users);
+    // let data;
+    // data = {
+    //   role: user.role,
+    //   status: user.status
+    // };
+    // return this.http.patch(
+    //   environment.siteUrl + "/users/" + id + ".json",
+    //   data
+    // );
   }
 
   deleteUser(id: string) {
-    return this.http.delete(environment.siteUrl + "/users/" + id + ".json");
+    let data;
+    data = {
+      userId: id
+    };
+    return this.http.post("http://localhost:3333/deleteuser", data);
   }
 }

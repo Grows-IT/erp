@@ -57,7 +57,7 @@ export class AuthService {
   //     })
   //   );
   // }
-  login(form) {
+  login(form, companyName) {
     const data = {
       email: form.email,
       password: form.password,
@@ -67,30 +67,32 @@ export class AuthService {
         // console.log(user);
         // const authen = new Auth(user.email);
         this.saveUserToStorage(user.email);
+        this.saveCompanyToStorage(companyName);
         this._email.next(user.email);
       })
     );
   }
 
-  signup(form) {
-    const data = {
-      email: form.email,
-      password: form.password,
-      returnSecureToken: true
-    };
+  // signup(form) {
+  //   const data = {
+  //     email: form.email,
+  //     password: form.password,
+  //     returnSecureToken: true
+  //   };
 
-    return this.http.post<{ email: string, idToken: string }>(environment.authSignUpUtl + environment.firebase.apiKey, data).pipe(
-      switchMap(res => {
-        const user = {
-          email: form.email,
-          token: res.idToken,
-          role: form.role,
-          status: form.status
-        };
-        return this.userService.addUser(user);
-      })
-    );
-  }
+  //   return this.http.post<{ email: string, idToken: string }>(environment.authSignUpUtl + environment.firebase.apiKey, data).pipe(
+  //     switchMap(res => {
+  //       const user = {
+  //         email: form.email,
+  //         token: res.idToken,
+  //         role: form.role,
+  //         status: form.status,
+  //         companyName: this.getCurrentCompany()
+  //       };
+  //       return this.userService.addUser(user);
+  //     })
+  //   );
+  // }
 
 
   logout() {
@@ -145,6 +147,10 @@ export class AuthService {
     // localStorage.setItem('role', CryptoJS.SHA1(role));
   }
 
+  private saveCompanyToStorage(companyName){
+    localStorage.setItem('company',companyName);
+  }
+
   // getTokenFormStorage() {
   //   return of(localStorage.getItem('token'));
   // }
@@ -156,6 +162,10 @@ export class AuthService {
 
   getCurrentEmail() {
     return of(localStorage.getItem('email'));
+  }
+
+  getCurrentCompany() {
+    return of(localStorage.getItem('company'));
   }
 
   getRoleFormStorage() {
