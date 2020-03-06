@@ -45,11 +45,8 @@ export class QuotationFormComponent implements OnInit {
     private fb: FormBuilder,
     private itemsService: ItemsService,
     private cService: CustomerService,
-    private uService: UserService,
-    private auth: AuthService,
     private cdRef: ChangeDetectorRef,
-    private sharedService: SharedService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.customerSubscription = this.cService.customers.subscribe(customers => {
@@ -126,14 +123,6 @@ export class QuotationFormComponent implements OnInit {
     return customer;
   }
 
-  // getItems(itemId: string) {
-  //   const product = this.items.find(pro => pro.id === itemId);
-  //   if (!product) {
-  //     return null;
-  //   }
-  //   return product;
-  // }
-
   getItems() {
     this.data = this.dialogRef.componentInstance.data;
 
@@ -149,27 +138,10 @@ export class QuotationFormComponent implements OnInit {
     }
 
     return items;
-
-    // this.data = this.dialogRef.componentInstance.data;
-    // console.log(this.data);
-
-    // const product = this.sellItem.find(pro => pro.sellItemId === sellItemId);
-    // const prod = product.itemId.split(",");
-
-    // let items = [];
-    // for (let i = 0; i < prod.length; i++) {
-    //   const product2 = this.items.find(pro2 => pro2.id == prod[i]);
-    //   items.push(product2);
-    // }
-    // if (!product) {
-    //   return null;
-    // }
-    // return items;
   }
 
   getQuantity() {
     this.data = this.dialogRef.componentInstance.data;
-    // const quantity = this.sellItem.find(quan => quan.sellItemId === sellItemId);
     const cutquan = this.data.itemQuantity.split(",");
     if (!this.data.itemQuantity) {
       return null;
@@ -216,9 +188,6 @@ export class QuotationFormComponent implements OnInit {
 
   onConfirmClick(status) {
     this.data = this.dialogRef.componentInstance.data;
-    // const cusNames = this.quotation.get("customerId").value;
-    // const findCus = this.customers.find(cus => cus.id === this.data.customerName);
-    // console.log(findCus);
 
     if (status === 0) {
       this.salesService
