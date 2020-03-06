@@ -7,6 +7,8 @@ import { Subscription } from 'rxjs';
 import { User } from './user.model';
 import { switchMap } from 'rxjs/operators';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { DepartmentService } from '../departmentmanagement/departmentmanagement.service';
+import { Department } from '../departmentmanagement/departmentmanagement.model';
 
 
 @Component({
@@ -18,9 +20,11 @@ export class UsersmanagementComponent implements OnInit {
 
   userCol: string[] = ['email', 'role' , 'status' , 'edit', 'delete'];
   userSubscription: Subscription;
+  departmentSubscription: Subscription;
   users: User[];
+  departments: Department[];
 
-  constructor(private authService: AuthService, public dialog: MatDialog, private uService: UserService) { }
+  constructor(private authService: AuthService, public dialog: MatDialog, private uService: UserService, private dService: DepartmentService) { }
 
   ngOnInit() {
 
@@ -28,6 +32,12 @@ export class UsersmanagementComponent implements OnInit {
       this.users = users;
     });
     this.uService.getUser().subscribe();
+
+    this.departmentSubscription = this.dService.department.subscribe(departments => {
+      this.departments = departments;
+    });
+    this.dService.getAllDepartments().subscribe();
+
   }
 
   openUser() {
@@ -38,16 +48,25 @@ export class UsersmanagementComponent implements OnInit {
       disableClose: false,
       autoFocus: false,
     });
+
+    dialogRef.afterClosed().pipe(
+      switchMap(() => {
+        return this.uService.getUser();
+      })
+    ).subscribe();
   }
 
-  editCustomer(user) {
+  editUser(user) {
+    const depart = this.departments.find(d => d.departmentId === user.departmentId);
+    const departmentName = depart.department;
+
     const dialogRef = this.dialog.open(UserdialogComponent, {
       panelClass: 'nopadding-dialog',
       width: '35vw',
       height: '85vh',
       disableClose: false,
       autoFocus: false,
-      data: user,
+      data: {user, departmentName},
     });
 
     dialogRef.afterClosed().pipe(
@@ -67,10 +86,17 @@ export class UsersmanagementComponent implements OnInit {
       autoFocus: false,
       data: { id, token, 'from': 'user' }
     });
+    dialogRef.afterClosed().pipe(
+      switchMap(() => {
+        return this.uService.getUser();
+      })
+    ).subscribe();
     // this.uService.deleteUser(id).pipe(
     //   switchMap(() => this.uService.getUser()),
-    //   switchMap(() => this.authService.delete(token))
+    //   // switchMap(() => this.authService.delete(token))
     // ).subscribe();
+    // console.log(id);
+
   }
 
 }

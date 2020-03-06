@@ -260,8 +260,8 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
 
   openPdf(item: any) {
     this.subTotal = 0;
-    console.log(typeof(item.itemId));
-    console.log(item.itemQuantity);
+    // console.log(typeof(item.itemId));
+    // console.log(item.itemQuantity);
 
 
     this.getListItem(item.itemId, item.itemQuantity);

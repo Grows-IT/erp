@@ -330,7 +330,7 @@ export class SalesService {
           date: quotation.date,
           expirationDate: quotation.expirationDate
         };
-        console.log(data);
+        // console.log(data);
 
         return this.http.patch("http://localhost:3333/quotation", data);
       })

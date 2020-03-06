@@ -4,6 +4,7 @@ import { User } from "../usersmanagement/user.model";
 import { Subscription } from "rxjs";
 import { AuthService } from "../signin/auth.service";
 import { switchMap, map, tap } from "rxjs/operators";
+import { DepartmentService } from '../departmentmanagement/departmentmanagement.service';
 // import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 class Menu {
@@ -26,34 +27,60 @@ export class HomeComponent implements OnInit {
   userSubscription: Subscription;
   getSubscription: Subscription;
   token: any;
-  email: any;
-  role: any;
-  // getToken: any;
+  email: string;
+  role: string;
+  name: string;
+  company: string;
+  departmentId: string;
+  companyId: string;
+  department: any;
+  position: string;
 
-  constructor(public uService: UserService, public auth: AuthService) {}
+  constructor(public uService: UserService, public auth: AuthService, public dService: DepartmentService) {}
   menu = [];
   menu2 = [];
   downmenu = [];
 
   ngOnInit() {
     this.auth.getCurrentEmail().subscribe(res => (this.email = res));
-    this.userSubscription = this.uService.users.subscribe(user => {
-      this.users = user;
-    });
+    // this.userSubscription = this.uService.users.subscribe(user => {
+    //   this.users = user;
+    // });
     // this.uService.getUser().subscribe();
-    this.uService.getUser().pipe(
+    this.uService
+      .getUser()
+      .pipe(
         map(res => {
-          const role = res.find(it => it.email === this.email);
-          if (!role) {
+          const info = res.find(it => it.email === this.email);
+          if (!info) {
             return;
           }
           // this.role = role.role;
-          return role.role;
+          this.position = info.position;
+          return info;
           // console.log(res);
           // console.log(this.email);
         })
       )
-      .subscribe(role => this.role = role);
+      .subscribe(info => ((this.role = info.role), (this.name = info.name), (this.departmentId = info.departmentId), (this.companyId = info.companyId)));
+    this.dService
+      .getAllDepartments()
+      .pipe(
+        map(res => {
+          const info = res.find(it => it.departmentId === this.departmentId);
+          const company = res.find(it => it.companyId === this.companyId);
+          if (!info) {
+            return;
+          }
+          // this.role = role.role;
+          this.company = company.companyName;
+          return info;
+
+          // console.log(res);
+          // console.log(this.email);
+        })
+      )
+      .subscribe(info => ((this.department = info.department)));
     // this.auth.getTokenFormStorage().subscribe(res => (this.token = res));
     // console.log(this.email);
 
@@ -155,17 +182,6 @@ export class HomeComponent implements OnInit {
     ];
     // this.role = this.getRole();
     // console.log(this.role);
-  }
-
-  getRole() {
-    const user = this.users.find(us => us.email === this.email);
-    // console.log(user);
-
-    if (!user) {
-      return null;
-    }
-    this.role = user.role;
-    return user.role;
   }
 
   logout() {

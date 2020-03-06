@@ -42,7 +42,7 @@ export class ConfirmDialogComponent implements OnInit {
     } else if (this.data.from === 'user') {
       this.uService.deleteUser(this.data.id).pipe(
         switchMap(() => this.uService.getUser()),
-        switchMap(() => this.authService.delete(this.data.token))
+        // switchMap(() => this.authService.delete(this.data.id))
       ).subscribe();
     } else if (this.data.from === 'department') {
       this.dService.deleteDepartment(this.data.id).pipe(
