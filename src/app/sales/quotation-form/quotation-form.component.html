@@ -11,7 +11,7 @@
 <form [formGroup]="quotation" novalidate>
   <mat-grid-list cols="8" rowHeight="40px">
     <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
-    <mat-grid-tile colspan="2" rowspan="4">
+    <mat-grid-tile colspan="4" rowspan="4">
       <mat-form-field appearance="outline">
         <mat-label>Customer Name</mat-label>
         <textarea matInput rows="2" formControlName="customerName" type="text" [matAutocomplete]="auto1"
@@ -76,8 +76,8 @@
           </td>
           <td>
             <mat-form-field appearance="outline">
-              <mat-label>Quantity (max: {{getMax(i)}})</mat-label>
-              <input matInput min="0" max = "{{getMax(i)}}"[formControl]="allItem.get('quantity')" type="number" required>
+              <mat-label>Quantity [Stock: {{getMax(i)}}]</mat-label>
+              <input matInput min="0" max = "{{getMax(i)}}" [formControl]="allItem.get('quantity')" type="number" required>
             </mat-form-field>
           </td>
           <td>
