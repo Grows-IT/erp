@@ -74,17 +74,15 @@ export class DepartmentdialogComponent implements OnInit {
     if (!departs) {
       return null;
     }
-    const string1 = JSON.stringify(departs).replace('["', "");
-    const string2 = string1.replace('"]', "");
+    const string1 = JSON.stringify(departs).replace('["', '');
+    const string2 = string1.replace('"]', '');
 
-    const splitdata = string2.split(",");
+    const splitdata = string2.split(',');
     return splitdata;
   }
 
   private viewDepartmentFormGroup(i) {
     this.data = this.dialogRef.componentInstance.data;
-    console.log(this.getPosition(this.data.department));
-
     return this.fb.group({
       position: [
         this.getPosition(this.data.department)[i],
@@ -111,7 +109,6 @@ export class DepartmentdialogComponent implements OnInit {
 
   onConfirmClick(status) {
     if (status === 0) {
-      console.log(this.departments.values);
       this.dService
         .addDepartment(this.department.value)
         .pipe(switchMap(() => this.dService.getAllDepartments()))
@@ -121,13 +118,7 @@ export class DepartmentdialogComponent implements OnInit {
         .updateDepartment(this.department.value, this.data.departmentId)
         .pipe(switchMap(() => this.dService.getAllDepartments()))
         .subscribe();
-
-      console.log(this.data.departmentId);
-      console.log(this.department.value);
-
-      // }
     }
-    console.log(this.department.value);
     this.dialogRef.close();
   }
 }

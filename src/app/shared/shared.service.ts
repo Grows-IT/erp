@@ -4,6 +4,7 @@ import { AuthService } from "../signin/auth.service";
 import { map, tap, switchMap } from "rxjs/operators";
 import { BehaviorSubject } from "rxjs";
 import { HttpClient } from "@angular/common/http";
+import { environment } from 'src/environments/environment';
 
 interface SellItemsResData {
   sellItemId: string;
@@ -41,7 +42,7 @@ export class SharedService {
 
   getRole() {
     return this.getEmail().pipe(
-      switchMap(email => this.http.get('http://localhost:3333/getRole?email=' + email))
+      switchMap(email => this.http.get(environment.erpUrl + '/getRole?email=' + email))
     );
   }
 
@@ -51,27 +52,26 @@ export class SharedService {
 
   getSellItems() {
     return this.http
-      .get<SellItemsResData>("http://localhost:3333/sellItem")
-      .pipe(
+      .get<SellItemsResData>(environment.erpUrl + '/sellItem').pipe(
         map(resSellItems => {
-          // console.log(resItem);
-          const sellItems: SellItemsResData[] = [];
+        // console.log(resItem);
+        const sellItems: SellItemsResData[] = [];
 
-          for (const key in resSellItems) {
-            if (resSellItems.hasOwnProperty(key)) {
-              const data = {
-                sellItemId: resSellItems[key].sellItemId,
-                itemId: resSellItems[key].itemId,
-                sellQuantity: resSellItems[key].sellQuantity
-              };
-              sellItems.push(data);
+        for (const key in resSellItems) {
+          if (resSellItems.hasOwnProperty(key)) {
+            const data = {
+              sellItemId: resSellItems[key].sellItemId,
+              itemId: resSellItems[key].itemId,
+              sellQuantity: resSellItems[key].sellQuantity
+            };
+            sellItems.push(data);
 
-              // const sellit = new sellItems();
-              // sellItems.push(sellit);
-            }
+            // const sellit = new sellItems();
+            // sellItems.push(sellit);
           }
-          return sellItems;
-        }),
+        }
+        return sellItems;
+      }),
         tap(sellItems => {
           this._sellItem.next(sellItems);
         })

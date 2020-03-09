@@ -62,7 +62,7 @@ export class InventoryComponent implements OnInit {
       height: '200px',
       disableClose: true,
       autoFocus: false,
-      data: { id, 'from': 'flowerPlant' }
+      data: { id, from: 'flowerPlant' }
     });
     dialogRef.beforeClosed();
   }

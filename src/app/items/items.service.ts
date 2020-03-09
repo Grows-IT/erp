@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AngularFireList } from '@angular/fire/database';
 import { BehaviorSubject } from 'rxjs';
 import { Item } from './items.model';
 import { environment } from 'src/environments/environment';
@@ -27,18 +26,15 @@ export class ItemsService {
   }
 
   addFlower(item: any) {
-
     const items = {
       name: item.name,
       price: item.price,
       availableQuantity: item.quantity
     };
-    return this.http.post('http://localhost:3333/flower', items);
-    // return this.http.post<any>(environment.siteUrl + '/items.json', items);
+    return this.http.post(environment.erpUrl + '/flower', items);
   }
 
   addItem(item: any) {
-
     const items = {
       name: item.name,
       price: item.price,
@@ -47,14 +43,12 @@ export class ItemsService {
     };
     console.log(item);
 
-    return this.http.post('http://localhost:3333/items', items);
-    // return this.http.post<any>(environment.siteUrl + '/items.json', items);
+    return this.http.post(environment.erpUrl + '/items', items);
   }
 
   getFlower() {
-    return this.http.get('http://localhost:3333/flower').pipe(
+    return this.http.get(environment.erpUrl + '/flower').pipe(
       map((resItem) => {
-        // console.log(resItem);
         const items: Item[] = [];
 
         for (const key in resItem) {
@@ -72,7 +66,7 @@ export class ItemsService {
   }
 
   getAllItems() {
-    return this.http.get('http://localhost:3333/items').pipe(
+    return this.http.get(environment.erpUrl + '/items').pipe(
       map((resItem) => {
         // console.log(resItem);
         const items: Item[] = [];
@@ -99,8 +93,7 @@ export class ItemsService {
       itemId: id,
       type: 'Flower'
     };
-    return this.http.patch('http://localhost:3333/flower', data);
-    // return this.http.patch(environment.siteUrl + '/items/' + id + '.json', data);
+    return this.http.patch(environment.erpUrl + '/flower', data);
   }
 
   updateItem(item: any, id: string) {
@@ -113,8 +106,7 @@ export class ItemsService {
     };
     console.log(data);
 
-    return this.http.patch('http://localhost:3333/items', data);
-    // return this.http.patch(environment.siteUrl + '/items/' + id + '.json', data);
+    return this.http.patch(environment.erpUrl + '/items', data);
   }
 
   deleteItem(id: string) {
@@ -122,28 +114,6 @@ export class ItemsService {
       itemId: id
     };
     console.log(data);
-    return this.http.post('http://localhost:3333/deleteitem/', data);
-    // return this.http.delete(environment.siteUrl + '/items/' + id + '.json');
+    return this.http.post(environment.erpUrl + '/deleteitem/', data);
   }
-
-  // getMaxQuantity(item) {
-  //   console.log(item);
-
-  //   const prodId = item.itemId.split(',');
-  //   const prodQuantity = item.itemQuantity.split(',');
-
-  //   // console.log(prod);
-
-  //   this.getFlower().pipe(
-  //     map(items => {
-  //       items.forEach((e, i) => {
-  //         if (prodId[i] == e.id) {
-  //           console.log(e);
-  //           console.log(prodQuantity[i]);
-
-  //         }
-  //       });
-  //     })
-  //   ).subscribe();
-  // }
 }

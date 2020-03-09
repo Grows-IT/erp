@@ -33,15 +33,15 @@ export class CustomerdialogComponent implements OnInit {
     if (this.data !== null && this.data !== undefined) {
       this.customer = this.fb.group({
         customerName: [this.data.name, [Validators.required]],
-        addressTo:  [this.data.address, [Validators.required]]
+        addressTo: [this.data.address, [Validators.required]]
       });
     } else {
 
-    this.customer = this.fb.group({
-      customerName: ['', [Validators.required]],
-      addressTo:  ['', [Validators.required]]
-    });
-  }
+      this.customer = this.fb.group({
+        customerName: ['', [Validators.required]],
+        addressTo: ['', [Validators.required]]
+      });
+    }
   }
 
   close(): void {
@@ -49,9 +49,7 @@ export class CustomerdialogComponent implements OnInit {
   }
 
   onConfirmClick(status) {
-
     if (status === 0) {
-      console.log(this.customers.values);
       this.cService.addCustomer(this.customer.value).pipe(
         switchMap(() => this.cService.getAllCustomer())
       ).subscribe();
@@ -59,11 +57,7 @@ export class CustomerdialogComponent implements OnInit {
       this.cService.updateCustomer(this.customer.value, this.data.id).pipe(
         switchMap(() => this.cService.getAllCustomer())
       ).subscribe();
-      console.log(this.customer.value);
-      console.log(this.data.id);
-
-    // }
-  }
+    }
     this.dialogRef.close();
-}
+  }
 }

@@ -53,7 +53,7 @@ export class InvoiceService {
 
   getAllInvoice() {
     const invoices: Invoice[] = [];
-    return this.http.get<any>('http://localhost:3333/invoice').pipe(
+    return this.http.get<any>(environment.erpUrl + '/invoice').pipe(
       map(res => {
         for (let i = 0; i < res.length; i++) {
           const invoice = new Invoice(
@@ -94,28 +94,28 @@ export class InvoiceService {
       itemType: 'Flower'
     };
 
-    return this.http.post('http://localhost:3333/invoice', { data, check }).pipe(
+    return this.http.post(environment.erpUrl + '/invoice', { data, check }).pipe(
       switchMap((inv: any) => {
         if (inv.err) {
           return of(inv);
         }
-        return this.http.patch('http://localhost:3333/updateQuotation', { 'invoiceId': inv.insertId, 'quotationId': quotation.quotationId });
+        return this.http.patch(environment.erpUrl + '/updateQuotation', { 'invoiceId': inv.insertId, 'quotationId': quotation.quotationId });
       })
     );
   }
 
   deleteInvoice(invoiceId: string, quotationId: string) {
     // console.log(invoiceId, quotationId);
-    return this.http.patch('http://localhost:3333/invoice', { invoiceId, quotationId });
+    return this.http.patch(environment.erpUrl + '/invoice', { invoiceId, quotationId });
   }
 
   addGroupName(groupName, invId) {
     // console.log(groupName);
-    return this.http.post('http://localhost:3333/invoiceGroup', { data: groupName, invoiceId: invId });
+    return this.http.post(environment.erpUrl + '/invoiceGroup', { data: groupName, invoiceId: invId });
   }
 
   getGroupName(invId) {
-    return this.http.get<GroupName>('http://localhost:3333/invoiceGroup?id=' + invId).pipe(
+    return this.http.get<GroupName>(environment.erpUrl + '/invoiceGroup?id=' + invId).pipe(
       map((data) => {
         return this._groupName.next(data);
       })
@@ -130,16 +130,16 @@ export class InvoiceService {
   }
 
   deleteTableSubInvoice(subInvoicesId) {
-    return this.http.patch('http://localhost:3333/subInvoice', { subInvoicesId });
+    return this.http.patch(environment.erpUrl + '/subInvoice', { subInvoicesId });
   }
 
   deleteGroupName(index) {
     // console.log(index);
-    return this.http.patch('http://localhost:3333/invoiceGroup', { index });
+    return this.http.patch(environment.erpUrl + '/invoiceGroup', { index });
   }
 
   changeGroupName(id, newName) {
-    return this.http.patch('http://localhost:3333/changeGroupName', { id, newName });
+    return this.http.patch(environment.erpUrl + '/changeGroupName', { id, newName });
   }
 
   addReceipt(id) {
@@ -147,21 +147,21 @@ export class InvoiceService {
       invId: id,
       createReceiptDate: new Date()
     };
-    return this.http.post('http://localhost:3333/addReceipt', data);
+    return this.http.post(environment.erpUrl + '/addReceipt', data);
     // return this.http.patch(environment.siteUrl + '/invoices/' + id + '.json', data);
   }
 
   getListItem(invoiceId) {
-    return this.http.get('http://localhost:3333/getListItem?id=' + invoiceId);
+    return this.http.get(environment.erpUrl + '/getListItem?id=' + invoiceId);
   }
 
   addSubInvoice(data: string, name: string, groupId: number) {
-    return this.http.post('http://localhost:3333/subInvoice', { data, name, groupId });
+    return this.http.post(environment.erpUrl + '/subInvoice', { data, name, groupId });
   }
 
   getSubInvoice(groupId) {
     // console.log(groupId);
-    return this.http.get('http://localhost:3333/subInvoice?groupId=' + groupId);
+    return this.http.get(environment.erpUrl + '/subInvoice?groupId=' + groupId);
   }
 }
 

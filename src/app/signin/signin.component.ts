@@ -47,7 +47,7 @@ export class SigninComponent implements OnInit {
   }
 
   getCompany() {
-    const email = this.loginForm.get("email").value;
+    const email = this.loginForm.get('email').value;
     const com = this.users.find(u => u.email === email);
     const comId = com.companyId;
     const company = this.departments.find(d => d.companyId === comId);

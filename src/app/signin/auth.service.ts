@@ -62,7 +62,7 @@ export class AuthService {
       email: form.email,
       password: form.password,
     };
-    return this.http.post<{ email: string, role: string }>('http://localhost:3333/login', data).pipe(
+    return this.http.post<{ email: string, role: string }>(environment.erpUrl + '/login', data).pipe(
       tap((user) => {
         // console.log(user);
         // const authen = new Auth(user.email);
@@ -97,8 +97,6 @@ export class AuthService {
 
   logout() {
     this._email.next(null);
-    // this._user.next(null);
-    // this._token.next(null);
     localStorage.clear();
   }
 
@@ -111,20 +109,6 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    // return this.token.pipe(
-    //   first(),
-    //   switchMap(token => {
-    //     if (!token) {
-    //       return this.getTokenFormStorage().pipe(
-
-    //         catchError(() => of(null)),
-    //         map(storedtoken => !!storedtoken)
-    //       );
-    //     }
-    //     return of(!!token);
-    //   })
-    // );
-
     return this.email.pipe(
       first(),
       switchMap(email => {
@@ -139,26 +123,13 @@ export class AuthService {
     );
   }
 
-
   private saveUserToStorage(email) {
-    // localStorage.setItem('user', JSON.stringify(val));
-    // localStorage.setItem('token', val.token);
     localStorage.setItem('email', email);
-    // localStorage.setItem('role', CryptoJS.SHA1(role));
   }
 
   private saveCompanyToStorage(companyName){
     localStorage.setItem('company',companyName);
   }
-
-  // getTokenFormStorage() {
-  //   return of(localStorage.getItem('token'));
-  // }
-
-  // getUserFormStorage() {
-  //   // return of(localStorage.getItem('auth'));
-  //   return of(JSON.parse(localStorage.getItem('auth')) as User);
-  // }
 
   getCurrentEmail() {
     return of(localStorage.getItem('email'));

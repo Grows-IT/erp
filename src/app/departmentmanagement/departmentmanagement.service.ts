@@ -25,36 +25,32 @@ export class DepartmentService {
   }
 
   addDepartment(department: any) {
-
     const departments = {
       position: JSON.stringify(department.position),
       department: department.department,
       // length: department.position.length
     };
-
-    console.log(departments);
-
-    return this.http.post('http://localhost:3333/department', departments);
-    // return this.http.post<any>(environment.siteUrl + '/items.json', items);
+    // console.log(departments);
+    return this.http.post(environment.erpUrl + '/department', departments);
   }
 
   getAllDepartments() {
-    return this.http.get('http://localhost:3333/department').pipe(
+    return this.http.get(environment.erpUrl + '/department').pipe(
       map((resDepartment) => {
-        console.log(resDepartment);
+        // console.log(resDepartment);
         const departments: Department[] = [];
 
         for (const key in resDepartment) {
           if (resDepartment.hasOwnProperty(key)) {
             // tslint:disable-next-line: max-line-length
-            const department = new Department(resDepartment[key].departmentId, resDepartment[key].position, resDepartment[key].department, resDepartment[key].companyId, resDepartment[key].companyName );
+            const department = new Department(resDepartment[key].departmentId, resDepartment[key].position, resDepartment[key].department, resDepartment[key].companyId, resDepartment[key].companyName);
             departments.push(department);
           }
         }
         return departments;
       }),
       tap(departments => {
-        this. _department.next(departments);
+        this._department.next(departments);
       })
     );
   }
@@ -68,10 +64,9 @@ export class DepartmentService {
       // position: department.position,
       // department: department.department,
     };
-    console.log(department.department);
+    // console.log(department.department);
 
-    return this.http.patch('http://localhost:3333/department', data);
-    // return this.http.patch(environment.siteUrl + '/items/' + id + '.json', data);
+    return this.http.patch(environment.erpUrl + '/department', data);
   }
 
   deleteDepartment(id: string) {
@@ -79,8 +74,7 @@ export class DepartmentService {
     data = {
       departmentId: id
     };
-    console.log(data);
-    return this.http.post('http://localhost:3333/deletedepartment/', data);
-    // return this.http.delete(environment.siteUrl + '/items/' + id + '.json');
+    // console.log(data);
+    return this.http.post(environment.erpUrl + '/deletedepartment/', data);
   }
 }

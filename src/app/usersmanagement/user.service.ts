@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, observable } from "rxjs";
-import { User } from "./user.model";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "src/environments/environment";
-import { map, tap } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, observable } from 'rxjs';
+import { User } from './user.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class UserService {
   private _user = new BehaviorSubject<User[]>(null);
@@ -28,14 +28,14 @@ export class UserService {
       position: user.position,
       company: companyName
     };
-    console.log(companyName);
+    // console.log(companyName);
 
-    return this.http.post("http://localhost:3333/user", users);
+    return this.http.post(environment.erpUrl + '/user', users);
     // return this.http.post<User>(environment.siteUrl + '/users.json', user);
   }
 
   getUser() {
-    return this.http.get("http://localhost:3333/user").pipe(
+    return this.http.get(environment.erpUrl + '/user').pipe(
       map(res => {
         // console.log(Object.keys(res));
         const customers = Object.keys(res).map((id, i) => {
@@ -56,26 +56,6 @@ export class UserService {
       tap(users => {
         this._user.next(users);
       })
-      // return this.http.get<User[]>('http://localhost:3333/user').pipe(
-      //   map(res => {
-      //     if (!res) {
-      //       return;
-      //     }
-      //     console.log(res);
-      //     // const users = Object.keys(res).map((id, i) => {
-      //     //   return new User(
-      //     //     id,
-      //     //     res[Object.keys(res)[i]].email,
-      //     //     // res[Object.keys(res)[i]].token,
-      //     //     res[Object.keys(res)[i]].role,
-      //     //     res[Object.keys(res)[i]].status,
-      //     //   );
-      //     // });
-      //     return res;
-      //   }),
-      //   tap(users => {
-      //     this._user.next(users);
-      //   })
     );
   }
 
@@ -89,18 +69,9 @@ export class UserService {
       status: user.status,
       userId: id
     };
-    console.log(user.role);
+    // console.log(user.role);
 
-    return this.http.patch("http://localhost:3333/user", users);
-    // let data;
-    // data = {
-    //   role: user.role,
-    //   status: user.status
-    // };
-    // return this.http.patch(
-    //   environment.siteUrl + "/users/" + id + ".json",
-    //   data
-    // );
+    return this.http.patch(environment.erpUrl + '/user', users);
   }
 
   deleteUser(id: string) {
@@ -108,6 +79,6 @@ export class UserService {
     data = {
       userId: id
     };
-    return this.http.post("http://localhost:3333/deleteuser", data);
+    return this.http.post(environment.erpUrl + '/deleteuser', data);
   }
 }
