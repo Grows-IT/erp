@@ -63,7 +63,7 @@ export class InvoicegroupComponent implements OnInit {
     return customer;
   }
 
-  onClickOpenDetail(invoice, item) {
+  onClickOpenDetail(invoice) {
     // console.log(invoice);
     // console.log(item);
 
@@ -73,7 +73,7 @@ export class InvoicegroupComponent implements OnInit {
       height: '70vh',
       disableClose: true,
       autoFocus: false,
-      data: { invoice, item }
+      data: { invoice }
     });
 
     dialogRef.afterClosed().pipe(
@@ -96,14 +96,14 @@ export class InvoicegroupComponent implements OnInit {
     return this.sharedService.decode(id, 'I');
   }
 
-  editGroupName(id, index) {
+  editGroupName(id) {
     const dialogRef = this.dialog.open(ChangeNameDialogComponent, {
       panelClass: 'nopadding-dialog',
       width: '250px',
       // height: '130px',
       disableClose: false,
       autoFocus: false,
-      data: { id, index }
+      data: { id }
     });
 
     dialogRef.afterClosed().pipe(
