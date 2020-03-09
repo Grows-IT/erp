@@ -78,21 +78,27 @@ export class InvoiceService {
 
   createInvoice(quotation: any) {
     const data = {
-      'quotationId': quotation.quotationId,
-      'customerId': quotation.customerId,
-      'items': quotation.itemId,
-      'status': "active",
-      'email': quotation.email,
-      'companyId': quotation.companyId,
-      'userId': quotation.userId,
-      'sellItemId': quotation.sellItemId,
-      'createReceiptDate': null
+      quotationId: quotation.quotationId,
+      customerId: quotation.customerId,
+      items: quotation.itemId,
+      status: 'active',
+      email: quotation.email,
+      companyId: quotation.companyId,
+      userId: quotation.userId,
+      sellItemId: quotation.sellItemId,
+      createReceiptDate: null
     };
-    return this.http.post('http://localhost:3333/invoice', data).pipe(
-      switchMap((inv: any) => {
-        return this.http.patch('http://localhost:3333/updateQuotation', { 'invoiceId': inv.insertId, 'quotationId': quotation.quotationId });
-      })
-    );
+    const check = {
+      itemId: quotation.itemId.split(','),
+      itemQuantity: quotation.itemQuantity.split(','),
+      itemType: 'Flower'
+    }
+    return this.http.post('http://localhost:3333/invoice', { data, check });
+    // .pipe(
+    //   switchMap((inv: any) => {
+    //     return this.http.patch('http://localhost:3333/updateQuotation', { 'invoiceId': inv.insertId, 'quotationId': quotation.quotationId });
+    //   })
+    // );
   }
 
   deleteInvoice(invoiceId: string, quotationId: string) {

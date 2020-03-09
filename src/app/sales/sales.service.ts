@@ -309,8 +309,8 @@ export class SalesService {
           sellItemsQuantity.push(itemInput.quantity);
         });
         const sellItems: SellItem = new SellItem(
-          JSON.stringify(sellItemsId).replace(/[\[\]']+/g, ""),
-          JSON.stringify(sellItemsQuantity).replace(/[\[\]"']+/g, "")
+          JSON.stringify(sellItemsId).replace(/[\[\]']+/g, ''),
+          JSON.stringify(sellItemsQuantity).replace(/[\[\]"']+/g, '')
         );
 
         const data = {
