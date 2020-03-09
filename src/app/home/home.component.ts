@@ -164,6 +164,12 @@ export class HomeComponent implements OnInit {
       "employee",
       "disabled"
     );
+    const inventory = new Menu(
+      "Inventory",
+      "assets/menu/inventory.svg",
+      "inventory",
+      "active"
+    );
     // const setting = new Menu(
     //   'Users management',
     //   'assets/menu/gear.svg',
@@ -177,7 +183,8 @@ export class HomeComponent implements OnInit {
       suppliers,
       customers,
       flowerplant,
-      employee
+      employee,
+      inventory
       // setting
     ];
     // this.role = this.getRole();

@@ -63,6 +63,8 @@ import { EmployeeprofileComponent } from './employee/employeeprofile/employeepro
 import { EmployeedialogComponent } from './employee/employeedialog/employeedialog.component';
 import { DepartmentmanagementComponent } from './departmentmanagement/departmentmanagement.component';
 import { DepartmentdialogComponent } from './departmentmanagement/departmentdialog/departmentdialog.component';
+import { InventoryComponent } from './inventory/inventory.component';
+import { InventoryDialogComponent } from './inventory/inventory-dialog/inventory-dialog.component';
 
 const materialComponent = [
   MatGridListModule,
@@ -122,6 +124,8 @@ const materialComponent = [
     EmployeedialogComponent,
     DepartmentmanagementComponent,
     DepartmentdialogComponent,
+    InventoryComponent,
+    InventoryDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -145,7 +149,8 @@ const materialComponent = [
     ConfirmDialogComponent,
     EmployeeprofileComponent,
     EmployeedialogComponent,
-    DepartmentdialogComponent
+    DepartmentdialogComponent,
+    InventoryDialogComponent
   ]
 })
 export class AppModule { }

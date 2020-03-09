@@ -26,26 +26,40 @@ export class ItemsService {
   constructor(private http: HttpClient) {
   }
 
-  addItem(item: any) {
+  addFlower(item: any) {
 
     const items = {
       name: item.name,
       price: item.price,
       availableQuantity: item.quantity
     };
+    return this.http.post('http://localhost:3333/flower', items);
+    // return this.http.post<any>(environment.siteUrl + '/items.json', items);
+  }
+
+  addItem(item: any) {
+
+    const items = {
+      name: item.name,
+      price: item.price,
+      availableQuantity: item.quantity,
+      type: item.type
+    };
+    console.log(item);
+
     return this.http.post('http://localhost:3333/items', items);
     // return this.http.post<any>(environment.siteUrl + '/items.json', items);
   }
 
-  getAllItems() {
-    return this.http.get('http://localhost:3333/items').pipe(
+  getFlower() {
+    return this.http.get('http://localhost:3333/flower').pipe(
       map((resItem) => {
         // console.log(resItem);
         const items: Item[] = [];
 
         for (const key in resItem) {
           if (resItem.hasOwnProperty(key)) {
-            const item = new Item(resItem[key].itemId, resItem[key].itemName, resItem[key].price, resItem[key].availableQuantity);
+            const item = new Item(resItem[key].itemId, resItem[key].itemName, resItem[key].price, resItem[key].availableQuantity, resItem[key].itemType);
             items.push(item);
           }
         }
@@ -57,14 +71,50 @@ export class ItemsService {
     );
   }
 
+  getAllItems() {
+    return this.http.get('http://localhost:3333/items').pipe(
+      map((resItem) => {
+        // console.log(resItem);
+        const items: Item[] = [];
+
+        for (const key in resItem) {
+          if (resItem.hasOwnProperty(key)) {
+            const item = new Item(resItem[key].itemId, resItem[key].itemName, resItem[key].price, resItem[key].availableQuantity, resItem[key].itemType);
+            items.push(item);
+          }
+        }
+        return items;
+      }),
+      tap(items => {
+        this._item.next(items);
+      })
+    );
+  }
+
+  updateFlower(item: any, id: string) {
+    let data;
+    data = {
+      name: item.name,
+      price: item.price,
+      availableQuantity: item.quantity,
+      itemId: id,
+      type: 'Flower'
+    };
+    return this.http.patch('http://localhost:3333/flower', data);
+    // return this.http.patch(environment.siteUrl + '/items/' + id + '.json', data);
+  }
+
   updateItem(item: any, id: string) {
     let data;
     data = {
       name: item.name,
       price: item.price,
       availableQuantity: item.quantity,
-      itemId: id
+      itemId: id,
+      type: item.type
     };
+    console.log(data);
+
     return this.http.patch('http://localhost:3333/items', data);
     // return this.http.patch(environment.siteUrl + '/items/' + id + '.json', data);
   }

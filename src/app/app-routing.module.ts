@@ -15,11 +15,17 @@ import { FlowerplantComponent } from './flowerplant/flowerplant.component';
 import { UsersmanagementComponent } from './usersmanagement/usersmanagement.component';
 import { EmployeeComponent } from './employee/employee.component';
 import { DepartmentmanagementComponent } from './departmentmanagement/departmentmanagement.component';
+import { InventoryComponent } from './inventory/inventory.component';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+    canActivate: [SigninGuard],
+  },
+  {
+    path: 'inventory',
+    component: InventoryComponent,
     canActivate: [SigninGuard],
   },
   {

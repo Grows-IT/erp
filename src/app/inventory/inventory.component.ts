@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { ItemsService } from 'src/app/items/items.service';
 import { Item } from '../items/items.model';
 import { Subscription } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { FlowerplantdialogComponent } from './flowerplantdialog/flowerplantdialog.component';
+import { ItemsService } from '../items/items.service';
+import { MatDialog } from '@angular/material';
 import { switchMap } from 'rxjs/operators';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { InventoryDialogComponent } from './inventory-dialog/inventory-dialog.component';
 
 @Component({
-  selector: 'app-flowerplant',
-  templateUrl: './flowerplant.component.html',
-  styleUrls: ['./flowerplant.component.scss']
+  selector: 'app-inventory',
+  templateUrl: './inventory.component.html',
+  styleUrls: ['./inventory.component.scss']
 })
-export class FlowerplantComponent implements OnInit {
+export class InventoryComponent implements OnInit {
 
   flowerCol: string[] = ['no', 'name', 'price', 'availableQuantity', 'edit', 'delete'];
   items: Item[];
@@ -25,24 +25,24 @@ export class FlowerplantComponent implements OnInit {
     this.itemSubscription = this.itemsService.items.subscribe(items => {
       this.items = items;
     });
-    this.itemsService.getFlower().subscribe();
+    this.itemsService.getAllItems().subscribe();
   }
 
   openFlowerplant() {
-    const dialogRef = this.dialog.open(FlowerplantdialogComponent, {
+    const dialogRef = this.dialog.open(InventoryDialogComponent, {
       panelClass: 'nopadding-dialog',
       width: '30vw',
-      height: '65vh',
+      height: '80vh',
       disableClose: false,
       autoFocus: false,
     });
   }
 
   editFlowerplant(item) {
-    const dialogRef = this.dialog.open(FlowerplantdialogComponent, {
+    const dialogRef = this.dialog.open(InventoryDialogComponent, {
       panelClass: 'nopadding-dialog',
       width: '30vw',
-      height: '65vh',
+      height: '80vh',
       disableClose: false,
       autoFocus: false,
       data: item,
@@ -50,7 +50,7 @@ export class FlowerplantComponent implements OnInit {
 
     dialogRef.afterClosed().pipe(
       switchMap(() => {
-        return this.itemsService.getFlower();
+        return this.itemsService.getAllItems();
       })
     ).subscribe();
   }
@@ -65,8 +65,6 @@ export class FlowerplantComponent implements OnInit {
       data: { id, 'from': 'flowerPlant' }
     });
     dialogRef.beforeClosed();
-    // this.itemsService.deleteItem(id).pipe(
-    //   switchMap(() => this.itemsService.getAllItems())
-    // ).subscribe();
   }
+
 }

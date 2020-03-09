@@ -18,7 +18,7 @@
       <h3>Log out &nbsp;<</h3>
     </button> -->
   </mat-grid-tile>
-  <mat-grid-tile [colspan]="1" [rowspan]="4"></mat-grid-tile>
+  <mat-grid-tile [colspan]="1" [rowspan]="3"></mat-grid-tile>
   <mat-grid-tile [colspan]="2" [rowspan]="1.5">
     <button
       mat-button
@@ -58,7 +58,8 @@
       <h1 style="margin-right: 50%;">Database</h1>
     </mat-grid-tile>
   </div>
-  <mat-grid-tile [colspan]="4" [rowspan]="2">
+
+  <mat-grid-tile [colspan]="4" [rowspan]="1.5">
     <div align="center" style="width: 150%;">
       <button
         mat-button
@@ -75,7 +76,11 @@
         </div>
         <h3>{{ menu.topicname }}</h3>
       </button>
-      <button
+
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="4" [rowspan]="1.5">
+    <button
         mat-button
         *ngIf="role === 'admin'"
         style="margin-left: 2%;"
@@ -96,6 +101,5 @@
         </div>
         <h3>Department Management</h3>
       </button>
-    </div>
   </mat-grid-tile>
 </mat-grid-list>
