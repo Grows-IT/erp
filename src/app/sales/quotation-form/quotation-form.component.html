@@ -10,8 +10,8 @@
 
 <form [formGroup]="quotation" novalidate>
   <mat-grid-list cols="8" rowHeight="40px">
-    <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
-    <mat-grid-tile colspan="4" rowspan="4">
+    <mat-grid-tile colspan="1" rowspan="4"></mat-grid-tile>
+    <mat-grid-tile colspan="3" rowspan="4">
       <mat-form-field appearance="outline">
         <mat-label>Customer Name</mat-label>
         <textarea matInput rows="2" formControlName="customerName" type="text" [matAutocomplete]="auto1"
@@ -23,13 +23,7 @@
         </mat-autocomplete>
       </mat-form-field>
     </mat-grid-tile>
-    <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
-
-  </mat-grid-list>
-
-  <mat-grid-list cols="12" rowHeight="55px">
-    <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
-    <mat-grid-tile colspan="4" rowspan="4">
+    <mat-grid-tile colspan="3" rowspan="4">
       <mat-form-field appearance="outline">
         <mat-label>To (Customer's address)</mat-label>
 
@@ -40,6 +34,13 @@
         </mat-select>
       </mat-form-field>
     </mat-grid-tile>
+    <mat-grid-tile colspan="1" rowspan="4"></mat-grid-tile>
+
+  </mat-grid-list>
+
+  <mat-grid-list cols="12" rowHeight="30px">
+    <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
+
     <mat-grid-tile colspan="4" rowspan="2">
       <mat-form-field appearance="outline">
         <mat-label>Date</mat-label>
@@ -56,7 +57,7 @@
         <mat-datepicker #expirationDate></mat-datepicker>
       </mat-form-field>
     </mat-grid-tile>
-    <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
+    <mat-grid-tile colspan="2" rowspan="2"></mat-grid-tile>
   </mat-grid-list>
   <h1 align="center">Items</h1>
   <div align="center">

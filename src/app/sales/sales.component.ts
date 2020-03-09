@@ -128,7 +128,7 @@ export class SalesComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       panelClass: 'removespace',
       width: '60vw',
-      height: '70vh',
+      height: '80vh',
       disableClose: true,
       autoFocus: false,
     });
@@ -142,7 +142,7 @@ export class SalesComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       panelClass: 'removespace',
       width: '40vw',
-      height: '70vh',
+      height: '80vh',
       disableClose: true,
       autoFocus: false,
       data: item
