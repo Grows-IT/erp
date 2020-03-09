@@ -7,7 +7,7 @@ export class Invoice {
     public sellItemQuantity: string,
     public status: string,
     public email: string,
-    public createdReceiptDate: Date,
+    public createReceiptDate: Date,
   ) { }
 }
 

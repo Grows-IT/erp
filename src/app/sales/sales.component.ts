@@ -50,7 +50,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class SalesComponent implements OnInit, OnDestroy {
   quotations: Quotation[];
   // quotationCol: string[] = ['no', 'customerName', 'date', 'totalPrice', 'status', 'by', 'edit', 'pdf', 'createInvoice', 'delete'];
-  quotationCol: string[] = ['no', 'customerName', 'date', 'email' , 'edit', 'pdf', 'createInvoice', 'delete'];
+  quotationCol: string[] = ['no', 'customerName', 'date', 'email', 'edit', 'pdf', 'createInvoice', 'delete'];
   listItem = [];
   items: Item[];
   date: any;
@@ -188,9 +188,6 @@ export class SalesComponent implements OnInit, OnDestroy {
       autoFocus: false,
       data: { id, invoiceId, 'from': 'quotation' }
     });
-    // this.salesService.deleteQuotation(id, invoiceId).pipe(
-    //   switchMap(() => this.salesService.getQuotation())
-    // ).subscribe();
   }
 
   getListItem(itemId, itemQuantity) {
@@ -231,7 +228,7 @@ export class SalesComponent implements OnInit, OnDestroy {
         }
       ];
       this.total = (<any>this.getQuantity(itemQuantity)[i] * this.getItems(itemId)[i].price),
-      this.listItem.push(product);
+        this.listItem.push(product);
       this.subTotal += this.total;
       // this.listItem = this.item;
       // this.listItem.push(this.item);

@@ -285,21 +285,12 @@ export class SalesService {
   //     );
   // }
 
-  deleteQuotation(id: string, invoiceId: string) {
+  deleteQuotation(id: string, invId: string) {
     const data = {
-      // status: canceled',
-      quotationId: id
+      quotationId: id,
+      invoiceId: invId
     };
     return this.http.patch("http://localhost:3333/deletequotation", data);
-    // if (invoiceId === '') {
-    //   return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data);
-    // } else {
-    //   return this.http.patch(environment.siteUrl + '/quotation/' + id + '.json', data).pipe(
-    //     switchMap(() => {
-    //       return this.http.patch(environment.siteUrl + '/invoices/' + invoiceId + '.json', data);
-    //     })
-    //   );
-    // }
   }
 
   updateQuotation(quotation: any, id: string, sellId: string) {

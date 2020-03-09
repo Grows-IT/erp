@@ -17,7 +17,7 @@ interface InvoiceResData {
   status: string;
   email: string;
   isReceipt: boolean;
-  createdReceiptDate: Date;
+  createReceiptDate: Date;
 }
 
 interface GroupName {
@@ -55,7 +55,6 @@ export class InvoiceService {
     const invoices: Invoice[] = [];
     return this.http.get<any>('http://localhost:3333/invoice').pipe(
       map(res => {
-        // console.log(res);
         for (let i = 0; i < res.length; i++) {
           const invoice = new Invoice(
             res[i].invoiceId,
@@ -65,7 +64,7 @@ export class InvoiceService {
             res[i].sellQuantity,
             res[i].invoiceStatus,
             res[i].creator,
-            res[i].createdReceiptDate,
+            res[i].createReceiptDate,
           );
           invoices.push(invoice);
         }
@@ -78,8 +77,6 @@ export class InvoiceService {
   }
 
   createInvoice(quotation: any) {
-    console.log(quotation);
-
     const data = {
       'quotationId': quotation.quotationId,
       'customerId': quotation.customerId,
@@ -138,10 +135,10 @@ export class InvoiceService {
 
   addReceipt(id) {
     const data = {
-      // isReceipt: true,
-      createdReceiptDate: new Date()
+      invId: id,
+      createReceiptDate: new Date()
     };
-    return this.http.post('http://localhost/addReceipt', data);
+    return this.http.post('http://localhost:3333/addReceipt', data);
     // return this.http.patch(environment.siteUrl + '/invoices/' + id + '.json', data);
   }
 

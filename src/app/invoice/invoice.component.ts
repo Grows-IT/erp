@@ -171,7 +171,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       height: '200px',
       disableClose: true,
       autoFocus: false,
-      data: { invoiceId, quotationId, 'from': 'invoice' }
+      data: { invoiceId, quotationId, from: 'invoice' }
     });
   }
 
