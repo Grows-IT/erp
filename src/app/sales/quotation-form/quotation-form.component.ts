@@ -38,6 +38,7 @@ export class QuotationFormComponent implements OnInit {
   addQ: Subscription;
   address: string;
   shareSubscription: Subscription;
+  quantity: any;
 
   constructor(
     private salesService: SalesService,
@@ -45,8 +46,8 @@ export class QuotationFormComponent implements OnInit {
     private fb: FormBuilder,
     private itemsService: ItemsService,
     private cService: CustomerService,
-    private cdRef: ChangeDetectorRef,
-  ) { }
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.customerSubscription = this.cService.customers.subscribe(customers => {
@@ -126,12 +127,22 @@ export class QuotationFormComponent implements OnInit {
   getMax(i) {
     const allItem = this.quotation.get("allItem").value;
     const it = this.items.find(m => m.name === allItem[i].item);
-    return it.availableQuantity;
-
+    if (it !== undefined) {
+      return it.availableQuantity;
+    }
+    return;
     // return allItem[i].item;
 
     // const length = allItem.length;
     // for(let i)
+  }
+
+  checkMax(max: number,i: number){
+    const allItem = this.quotation.get("allItem").value;
+    if(max < allItem[i].quantity){
+      return max;
+    }
+
   }
 
   // getItems(itemId: string) {

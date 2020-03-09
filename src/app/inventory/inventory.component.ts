@@ -14,7 +14,7 @@ import { InventoryDialogComponent } from './inventory-dialog/inventory-dialog.co
 })
 export class InventoryComponent implements OnInit {
 
-  flowerCol: string[] = ['no', 'name', 'price', 'availableQuantity', 'edit', 'delete'];
+  flowerCol: string[] = ['no', 'type', 'name', 'price', 'availableQuantity', 'edit', 'delete'];
   items: Item[];
   itemSubscription: Subscription;
 

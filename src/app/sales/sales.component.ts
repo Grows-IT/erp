@@ -127,7 +127,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   openQuotation() {
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       panelClass: 'removespace',
-      width: '40vw',
+      width: '60vw',
       height: '70vh',
       disableClose: true,
       autoFocus: false,
