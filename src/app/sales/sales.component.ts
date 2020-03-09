@@ -94,7 +94,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   getItems(itemId: string) {
-    const prod = itemId.split(",");
+    const prod = itemId.split(',');
 
     let items = [];
     for (let i = 0; i < prod.length; i++) {
@@ -109,7 +109,7 @@ export class SalesComponent implements OnInit, OnDestroy {
 
   getQuantity(quantity: string) {
 
-    const cutquan = quantity.split(",");
+    const cutquan = quantity.split(',');
     if (!quantity) {
       return null;
     }
@@ -127,7 +127,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   openQuotation() {
     const dialogRef = this.dialog.open(QuotationDialogComponent, {
       panelClass: 'removespace',
-      width: '60vw',
+      width: '40vw',
       height: '80vh',
       disableClose: true,
       autoFocus: false,
@@ -172,11 +172,13 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   createInvoice(item) {
-    // this.itemsService.getMaxQuantity(item);
     this.invoiceService.createInvoice(item).pipe(
-      // switchMap(() => {
-      //   return this.salesService.getQuotation();
-      // })
+      switchMap((res) => {
+        if (res.err) {
+          alert(res.err);
+        }
+        return this.salesService.getQuotation();
+      })
     ).subscribe();
   }
 
@@ -187,7 +189,7 @@ export class SalesComponent implements OnInit, OnDestroy {
       height: '200px',
       disableClose: true,
       autoFocus: false,
-      data: { id, invoiceId, 'from': 'quotation' }
+      data: { id, invoiceId, from: 'quotation' }
     });
   }
 

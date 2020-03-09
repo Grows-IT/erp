@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Invoice, SellItem, InvoiceGroup, SubInvoice } from './invoice.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { tap, map, switchMap } from 'rxjs/operators';
 import { SharedService } from '../shared/shared.service';
 import { UserService } from '../usersmanagement/user.service';
@@ -92,13 +92,16 @@ export class InvoiceService {
       itemId: quotation.itemId.split(','),
       itemQuantity: quotation.itemQuantity.split(','),
       itemType: 'Flower'
-    }
-    return this.http.post('http://localhost:3333/invoice', { data, check });
-    // .pipe(
-    //   switchMap((inv: any) => {
-    //     return this.http.patch('http://localhost:3333/updateQuotation', { 'invoiceId': inv.insertId, 'quotationId': quotation.quotationId });
-    //   })
-    // );
+    };
+
+    return this.http.post('http://localhost:3333/invoice', { data, check }).pipe(
+      switchMap((inv: any) => {
+        if (inv.err) {
+          return of(inv);
+        }
+        return this.http.patch('http://localhost:3333/updateQuotation', { 'invoiceId': inv.insertId, 'quotationId': quotation.quotationId });
+      })
+    );
   }
 
   deleteInvoice(invoiceId: string, quotationId: string) {
