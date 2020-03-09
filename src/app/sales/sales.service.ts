@@ -39,7 +39,7 @@ interface QuotationCount {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class SalesService {
   email: string;
@@ -140,15 +140,15 @@ export class SalesService {
           JSON.stringify(sellItemsQuantity).replace(/[\[\]']+/g, "")
         );
         const data = {
-          status: "active",
+          status: 'active',
           email: createdEmail,
           customerId: customer.id,
           date: inputs.date,
           expirationDate: inputs.expirationDate,
           items: sellItems,
-          invoiceId: ""
+          invoiceId: ''
         };
-        return this.http.post("http://localhost:3333/quotation", data);
+        return this.http.post('http://localhost:3333/quotation', data);
       })
     );
 
@@ -199,7 +199,7 @@ export class SalesService {
 
   getQuotation() {
     const quotations: Quotation[] = [];
-    return this.http.get<any>("http://localhost:3333/quotation").pipe(
+    return this.http.get<any>('http://localhost:3333/quotation').pipe(
       map(res => {
         for (let i = 0; i < res.length; i++) {
           // console.log(res);
@@ -290,7 +290,7 @@ export class SalesService {
       quotationId: id,
       invoiceId: invId
     };
-    return this.http.patch("http://localhost:3333/deletequotation", data);
+    return this.http.patch('http://localhost:3333/deletequotation', data);
   }
 
   updateQuotation(quotation: any, id: string, sellId: string) {
@@ -323,7 +323,7 @@ export class SalesService {
         };
         // console.log(data);
 
-        return this.http.patch("http://localhost:3333/quotation", data);
+        return this.http.patch('http://localhost:3333/quotation', data);
       })
     );
   }
