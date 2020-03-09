@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { UserService } from "../usersmanagement/user.service";
 import { AuthService } from "../signin/auth.service";
-import { map, tap } from "rxjs/operators";
+import { map, tap, switchMap } from "rxjs/operators";
 import { BehaviorSubject } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 
@@ -39,22 +39,11 @@ export class SharedService {
     return no;
   }
 
-  // getRole() {
-  //   this.getEmail().subscribe(email => this.email = email);
-  //   return this.userService.getUser().pipe(
-  //     map(users => {
-  //       return users.find(user => {
-  //         if (user.email === this.email) {
-  //           console.log(user);
-  //           return user.role;
-  //         }
-  //       });
-  //     }),
-  //     tap(role => {
-  //       this._role.next(role);
-  //     })
-  //   );
-  // }
+  getRole() {
+    return this.getEmail().pipe(
+      switchMap(email => this.http.get('http://localhost:3333/getRole?email=' + email))
+    );
+  }
 
   getEmail() {
     return this.authService.getCurrentEmail();

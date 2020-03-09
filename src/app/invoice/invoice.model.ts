@@ -3,14 +3,11 @@ export class Invoice {
     public id: string,
     public quotationId: string,
     public customerId: string,
-    // public type: string,
-    public items: SellItem[],
-    // public count: number,
+    public sellItemId: string,
+    public sellItemQuantity: string,
     public status: string,
     public email: string,
-    // public isReceipt: boolean,
     public createdReceiptDate: Date,
-    public group?: InvoiceGroup[],
   ) { }
 }
 
@@ -50,8 +47,6 @@ export class SubInvoice {
 
 export class SellItem {
   constructor(
-    // public itemId: string,
-    // public quantity: number
     public itemId: string,
     public quantity: string
   ) { }

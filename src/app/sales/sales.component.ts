@@ -105,11 +105,6 @@ export class SalesComponent implements OnInit, OnDestroy {
       return null;
     }
     return items;
-    // const item = this.items.find(it => it.id === itemId);
-    // if (!item) {
-    //   return null;
-    // }
-    // return item;
   }
 
   getQuantity(quantity: string) {
@@ -259,6 +254,8 @@ export class SalesComponent implements OnInit, OnDestroy {
 
   opnePdf(item: any) {
     this.subTotal = 0;
+    console.log(item);
+
     this.formatDate(new Date(item.date), new Date(item.expirationDate));
     this.getListItem(item.itemId, item.itemQuantity);
     console.log(this.listItem);

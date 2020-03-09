@@ -23,12 +23,6 @@
         </mat-autocomplete>
       </mat-form-field>
     </mat-grid-tile>
-    <!-- <mat-grid-tile colspan="2" rowspan="4">
-      <mat-form-field appearance="outline">
-        <mat-label>By</mat-label>
-        <textarea matInput rows="2" formControlName="by" required></textarea>
-      </mat-form-field>
-    </mat-grid-tile> -->
     <mat-grid-tile colspan="2" rowspan="4"></mat-grid-tile>
 
   </mat-grid-list>
@@ -44,13 +38,6 @@
             {{autoAddress()}}
           </mat-option>
         </mat-select>
-
-        <!-- <textarea matInput rows="8" formControlName="addressTo" type="text" [matAutocomplete]="auto"></textarea>
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option value="{{autoAddress()}}">
-            {{autoAddress()}}
-          </mat-option>
-        </mat-autocomplete> -->
       </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile colspan="4" rowspan="2">
@@ -85,7 +72,6 @@
                   {{item.name}}
                 </mat-option>
               </mat-autocomplete>
-              <!-- <input matInput [formControl]="allItem.get('item')" required> -->
             </mat-form-field>
           </td>
           <td>
@@ -107,7 +93,6 @@
         </button>
       </div>
     </mat-card>
-    <!-- <h3>Total price: </h3> -->
   </div>
 
   <mat-dialog-actions align="center">

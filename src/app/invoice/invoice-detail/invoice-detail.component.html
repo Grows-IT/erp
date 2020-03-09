@@ -1,7 +1,8 @@
 <mat-spinner *ngIf="!dataInvoiceGroup"></mat-spinner>
 <div *ngIf="dataInvoiceGroup">
   <mat-toolbar class="allbg">
-    <span style="color: white;">Invoice : {{decode(dataInvoiceGroup.item.invoiceGroupId)}} ,
+    <span style="color: white;">Invoice :
+      {{decode(dataInvoiceGroup.item.invoiceId) + '' + dataInvoiceGroup.item.invoiceGroupId}} ,
     </span>
     <span style="color: white;"> Group Name : {{dataInvoiceGroup.item.groupName}}</span>
     <span class="space"></span>
@@ -19,10 +20,6 @@
     Address : {{getCustomer(dataInvoiceGroup.invoice.customerId).address}}</h2>
   <button mat-raised-button color="primary" style="margin-bottom: 10px;" (click)="toggleShoing()">Add invoice</button>
   <div>
-    <div align="center">
-      <!-- <button mat-raised-button color="primary" (click)="toggleShoing()" >Add invoice</button> -->
-    </div>
-    <br />
     <mat-card *ngIf="isShowing" style="margin-bottom: 10px;">
       <div [formGroup]="addForm">
         <mat-form-field appearance="outline">
@@ -40,10 +37,9 @@
                     <mat-label>Name : </mat-label>
                     <input matInput [formControl]="row.get('name')" [matAutocomplete]="autoName" required>
                     <mat-autocomplete #autoName="matAutocomplete">
-                      <mat-option *ngFor="let item of dataInvoiceGroup.invoice.items" [value]="getItems(item).name"
-                      {{item}}
+                      <mat-option *ngFor="let item of listSellItems" [value]="item.name"
                         (click)="getMaxQuantity(item, i)" name="item.itemId">
-                        <span>{{getItems(item).name}}</span>
+                        <span>{{item.name}}</span>
                       </mat-option>
                     </mat-autocomplete>
                   </mat-form-field>
@@ -72,122 +68,116 @@
         <button mat-raised-button class="btn" color="warn" (click)="toggleShoing()">cancel</button>
       </div>
     </mat-card>
-    {{dataInvoiceGroup|json}}
     <br />
-    <!-- invoices[dataInvoiceGroup.index] -->
-    <div *ngFor="let subInv of dataInvoiceGroup.invoice.group; let i = index">
-      <div *ngIf="dataInvoiceGroup.index === i">
-        <span *ngFor="let list of subInv.subInvoices; let j = index">
-          <!-- <div *ngIf="list.status === 'active'"> -->
-          <!-- {{list|json}} -->
-          <h4>Invoice Name : {{list.name}} ,
-            Invoice NO : {{list.subInvoiceId}},
-            <span *ngIf="list.status === 'active'">
-              PDF : <button mat-button (click)="openPdf(list, dataInvoiceGroup.index, j)">
+    <mat-spinner *ngIf="!listSubInvoiceItems"></mat-spinner>
+    <div *ngIf="listSubInvoiceItems">
+      <div *ngFor="let item of listSubInvoiceItems; let i = index">
+        <h4>Invoice Name : {{listSubInvoice[i].subInvoiceName}} ,
+          Invoice NO : {{decode(dataInvoiceGroup.item.invoiceId) + dataInvoiceGroup.item.invoiceGroupId + listSubInvoice[i].subInvoicesId}},
+          <span *ngIf="listSubInvoice">
+            <span *ngIf="listSubInvoice[i].subInvoiceStatus === 'active'">
+              PDF : <button mat-button
+                (click)="openPdf(item, dataInvoiceGroup.item.invoiceGroupId, listSubInvoice[i].subInvoicesId)">
                 <img src="/assets/icons/pdfbw.svg">
               </button>
             </span>
-            <span *ngIf="list.status !== 'active'" style="color: red;">Cancel</span>
-          </h4>
+          </span>
+          <span *ngIf="listSubInvoice[i].subInvoiceStatus !== 'active'" style="color: red;">Cancel</span>
+        </h4>
 
-          <!-- table status active -->
+        <!-- table status active -->
 
-          <table *ngIf="list.sellItems&&list.status === 'active'" mat-table [dataSource]="list.sellItems"
-            multiTemplateDataRows class="mat-elevation-z8">
-            <ng-container matColumnDef="item">
-              <th mat-header-cell *matHeaderCellDef> Item </th>
-              <td mat-cell *matCellDef="let element">{{getItems(element).name}} </td>
-            </ng-container>
+        <table *ngIf="item&&listSubInvoice[i].subInvoiceStatus === 'active'" mat-table [dataSource]="item"
+          multiTemplateDataRows class="mat-elevation-z8">
+          <ng-container matColumnDef="item">
+            <th mat-header-cell *matHeaderCellDef> Item </th>
+            <td mat-cell *matCellDef="let element">{{element.name}} </td>
+          </ng-container>
 
-            <ng-container matColumnDef="quantity">
-              <th mat-header-cell *matHeaderCellDef> Quantity </th>
-              <td mat-cell *matCellDef="let element"><span
-                  *ngIf="element">{{(element.quantity).toLocaleString()}}</span></td>
-            </ng-container>
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+            <td mat-cell *matCellDef="let element"><span *ngIf="element">{{element.quantity}}</span>
+            </td>
+          </ng-container>
 
-            <ng-container matColumnDef="totalPrice">
-              <th mat-header-cell *matHeaderCellDef> Total price </th>
-              <td mat-cell *matCellDef="let element">
-                <!-- {{getTotal((getItems(element).price * element.quantity), j)}} -->
-                {{(getItems(element).price * element.quantity).toLocaleString()}} </td>
-            </ng-container>
+          <ng-container matColumnDef="totalPrice">
+            <th mat-header-cell *matHeaderCellDef> Total price </th>
+            <td mat-cell *matCellDef="let element">
+              {{(element.price * element.quantity).toLocaleString()}} </td>
+          </ng-container>
 
-            <ng-container matColumnDef="more">
-              <th mat-header-cell *matHeaderCellDef>
-                <button mat-icon-button [matMenuTriggerFor]="more" aria-label="" style="float: right;">
-                  <mat-icon>more_vert</mat-icon>
-                </button>
-                <mat-menu #more>
-                  <button mat-menu-item (click)="deleteTableSubInvoice(dataInvoiceGroup.invoice.id, i, j)">Delete
-                    Table</button>
-                </mat-menu>
-              </th>
-              <td mat-cell *matCellDef="let element">
-              </td>
-            </ng-container>
+          <ng-container matColumnDef="more">
+            <th mat-header-cell *matHeaderCellDef>
+              <button mat-icon-button [matMenuTriggerFor]="more" aria-label="" style="float: right;">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #more>
+                <button mat-menu-item (click)="deleteTableSubInvoice(listSubInvoice[i].subInvoicesId)">Delete Table</button>
+              </mat-menu>
+            </th>
+            <td mat-cell *matCellDef="let element">
+            </td>
+          </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="invoiceCol"></tr>
-            <tr mat-row *matRowDef="let row; columns: invoiceCol" class="detail-row"></tr>
-          </table>
+          <tr mat-header-row *matHeaderRowDef="invoiceCol"></tr>
+          <tr mat-row *matRowDef="let row; columns: invoiceCol" class="detail-row"></tr>
+        </table>
 
-          <!-- end table status active -->
+        <!-- end table status active -->
 
+        <!-- table status cancel -->
 
-          <!-- table status cancel -->
+        <table *ngIf="item&&listSubInvoice[i].subInvoiceStatus !== 'active'" mat-table [dataSource]="item"
+          multiTemplateDataRows class="mat-elevation-z8">
+          <ng-container matColumnDef="item">
+            <th mat-header-cell *matHeaderCellDef> Item </th>
+            <td mat-cell *matCellDef="let element" class="disabled">{{element.name}} </td>
+          </ng-container>
 
-          <table *ngIf="list.sellItems&&list.status !== 'active'" mat-table [dataSource]="list.sellItems"
-            multiTemplateDataRows class="mat-elevation-z8">
-            <ng-container matColumnDef="item">
-              <th mat-header-cell *matHeaderCellDef> Item </th>
-              <td mat-cell *matCellDef="let element" class="disabled">{{getItems(element).name}} </td>
-            </ng-container>
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+            <td mat-cell *matCellDef="let element" class="disabled"><span *ngIf="element">{{element.quantity}}</span></td>
+          </ng-container>
 
-            <ng-container matColumnDef="quantity">
-              <th mat-header-cell *matHeaderCellDef> Quantity </th>
-              <td mat-cell *matCellDef="let element" class="disabled"><span
-                  *ngIf="element">{{(element.quantity).toLocaleString()}}</span></td>
-            </ng-container>
+          <ng-container matColumnDef="totalPrice">
+            <th mat-header-cell *matHeaderCellDef> Total price </th>
+            <td mat-cell *matCellDef="let element" class="disabled">
+              {{(element.price * element.quantity).toLocaleString()}} </td>
+          </ng-container>
 
-            <ng-container matColumnDef="totalPrice">
-              <th mat-header-cell *matHeaderCellDef> Total price </th>
-              <td mat-cell *matCellDef="let element" class="disabled">
-                {{(getItems(element).price * element.quantity).toLocaleString()}} </td>
-            </ng-container>
+          <ng-container matColumnDef="more">
+            <th mat-header-cell *matHeaderCellDef>
+              <button mat-icon-button [matMenuTriggerFor]="more" aria-label="" style="float: right;" disabled>
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #more>
+                <button mat-menu-item (click)="deleteTableSubInvoice(listSubInvoice[i].subInvoicesId)"
+                class="disabled">Delete Table</button>
+              </mat-menu>
+            </th>
+            <td mat-cell *matCellDef="let element">
+            </td>
+          </ng-container>
 
-            <ng-container matColumnDef="more">
-              <th mat-header-cell *matHeaderCellDef>
-                <button mat-icon-button [matMenuTriggerFor]="more" aria-label="" style="float: right;" disabled>
-                  <mat-icon>more_vert</mat-icon>
-                </button>
-                <mat-menu #more>
-                  <button mat-menu-item (click)="deleteTableSubInvoice(dataInvoiceGroup.invoice.id, i, j)"
-                    class="disabled">Delete
-                    Table</button>
-                </mat-menu>
-              </th>
-              <td mat-cell *matCellDef="let element">
-              </td>
-            </ng-container>
+          <tr mat-header-row *matHeaderRowDef="invoiceCol"></tr>
+          <tr mat-row *matRowDef="let row; columns: invoiceCol" class="detail-row"></tr>
+        </table>
 
-            <tr mat-header-row *matHeaderRowDef="invoiceCol"></tr>
-            <tr mat-row *matRowDef="let row; columns: invoiceCol" class="detail-row"></tr>
-          </table>
+        <!-- end table status cancel -->
 
-          <!-- end table status cancel -->
+        <!-- check total status -->
 
-          <!-- check total status -->
+        <p align="right" *ngIf="tableTotal[i]">
+          <b *ngIf="listSubInvoice[i].subInvoiceStatus === 'active'">Total {{tableTotal[i].toLocaleString()}} + tax 7% =
+            {{((tableTotal[i] * 7)/100 + tableTotal[i]).toLocaleString()}}</b>
 
-          <p align="right" *ngIf="tableTotal[j]">
-            <b *ngIf="list.status === 'active'">Total {{tableTotal[j].toLocaleString()}} + tax 7% =
-              {{((tableTotal[j] * 7)/100 + tableTotal[j]).toLocaleString()}}</b>
+          <b *ngIf="listSubInvoice[i].subInvoiceStatus !== 'active'" class="disabled">Total
+            {{tableTotal[i].toLocaleString()}} + tax 7% =
+            {{((tableTotal[i] * 7)/100 + tableTotal[i]).toLocaleString()}}</b>
+        </p>
 
-            <b *ngIf="list.status !== 'active'" class="disabled">Total {{tableTotal[j].toLocaleString()}} + tax 7% =
-              {{((tableTotal[j] * 7)/100 + tableTotal[j]).toLocaleString()}}</b>
-          </p>
+        <!-- end total check status -->
 
-          <!-- end total check status -->
-
-        </span>
       </div>
     </div>
     <button mat-raised-button mat-dialog-close tabindex="-1" style="margin-bottom: 20px;" color="warn">cancel</button>

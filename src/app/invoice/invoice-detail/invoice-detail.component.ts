@@ -22,14 +22,13 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   styleUrls: ['./invoice-detail.component.scss']
 })
 export class InvoiceDetailComponent implements OnInit, OnDestroy {
-  expandedElement;
   invoiceCol: string[] = ['item', 'quantity', 'totalPrice', 'more'];
   invoiceSubscription: Subscription;
   customerSubscription: Subscription;
   quotationSubscription: Subscription;
   customers: Customer[];
   invoices: Invoice[];
-  mainInvoices: any;
+  invoice: Invoice;
   addForm: FormGroup;
   rows: FormArray;
   isShowing: boolean;
@@ -38,14 +37,15 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   subTotal: number;
   quotations: Quotation[];
   listItem = [];
-  date: any;
-  expirationDate: any;
   tableTotal = [];
   maxQuantityList = [];
-  quantityValue = [];
   _quantity = [];
-  // this.data is id
+  listSellItems;
   items: Item[];
+  listSubInvoice;
+  listSubInvoiceItems = [];
+
+  // this.data is id
   dataInvoiceGroup = this.data;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private cService: CustomerService, private sharedService: SharedService,
@@ -73,17 +73,25 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
       if (!invoices === null) {
         return;
       }
+
       this.invoices = invoices;
+      this.invoice = invoices.find(i => i.id === this.data.invoice.id);
     });
 
     this.itemsService.items.subscribe(items => {
       this.items = items;
     });
 
+    console.log(this.dataInvoiceGroup);
+
+
     this.cService.getAllCustomer().subscribe();
     this.invoiceService.getAllInvoice().subscribe();
     this.itemsService.getAllItems().subscribe();
-    this.getTotal(this.dataInvoiceGroup);
+    this.invoiceService.getListItem(this.dataInvoiceGroup.item.invoiceId).subscribe(res => {
+      this.listSellItems = this.getItems(res[0].itemId, res[0].sellQuantity);
+    });
+    this.getSubInvoice();
   }
 
   ngOnDestroy(): void {
@@ -92,13 +100,58 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     this.invoiceSubscription.unsubscribe();
   }
 
-  getItems(item: SellItem) {
-    const product = this.items.find(pro => pro.id === item.itemId);
-    if (!product) {
+  getSubInvoice() {
+    this.invoiceService.getSubInvoice(this.dataInvoiceGroup.item.invoiceGroupId).subscribe(res => {
+      const listSubInvoiceItems = [];
+      this.listSubInvoice = res;
+      for (let i = 0; i < this.listSubInvoice.length; i++) {
+        listSubInvoiceItems.push(JSON.parse(this.listSubInvoice[i].sellItems));
+      }
+      this.getItemsByJson(listSubInvoiceItems);
+    });
+  }
+
+  getItems(itemId: string, sellQuantity: string) {
+    const prod = itemId.split(',');
+    const prod2 = sellQuantity.split(',');
+    const items = [];
+    for (let i = 0; i < prod.length; i++) {
+      const product2 = this.items.find(pro2 => pro2.id == prod[i]);
+      console.log(product2);
+      const item = {
+        itemId: product2.id,
+        name: product2.name,
+        price: product2.price,
+        availableQuantity: product2.availableQuantity,
+        sellQuantity: prod2[i]
+      };
+      items.push(item);
+    }
+    if (!itemId) {
       return null;
     }
+    return items;
+  }
 
-    return product;
+  getItemsByJson(items) {
+    let data = [];
+    for (let i = 0; i < items.length; i++) {
+      data = [];
+      for (let j = 0; j < items[i].length; j++) {
+        const itemDetail = this.items.find(item => item.id == items[i][j].itemId);
+        data.push({
+          name: itemDetail.name,
+          price: itemDetail.price,
+          quantity: items[i][j].quantity,
+        });
+
+        if (j === items[i].length - 1) {
+          this.listSubInvoiceItems.push(data);
+        }
+      }
+    }
+    this.getTotal(this.listSubInvoiceItems);
+    return this.listSubInvoiceItems;
   }
 
   getCustomerName(customerId: string) {
@@ -158,6 +211,9 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   onAddRow() {
+    // console.log(this.rows);
+
+    // this.invoiceService.getListItem(this.invoice).subscribe(res => console.log(res));
     this.rows.push(this.createItemFormGroup());
   }
 
@@ -165,25 +221,21 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     if (!this.maxQuantityList[index]) {
       this.maxQuantityList[index] = 0;
     }
-    this.maxQuantityList[index] = item.quantity;
+    this.maxQuantityList[index] = item.sellQuantity;
   }
 
   getTotal(data) {
-    // for (let i = 0; data.invoice.group[data.index].subInvoices.length > i; i++) {
-    //   for (let j = 0; j < data.invoice.group[data.index].subInvoices[i].sellItems.length; j++) {
-    //     if (!this.tableTotal[i]) {
-    //       this.tableTotal[i] = 0;
-    //     }
-    //     const item = this.getItems(data.invoice.group[data.index].subInvoices[i].sellItems[j]);
-    //     this.tableTotal[i] += item.price * data.invoice.group[data.index].subInvoices[i].sellItems[j].quantity;
-    //   }
-    // }
+    for (let i = 0; i < data.length; i++) {
+      this.tableTotal[i] = 0;
+      for (let j = 0; j < data[i].length; j++) {
+        this.tableTotal[i] += data[i][j].price * data[i][j].quantity;
+      }
+    }
   }
 
-  deleteTableSubInvoice(id, i, j) {
-    this.dataInvoiceGroup.invoice.group[i].subInvoices[j].status = 'cancel';
-    this.invoiceService.deleteTableSubInvoice(id, this.dataInvoiceGroup.invoice).pipe(
-      tap(() => this.invoiceService.getAllInvoice())
+  deleteTableSubInvoice(subInvoicesId) {
+    this.invoiceService.deleteTableSubInvoice(subInvoicesId).pipe(
+      map(() => this.getSubInvoice())
     ).subscribe();
   }
 
@@ -216,28 +268,15 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
       name: this.addForm.value.name,
       sellItem: this.rows.value
     };
-    console.log(data);
-
-    const invoiceId = this.decode(this.dataInvoiceGroup.invoice.id, this.dataInvoiceGroup.invoice.count);
     const sellItems: SellItem[] = data.sellItem.map(val => new SellItem(this.getItemsToId(val.name).id, val.quantity));
 
-    // this.invoiceService.updateCountSubInvoice().pipe(
-    //   tap(subInvoiceCount => {
-    //     this.dataInvoiceGroup.invoice.group[this.dataInvoiceGroup.index].subInvoices.push(
-    //       new SubInvoice(invoiceId + '' + subInvoiceCount.count, data.name, sellItems, 'active')
-    //     );
-    //   }),
-    //   switchMap(() => {
-    //     return this.invoiceService.updateInvoice(this.dataInvoiceGroup.invoice);
-    //   }),
-    //   tap(() => this.invoiceService.getAllInvoice()),
-    //   tap(() => this.getTotal(this.dataInvoiceGroup)),
-    // ).subscribe();
-
+    this.invoiceService.addSubInvoice(JSON.stringify(sellItems), data.name, this.dataInvoiceGroup.item.invoiceGroupId).pipe(
+      map(() => this.getSubInvoice())
+    ).subscribe();
     this.toggleShoing();
   }
 
-  decode(id, count) {
+  decode(id) {
     return this.sharedService.decode(id, 'I');
   }
 
@@ -273,13 +312,17 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   getListItem(items) {
+    console.log(items);
+    console.log(this.getItemsByJson(items));
+
+
     this.total = 0;
     this.listItem = [];
     for (let i = 0; i < items.length; i++) {
       const product = [
         [
           {
-            text: this.getItems(items[i]).name,
+            text: items[i].name,
             style: 'itemTitle'
           },
           {
@@ -292,7 +335,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
           style: 'itemNumber'
         },
         {
-          text: this.getItems(items[i]).price.toLocaleString(),
+          text: items[i].price,
           style: 'itemNumber'
         },
         {
@@ -304,20 +347,22 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
           style: 'itemNumber'
         },
         {
-          text: (items[i].quantity * this.getItems(items[i]).price).toLocaleString(),
+          text: items[i].quantity * items[i].price,
           style: 'itemTotal'
         }
       ];
-      this.total = (items[i].quantity * this.getItems(items[i]).price);
+      this.total = (items[i].quantity * items[i].price);
       this.listItem.push(product);
       this.subTotal += this.total;
     }
   }
 
-  openPdf(item: any, groupIndex: number, subInvoiceIndex: number) {
+  openPdf(item: any, invoiceGroupId: number, subInvoicesId: number) {
     this.subTotal = 0;
-    this.getListItem(item.sellItems);
-    console.log(this.dataInvoiceGroup.invoice.group[groupIndex].subInvoices[subInvoiceIndex].subInvoiceId);
+    this.getListItem(item);
+    console.log(item);
+    console.log(invoiceGroupId);
+    console.log(subInvoicesId);
 
 
     const documentDefinition = {
@@ -360,7 +405,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
 
                       },
                       {
-                        text: this.dataInvoiceGroup.invoice.group[groupIndex].subInvoices[subInvoiceIndex].subInvoiceId,
+                        text: this.decode(this.dataInvoiceGroup.item.invoiceId) + invoiceGroupId + subInvoicesId,
                         style: 'invoiceSubValue',
                         width: 100
 
