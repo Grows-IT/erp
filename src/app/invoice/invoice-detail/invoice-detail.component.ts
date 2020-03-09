@@ -312,9 +312,8 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   getListItem(items) {
-    console.log(items);
-    console.log(this.getItemsByJson(items));
-
+    // console.log(items);
+    // console.log(this.getItemsByJson(items));
 
     this.total = 0;
     this.listItem = [];
@@ -360,10 +359,9 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   openPdf(item: any, invoiceGroupId: number, subInvoicesId: number) {
     this.subTotal = 0;
     this.getListItem(item);
-    console.log(item);
-    console.log(invoiceGroupId);
-    console.log(subInvoicesId);
-
+    // console.log(item);
+    // console.log(invoiceGroupId);
+    // console.log(subInvoicesId);
 
     const documentDefinition = {
       // header: {

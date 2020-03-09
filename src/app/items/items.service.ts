@@ -92,8 +92,7 @@ export class ItemsService {
   }
 
   updateFlower(item: any, id: string) {
-    let data;
-    data = {
+    const data = {
       name: item.name,
       price: item.price,
       availableQuantity: item.quantity,
@@ -105,8 +104,7 @@ export class ItemsService {
   }
 
   updateItem(item: any, id: string) {
-    let data;
-    data = {
+    const data = {
       name: item.name,
       price: item.price,
       availableQuantity: item.quantity,
@@ -120,12 +118,32 @@ export class ItemsService {
   }
 
   deleteItem(id: string) {
-    let data;
-    data = {
+    const data = {
       itemId: id
     };
     console.log(data);
     return this.http.post('http://localhost:3333/deleteitem/', data);
     // return this.http.delete(environment.siteUrl + '/items/' + id + '.json');
   }
+
+  // getMaxQuantity(item) {
+  //   console.log(item);
+
+  //   const prodId = item.itemId.split(',');
+  //   const prodQuantity = item.itemQuantity.split(',');
+
+  //   // console.log(prod);
+
+  //   this.getFlower().pipe(
+  //     map(items => {
+  //       items.forEach((e, i) => {
+  //         if (prodId[i] == e.id) {
+  //           console.log(e);
+  //           console.log(prodQuantity[i]);
+
+  //         }
+  //       });
+  //     })
+  //   ).subscribe();
+  // }
 }

@@ -9,11 +9,7 @@
       <img src="/assets/icons/pdf-file.svg" style="width: 25px;" />
     </button>
     <button mat-button *ngIf="quotation.invoiceId">
-      <img
-        src="/assets/icons/invoicewhite.svg"
-        style="width: 25px;"
-        (click)="invoiceDetail(quotation.invoiceId)"
-      />
+      <img src="/assets/icons/invoicewhite.svg" style="width: 25px;" (click)="invoiceDetail(quotation.invoiceId)" />
     </button>
 
     <button mat-button (click)="delete(data,quotation.invoiceId)" style="background-color: red;">
@@ -87,11 +83,7 @@
     </h4>
   </div>
   <div class="showhidebutton">
-    <button
-      mat-raised-button
-      (click)="showItem()"
-      style="background-color: darkcyan; color: white; "
-    >
+    <button mat-raised-button (click)="showItem()" style="background-color: darkcyan; color: white; ">
       Show/Hide Items
     </button>
   </div>
@@ -112,7 +104,7 @@
       <mat-spinner *ngIf="!quotation"></mat-spinner>
     </div>
     <div *ngIf="quotation">
-      <div *ngFor = "let itemm of getAll(quotation.itemId, quotation.itemQuantity);let i = index">
+      <div *ngFor="let itemm of getAll(quotation.itemId, quotation.itemQuantity);let i = index">
         <mat-grid-list cols="6" rowHeight="30px">
           <mat-grid-tile colspan="3" rowspan="2">
             <h4 style="color: darkcyan; display: inline-block;">
@@ -122,8 +114,8 @@
           <mat-grid-tile colspan="3" rowspan="2">
             <h4 style="color: darkcyan; display: inline-block;">
               {{ itemm.quantity }}
-            </h4></mat-grid-tile
-          >
+            </h4>
+          </mat-grid-tile>
         </mat-grid-list>
       </div>
     </div>
