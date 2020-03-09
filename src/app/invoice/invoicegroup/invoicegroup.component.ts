@@ -64,8 +64,6 @@ export class InvoicegroupComponent implements OnInit {
   }
 
   onClickOpenDetail(invoice) {
-    // console.log(invoice);
-    // console.log(item);
 
     const dialogRef = this.dialog.open(InvoiceDetailComponent, {
       panelClass: 'nopadding-dialog',
