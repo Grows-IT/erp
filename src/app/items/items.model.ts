@@ -3,7 +3,8 @@ export class Item {
     public id: string,
     public name: string,
     public price: number,
-    public availableQuantity: number
+    public availableQuantity: number,
+    public itemType: string
   ) { }
 }
 

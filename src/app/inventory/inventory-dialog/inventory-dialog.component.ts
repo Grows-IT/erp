@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from "@angular/core";
+import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { Subscription } from "rxjs";
 import { ItemsService } from "src/app/items/items.service";
@@ -7,11 +7,12 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: "app-flowerplantdialog",
-  templateUrl: "./flowerplantdialog.component.html",
-  styleUrls: ["./flowerplantdialog.component.scss"]
+  selector: 'app-inventory-dialog',
+  templateUrl: './inventory-dialog.component.html',
+  styleUrls: ['./inventory-dialog.component.scss']
 })
-export class FlowerplantdialogComponent implements OnInit {
+export class InventoryDialogComponent implements OnInit {
+
   items: Item[];
   itemSubscription: Subscription;
   item: FormGroup;
@@ -21,23 +22,25 @@ export class FlowerplantdialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private itemsService: ItemsService,
-    public dialogRef: MatDialogRef<FlowerplantdialogComponent>
+    public dialogRef: MatDialogRef<InventoryDialogComponent>
   ) {}
 
   ngOnInit() {
     this.itemSubscription = this.itemsService.items.subscribe(items => {
       this.items = items;
     });
-    this.itemsService.getFlower().subscribe();
+    this.itemsService.getAllItems().subscribe();
 
     if (this.data !== null && this.data !== undefined) {
       this.item = this.fb.group({
+        type: [this.data.itemType, [Validators.required]],
         name: [this.data.name, [Validators.required]],
         price: [this.data.price, [Validators.required]],
         quantity: [this.data.availableQuantity, [Validators.required]]
       });
     } else {
       this.item = this.fb.group({
+        type: ['', [Validators.required]],
         name: ['', [Validators.required]],
         price: ['', [Validators.required]],
         quantity: ['', [Validators.required]]
@@ -52,12 +55,12 @@ export class FlowerplantdialogComponent implements OnInit {
   onConfirmClick(status) {
     if (status === 0) {
       console.log(this.items.values);
-      this.itemsService.addFlower(this.item.value).pipe(
-        switchMap(() => this.itemsService.getFlower())
+      this.itemsService.addItem(this.item.value).pipe(
+        switchMap(() => this.itemsService.getAllItems())
       ).subscribe();
     } else if (status === 1) {
-      this.itemsService.updateFlower(this.item.value, this.data.id).pipe(
-        switchMap(() => this.itemsService.getFlower())
+      this.itemsService.updateItem(this.item.value, this.data.id).pipe(
+        switchMap(() => this.itemsService.getAllItems())
       ).subscribe();
       console.log(this.item.value);
       console.log(this.data.id);
@@ -67,4 +70,5 @@ export class FlowerplantdialogComponent implements OnInit {
     }
     this.dialogRef.close();
   }
+
 }
