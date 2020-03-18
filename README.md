@@ -19,6 +19,10 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 Run `ng serve --host 0.0.0.0 --port 4200` 
 Run background `ng serve --host 0.0.0.0 --port 4200&`
 
+  If website show error "invalid host header"
+
+  Run `ng serve --host 0.0.0.0 --port 4200 --disable-host-check`
+
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
