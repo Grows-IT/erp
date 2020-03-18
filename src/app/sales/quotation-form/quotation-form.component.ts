@@ -1,18 +1,18 @@
-import { Component, OnInit } from "@angular/core";
-import { FormGroup, Validators, FormArray, FormBuilder } from "@angular/forms";
-import { SalesService } from "../sales.service";
-import { QuotationDialogComponent } from "../quotation-dialog/quotation-dialog.component";
-import { MatDialogRef } from "@angular/material";
-import { ItemsService } from "src/app/items/items.service";
-import { Item } from "src/app/items/items.model";
-import { CustomerService } from "src/app/customer/customer.service";
-import { Customer } from "src/app/customer/customer.model";
-import { Subscription, Observable } from "rxjs";
-import { switchMap, startWith, map } from "rxjs/operators";
-import { UserService } from "src/app/usersmanagement/user.service";
-import { AuthService } from "src/app/signin/auth.service";
-import { ChangeDetectorRef } from "@angular/core";
-import { SharedService } from "src/app/shared/shared.service";
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, Validators, FormArray, FormBuilder } from '@angular/forms';
+import { SalesService } from '../sales.service';
+import { QuotationDialogComponent } from '../quotation-dialog/quotation-dialog.component';
+import { MatDialogRef } from '@angular/material';
+import { ItemsService } from 'src/app/items/items.service';
+import { Item } from 'src/app/items/items.model';
+import { CustomerService } from 'src/app/customer/customer.service';
+import { Customer } from 'src/app/customer/customer.model';
+import { Subscription, Observable } from 'rxjs';
+import { switchMap, startWith, map } from 'rxjs/operators';
+import { UserService } from 'src/app/usersmanagement/user.service';
+import { AuthService } from 'src/app/signin/auth.service';
+import { ChangeDetectorRef } from '@angular/core';
+import { SharedService } from 'src/app/shared/shared.service';
 
 interface SellItemsResData {
   sellItemId: string;
@@ -21,9 +21,9 @@ interface SellItemsResData {
 }
 
 @Component({
-  selector: "app-quotation-form",
-  templateUrl: "./quotation-form.component.html",
-  styleUrls: ["./quotation-form.component.scss"]
+  selector: 'app-quotation-form',
+  templateUrl: './quotation-form.component.html',
+  styleUrls: ['./quotation-form.component.scss']
 })
 export class QuotationFormComponent implements OnInit {
   customerSubscription: Subscription;
@@ -77,20 +77,20 @@ export class QuotationFormComponent implements OnInit {
       });
 
       for (let i = 0; i < this.getItems().length; i++) {
-        const control = <FormArray>this.quotation.controls["allItem"];
+        const control = <FormArray>this.quotation.controls['allItem'];
         control.push(this.viewItemFormGroup(i));
       }
     } else {
       this.quotation = this.fb.group({
-        customerName: ["", [Validators.required]],
-        addressTo: ["", [Validators.required]],
-        date: ["", [Validators.required]],
-        expirationDate: ["", [Validators.required]],
+        customerName: ['', [Validators.required]],
+        addressTo: ['', [Validators.required]],
+        date: ['', [Validators.required]],
+        expirationDate: ['', [Validators.required]],
         allItem: this.fb.array([this.createItemFormGroup()])
       });
     }
-    this.filteredOptions = this.quotation.get("customerName").valueChanges.pipe(
-      startWith(""),
+    this.filteredOptions = this.quotation.get('customerName').valueChanges.pipe(
+      startWith(''),
       map(val => this.filter(val))
     );
   }
@@ -108,7 +108,7 @@ export class QuotationFormComponent implements OnInit {
   }
 
   autoAddress() {
-    const cusNames = this.quotation.get("customerName").value;
+    const cusNames = this.quotation.get('customerName').value;
     const findCus = this.customers.find(cus => cus.name === cusNames);
     if (!findCus) {
       return null;
@@ -125,7 +125,7 @@ export class QuotationFormComponent implements OnInit {
   }
 
   getMax(i) {
-    const allItem = this.quotation.get("allItem").value;
+    const allItem = this.quotation.get('allItem').value;
     const it = this.items.find(m => m.name === allItem[i].item);
     if (it !== undefined) {
       return it.availableQuantity;
@@ -138,7 +138,7 @@ export class QuotationFormComponent implements OnInit {
   }
 
   checkMax(max: number,i: number){
-    const allItem = this.quotation.get("allItem").value;
+    const allItem = this.quotation.get('allItem').value;
     if(max < allItem[i].quantity){
       return max;
     }
@@ -156,7 +156,7 @@ export class QuotationFormComponent implements OnInit {
   getItems() {
     this.data = this.dialogRef.componentInstance.data;
 
-    const prod = this.data.itemId.split(",");
+    const prod = this.data.itemId.split(',');
 
     let items = [];
     for (let i = 0; i < prod.length; i++) {
@@ -172,7 +172,7 @@ export class QuotationFormComponent implements OnInit {
 
   getQuantity() {
     this.data = this.dialogRef.componentInstance.data;
-    const cutquan = this.data.itemQuantity.split(",");
+    const cutquan = this.data.itemQuantity.split(',');
     if (!this.data.itemQuantity) {
       return null;
     }
@@ -191,8 +191,8 @@ export class QuotationFormComponent implements OnInit {
 
   private createItemFormGroup() {
     return this.fb.group({
-      item: ["", [Validators.required]],
-      quantity: ["", [Validators.required]]
+      item: ['', [Validators.required]],
+      quantity: ['', [Validators.required]]
     });
   }
 
@@ -201,12 +201,12 @@ export class QuotationFormComponent implements OnInit {
   }
 
   onAddRow() {
-    const control = <FormArray>this.quotation.controls["allItem"];
+    const control = <FormArray>this.quotation.controls['allItem'];
     control.push(this.createItemFormGroup());
   }
 
   removeUnit(i: number) {
-    const control = <FormArray>this.quotation.controls["allItem"];
+    const control = <FormArray>this.quotation.controls['allItem'];
     control.removeAt(i);
   }
 
