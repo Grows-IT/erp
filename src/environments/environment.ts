@@ -3,6 +3,7 @@ const authLoginUtl = 'https://identitytoolkit.googleapis.com/v1/accounts:signInW
 const authSignUpUtl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
 const deleteAccount = 'https://identitytoolkit.googleapis.com/v1/accounts:delete?key=';
 const erpUrl = 'http://ec2-13-250-42-93.ap-southeast-1.compute.amazonaws.com:3333';
+// const erpUrl = 'http://localhost:3333';
 
 export const environment = {
   production: false,

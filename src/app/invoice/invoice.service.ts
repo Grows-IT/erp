@@ -46,14 +46,16 @@ export class InvoiceService {
   }
 
   constructor(private http: HttpClient, private userService: UserService, private sharedService: SharedService, private authService: AuthService) {
-    this.sharedService.getEmail().subscribe(email => {
-      this.email = email;
-    });
+    this.sharedService.getEmail().subscribe(email => (this.email = email));
   }
 
   getAllInvoice() {
     const invoices: Invoice[] = [];
-    return this.http.get<any>(environment.erpUrl + '/invoice').pipe(
+    return this.sharedService.getRole().pipe(
+      switchMap(role => {
+        this.role = role[0].role;
+        return this.http.get<any>(environment.erpUrl + '/invoice');
+      }),
       map(res => {
         for (let i = 0; i < res.length; i++) {
           const invoice = new Invoice(
@@ -66,7 +68,11 @@ export class InvoiceService {
             res[i].creator,
             res[i].createReceiptDate,
           );
-          invoices.push(invoice);
+          // console.log(res[i].creator);
+          // console.log(this.email);
+          if (this.role === 'admin' || (this.email === res[i].creator && this.role === 'user')) {
+            invoices.push(invoice);
+          }
         }
         return invoices;
       }),

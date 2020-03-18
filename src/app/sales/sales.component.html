@@ -46,7 +46,8 @@
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef> Delete </th>
     <td mat-cell *matCellDef="let element">
-      <button mat-button (click)="delete(element.quotationId, element.invoiceId)" [disabled]="element.status != 'active'">
+      <button mat-button (click)="delete(element.quotationId, element.invoiceId)"
+        [disabled]="element.status != 'active'">
         <i class="material-icons"> delete </i>
       </button>
     </td>
@@ -79,7 +80,8 @@
     <th mat-header-cell *matHeaderCellDef> Create Invoice </th>
     <td mat-cell *matCellDef="let element">
       <!-- {{element|json}} -->
-      <button mat-button (click)="createInvoice(element)" [disabled]="element.invoiceId != 0 || element.status != 'active'">
+      <button mat-button (click)="createInvoice(element)"
+        [disabled]="element.invoiceId != 0 || element.status != 'active'">
         <i class="material-icons"> add</i>
       </button>
     </td>
