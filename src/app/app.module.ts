@@ -44,7 +44,6 @@ import { SigninComponent } from './signin/signin.component';
 import { InvoiceComponent } from './invoice/invoice.component';
 
 import { environment } from 'src/environments/environment';
-import { CutStringPipe } from './cut-string.pipe';
 import { InvoiceDetailComponent } from './invoice/invoice-detail/invoice-detail.component';
 import { RouterModule } from '@angular/router';
 
@@ -115,7 +114,6 @@ const materialComponent = [
     ItemspriceComponent,
     SigninComponent,
     InvoiceComponent,
-    CutStringPipe,
     InvoiceDetailComponent,
     QuotationdetailComponent,
     InvoicegroupComponent,

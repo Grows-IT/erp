@@ -1,17 +1,20 @@
 <mat-grid-list cols="4" rowHeight="100px">
   <mat-grid-tile [colspan]="4" [rowspan]="0.5">
     <h1 style="margin-right: 50%;">Home</h1>
-    <button mat-flat-button [matMenuTriggerFor]="profile"><h3>My profile <mat-icon>account_circle</mat-icon></h3></button>
-    <mat-menu  #profile="matMenu">
+    <button mat-flat-button [matMenuTriggerFor]="profile">
+      <h3>My profile <mat-icon>account_circle</mat-icon>
+      </h3>
+    </button>
+    <mat-menu #profile="matMenu">
       <div class="profile" align="center">
         <h4>Name: {{name}}</h4>
         <h4>Company: {{company}}</h4>
         <h4>department: {{department}}</h4>
         <h4>position: {{position}}</h4>
         <div>
-        <button mat-raised-button color="primary" style="margin: 5px;">Reset Password</button>
-        <button mat-raised-button color="warn" (click)="logout()" [routerLink]="['/signin']">Log out</button>
-      </div>
+          <button mat-raised-button color="primary" style="margin: 5px;">Reset Password</button>
+          <button mat-raised-button color="warn" (click)="logout()" [routerLink]="['/signin']">Log out</button>
+        </div>
       </div>
     </mat-menu>
     <!-- <button mat-button (click)="logout()" [routerLink]="['/signin']">
@@ -20,13 +23,8 @@
   </mat-grid-tile>
   <mat-grid-tile [colspan]="1" [rowspan]="3"></mat-grid-tile>
   <mat-grid-tile [colspan]="2" [rowspan]="1.5">
-    <button
-      mat-button
-      style="margin-left: 3%;"
-      *ngFor="let menu of menu"
-      [routerLink]="menu.link"
-      [disabled]="menu.status === 'disabled'"
-    >
+    <button mat-button style="margin-left: 3%;" *ngFor="let menu of menu" [routerLink]="menu.link"
+      [disabled]="menu.status === 'disabled'">
       <div *ngIf="menu.status === 'disabled'">
         <img mat-card-image src="{{ menu.img }}" style="opacity: 40%;" />
       </div>
@@ -34,16 +32,10 @@
         <img mat-card-image src="{{ menu.img }}" />
       </div>
       <h3>{{ menu.topicname }}</h3>
-    </button></mat-grid-tile
-  >
+    </button></mat-grid-tile>
   <mat-grid-tile [colspan]="2" [rowspan]="1.5">
-    <button
-      mat-button
-      style="margin-left: 2%;"
-      *ngFor="let menu of menu2"
-      [routerLink]="menu.link"
-      [disabled]="menu.status === 'disabled'"
-    >
+    <button mat-button style="margin-left: 2%;" *ngFor="let menu of menu2" [routerLink]="menu.link"
+      [disabled]="menu.status === 'disabled'">
       <div *ngIf="menu.status === 'disabled'">
         <img mat-card-image src="{{ menu.img }}" style="opacity: 40%;" />
       </div>
@@ -51,8 +43,7 @@
         <img mat-card-image src="{{ menu.img }}" />
       </div>
       <h3>{{ menu.topicname }}</h3>
-    </button></mat-grid-tile
-  >
+    </button></mat-grid-tile>
   <div>
     <mat-grid-tile [colspan]="4" [rowspan]="0.5">
       <h1 style="margin-right: 50%;">Database</h1>
@@ -61,13 +52,8 @@
 
   <mat-grid-tile [colspan]="4" [rowspan]="1.5">
     <div align="center" style="width: 150%;">
-      <button
-        mat-button
-        style="margin-left: 2%;"
-        *ngFor="let menu of downmenu"
-        [routerLink]="menu.link"
-        [disabled]="menu.status === 'disabled'"
-      >
+      <button mat-button style="margin-left: 2%;" *ngFor="let menu of downmenu" [routerLink]="menu.link"
+        [disabled]="menu.status === 'disabled'">
         <div *ngIf="menu.status === 'disabled'">
           <img mat-card-image src="{{ menu.img }}" style="opacity: 40%;" />
         </div>
@@ -79,27 +65,18 @@
 
     </div>
   </mat-grid-tile>
-  <mat-grid-tile [colspan]="4" [rowspan]="1.5">
-    <button
-        mat-button
-        *ngIf="role === 'admin'"
-        style="margin-left: 2%;"
-        routerLink="usersmanagement"
-      >
-        <div>
-          <img mat-card-image src="assets/menu/gear.svg" />
-        </div>
-        <h3>User Management</h3>
-      </button>
-      <button
-        mat-button
-        *ngIf="role === 'admin'"
-        routerLink="departmentmanagement"
-      >
-        <div>
-          <img mat-card-image src="assets/menu/team.svg" />
-        </div>
-        <h3>Department Management</h3>
-      </button>
+  <mat-grid-tile [colspan]="4" [rowspan]="1.5" *ngIf="role === 'admin'">
+    <button mat-button style="margin-left: 2%;" routerLink="usersmanagement">
+      <div>
+        <img mat-card-image src="assets/menu/gear.svg" />
+      </div>
+      <h3>User Management</h3>
+    </button>
+    <button mat-button routerLink="departmentmanagement">
+      <div>
+        <img mat-card-image src="assets/menu/team.svg" />
+      </div>
+      <h3>Department Management</h3>
+    </button>
   </mat-grid-tile>
 </mat-grid-list>

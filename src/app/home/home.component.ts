@@ -13,7 +13,7 @@ class Menu {
     public img: string,
     public link: string,
     public status: string
-  ) {}
+  ) { }
 }
 
 @Component({
@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit {
   department: any;
   position: string;
 
-  constructor(public uService: UserService, public auth: AuthService, public dService: DepartmentService) {}
+  constructor(public uService: UserService, public auth: AuthService, public dService: DepartmentService) { }
   menu = [];
   menu2 = [];
   downmenu = [];
@@ -47,24 +47,21 @@ export class HomeComponent implements OnInit {
     //   this.users = user;
     // });
     // this.uService.getUser().subscribe();
-    this.uService
-      .getUser()
-      .pipe(
-        map(res => {
-          const info = res.find(it => it.email === this.email);
-          if (!info) {
-            return;
-          }
-          // this.role = role.role;
-          this.position = info.position;
-          return info;
-          // console.log(res);
-          // console.log(this.email);
-        })
-      )
-      .subscribe(info => ((this.role = info.role), (this.name = info.name), (this.departmentId = info.departmentId), (this.companyId = info.companyId)));
-    this.dService
-      .getAllDepartments()
+    this.uService.getUser().pipe(
+      map(res => {
+        const info = res.find(it => it.email === this.email);
+        if (!info) {
+          return;
+        }
+        // this.role = role.role;
+        this.position = info.position;
+        return info;
+        // console.log(res);
+        // console.log(this.email);
+      })
+    ).subscribe(info => ((this.role = info.role), (this.name = info.name), (this.departmentId = info.departmentId), (this.companyId = info.companyId)));
+
+    this.dService.getAllDepartments()
       .pipe(
         map(res => {
           const info = res.find(it => it.departmentId === this.departmentId);

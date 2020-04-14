@@ -42,9 +42,9 @@ interface QuotationCount {
   providedIn: 'root'
 })
 export class SalesService {
+  private _quotations = new BehaviorSubject<Quotation[]>(null);
   email: string;
   role: string;
-  private _quotations = new BehaviorSubject<Quotation[]>(null);
 
   get quotations() {
     return this._quotations.asObservable();
@@ -55,8 +55,9 @@ export class SalesService {
     private itemsService: ItemsService,
     private cService: CustomerService,
     private auth: AuthService,
+    private sharedService: SharedService
   ) {
-    this.auth.getCurrentEmail().subscribe(email => (this.email = email));
+    this.sharedService.getEmail().subscribe(email => (this.email = email));
   }
 
   addQuotation(inputs: any) {
@@ -95,15 +96,34 @@ export class SalesService {
           items: sellItems,
           invoiceId: ''
         };
-        return this.http.post(environment.erpUrl + '/quotation', data);
+        return this.http.post(environment.erpUrl + '/addQuotation', data);
       })
     );
+    // const data = {
+    //   "status": "active",
+    //   "email": "test@test.com",
+    //   "customerId": 1,
+    //   "date": "2020-03-25T17:00:00.000Z",
+    //   "expirationDate": "2020-03-27T17:00:00.000Z",
+    //   "items": {
+    //     "itemId": "1",
+    //     "quantity": "23"
+    //   },
+    //   "invoiceId": ""
+    // };
+    // return this.http.post(environment.erpUrl + '/quotation', data);
   }
 
   getQuotation() {
     const quotations: Quotation[] = [];
-    return this.http.get<any>(environment.erpUrl + '/quotation').pipe(
-      map(res => {
+    return this.sharedService.getRole().pipe(
+      switchMap(role => {
+        this.role = role[0].role;
+        return this.http.get<any>(environment.erpUrl + '/quotation');
+      }),
+      map((res) => {
+        console.log(res);
+
         for (let i = 0; i < res.length; i++) {
           // console.log(res);
           const quotation = new Quotation(
@@ -121,9 +141,12 @@ export class SalesService {
             // allItem,
             res[i].invoiceId
           );
-          // console.log(quotation);
-
-          quotations.push(quotation);
+          console.log(res[i].email);
+          console.log(this.role);
+          console.log(this.email);
+          if (this.role === 'admin' || (this.email === res[i].email && this.role === 'user')) {
+            quotations.push(quotation);
+          }
         }
         return quotations;
       }),
@@ -131,6 +154,40 @@ export class SalesService {
         this._quotations.next(quotations);
       })
     );
+    // return this.http.get<any>(environment.erpUrl + '/quotation').pipe(
+    //     // let getRole = this.sharedService.getRole().subscribe(role => this.role = role[0].role);
+    //     // getRole.unsubscribe();
+    //   map((res) => {
+    //     console.log(res);
+
+    //     for (let i = 0; i < res.length; i++) {
+    //       // console.log(res);
+    //       const quotation = new Quotation(
+    //         res[i].quotationStatus,
+    //         res[i].customerId,
+    //         res[i].sellItemId,
+    //         res[i].itemId,
+    //         res[i].sellQuantity,
+    //         res[i].userId,
+    //         res[i].companyId,
+    //         res[i].email,
+    //         res[i].quotationId,
+    //         res[i].date,
+    //         res[i].expirationDate,
+    //         // allItem,
+    //         res[i].invoiceId
+    //       );
+    //       // console.log(quotation);
+    //       if (this.role === 'admin' || this.email === res[i].creator) {
+    //         quotations.push(quotation);
+    //       }
+    //     }
+    //     return quotations;
+    //   }),
+    //   tap(quotations => {
+    //     this._quotations.next(quotations);
+    //   })
+    // );
   }
 
   deleteQuotation(id: string, invId: string) {

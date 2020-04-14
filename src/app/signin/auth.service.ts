@@ -127,8 +127,8 @@ export class AuthService {
     localStorage.setItem('email', email);
   }
 
-  private saveCompanyToStorage(companyName){
-    localStorage.setItem('company',companyName);
+  private saveCompanyToStorage(companyName) {
+    localStorage.setItem('company', companyName);
   }
 
   getCurrentEmail() {
