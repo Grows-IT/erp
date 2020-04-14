@@ -1,0 +1,105 @@
+<mat-toolbar class="sticky" class="allbg">
+  <span style="color: white;">Purchase Requisition [Items detail]</span>
+  <span class="space"></span>
+  <button mat-button (click)="close()" style="color: white;">
+    <i class="material-icons"> close </i>
+  </button>
+</mat-toolbar>
+<br />
+<h1 align="center">Purchase Items</h1>
+<form [formGroup]="prItem" novalidate>
+<mat-grid-list cols="10" rowHeight="15vh">
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="1">
+    <mat-form-field appearance="outline">
+      <mat-label>Type</mat-label>
+      <textarea matInput rows="1"></textarea> </mat-form-field
+  ></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="1">
+    <mat-form-field appearance="outline">
+      <mat-label>Item's name</mat-label>
+      <textarea matInput rows="1"></textarea> </mat-form-field
+  ></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="1">
+    <mat-form-field appearance="outline">
+      <mat-label>Quantity</mat-label>
+      <textarea matInput rows="1"></textarea> </mat-form-field
+  ></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="1">
+    <mat-form-field appearance="outline">
+      <mat-label>Price</mat-label>
+      <textarea matInput rows="1"></textarea> </mat-form-field
+  ></mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+</mat-grid-list>
+<div align="center">
+  <button mat-button (click)="onAddRow()">
+    <i class="material-icons md-48">add_circle_outline</i>
+  </button>
+</div>
+<mat-grid-list cols="3" rowHeight="15vh">
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1"><mat-form-field appearance="outline">
+    <mat-label>Shipping cost</mat-label>
+    <textarea matInput rows="1" rowspan="1" formControlName="shipCost"></textarea> </mat-form-field
+></mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1">Total price : </mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+</mat-grid-list>
+
+<mat-dialog-actions align="center">
+  <button mat-raised-button color="primary">Save</button>
+  <button mat-raised-button mat-dialog-close tabindex="-1" color="warn">Cancel</button>
+</mat-dialog-actions>
+</form>
+
+<!-- <h1 align="center">Purchase Items</h1>
+<form [formGroup]="prItem" novalidate>
+<mat-grid-list cols="10" rowHeight="15vh">
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="1">
+    <mat-form-field appearance="outline">
+      <mat-label>Type</mat-label>
+      <textarea matInput rows="1" formArrayName="type"></textarea> </mat-form-field
+  ></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="1">
+    <mat-form-field appearance="outline">
+      <mat-label>Item's name</mat-label>
+      <textarea matInput rows="1" formArrayName="itName"></textarea> </mat-form-field
+  ></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="1">
+    <mat-form-field appearance="outline">
+      <mat-label>Quantity</mat-label>
+      <textarea matInput rows="1" formArrayName="quantity"></textarea> </mat-form-field
+  ></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="1">
+    <mat-form-field appearance="outline">
+      <mat-label>Price</mat-label>
+      <textarea matInput rows="1" formArrayName="price"></textarea> </mat-form-field
+  ></mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+</mat-grid-list>
+<div align="center">
+  <button mat-button (click)="onAddRow()">
+    <i class="material-icons md-48">add_circle_outline</i>
+  </button>
+</div>
+<mat-grid-list cols="3" rowHeight="15vh">
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1"><mat-form-field appearance="outline">
+    <mat-label>Shipping cost</mat-label>
+    <textarea matInput rows="1" rowspan="1" formControlName="shipCost"></textarea> </mat-form-field
+></mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1">Total price : </mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+</mat-grid-list>
+
+<mat-dialog-actions align="center">
+  <button mat-raised-button color="primary">Save</button>
+  <button mat-raised-button mat-dialog-close tabindex="-1" color="warn">Cancel</button>
+</mat-dialog-actions>
+</form> -->

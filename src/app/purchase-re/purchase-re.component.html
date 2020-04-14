@@ -1,0 +1,79 @@
+<h1 align="center">Purchase Requisition <img src="assets\icons\requisition.svg" style="width: 50px; padding-top: 30px;"></h1>
+<button mat-button style="margin-left: 80%; padding-bottom: 20px;" (click)="openPR()">
+  <img src="/assets/icons/add.svg">
+</button>
+<!-- <img src="assets\icons\cancel.svg" style="width: 30px;"><img src="assets\icons\correct.svg" style="width: 30px;"> -->
+
+<table mat-table *ngIf = "purchasreRe" [dataSource]="purchasreRe"  matSort class="mat-elevation-z8"
+  style="width: 80%;" align="center">
+
+  <ng-container matColumnDef="no">
+    <th mat-header-cell *matHeaderCellDef> No. </th>
+    <td mat-cell *matCellDef="let element">
+        {{element.id}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="Name">
+    <th mat-header-cell *matHeaderCellDef>PR's Name</th>
+    <td mat-cell *matCellDef="let element"> {{element.prName}}  </td>
+  </ng-container>
+
+  <ng-container matColumnDef="CreatedDate">
+    <th mat-header-cell *matHeaderCellDef> CreatedDate </th>
+    <td mat-cell *matCellDef="let element"> {{element.createdDate}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="CreatedBy">
+    <th mat-header-cell *matHeaderCellDef> CreatedBy </th>
+    <td mat-cell *matCellDef="let element"> {{element.CreatedBy}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Status">
+    <th mat-header-cell *matHeaderCellDef> Status </th>
+    <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="edit">
+    <th mat-header-cell *matHeaderCellDef> Edit </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-button (click)="edit(element)">
+        <i class="material-icons"> edit </i>
+      </button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="delete">
+    <th mat-header-cell *matHeaderCellDef> Delete </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-button (click)="delete(element.id)">
+        <i class="material-icons"> delete </i>
+      </button>
+    </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="manage">
+    <th mat-header-cell *matHeaderCellDef> Manage </th>
+    <td mat-cell *matCellDef="let element">
+      <div *ngIf = "element.status === 'waiting for approved'">
+        <button mat-button (click)="approve(element.id)">
+          <img src="assets\icons\correct.svg" style="width: 30px;">
+        </button>
+        <button mat-button (click)="reject(element.id)">
+          <img src="assets\icons\cancel.svg" style="width: 30px;">
+        </button></div>
+      <div *ngIf = "element.status === 'rejected'">
+      <button mat-button (click)="approve(element.id)">
+        <img src="assets\icons\correct.svg" style="width: 30px;">
+      </button></div>
+      <div *ngIf = "element.status === 'approved'">
+      <button mat-button (click)="reject(element.id)">
+        <img src="assets\icons\cancel.svg" style="width: 30px;">
+      </button></div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="prCol"></tr>
+  <tr mat-row *matRowDef="let row; columns: prCol;"></tr>
+</table>

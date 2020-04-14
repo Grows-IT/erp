@@ -120,7 +120,7 @@ export class HomeComponent implements OnInit {
       "Purchase",
       "assets/menu/purchase.svg",
       "purchase",
-      "disabled"
+      "active"
     );
     const truck = new Menu(
       "Truck & GPS",
@@ -144,7 +144,7 @@ export class HomeComponent implements OnInit {
       "Suppliers",
       "assets/menu/suppliers.svg",
       "suppliers",
-      "disabled"
+      "active"
     );
     const customers = new Menu(
       "Customers",

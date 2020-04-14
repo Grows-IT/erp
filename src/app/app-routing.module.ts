@@ -16,11 +16,29 @@ import { UsersmanagementComponent } from './usersmanagement/usersmanagement.comp
 import { EmployeeComponent } from './employee/employee.component';
 import { DepartmentmanagementComponent } from './departmentmanagement/departmentmanagement.component';
 import { InventoryComponent } from './inventory/inventory.component';
+import { SuppliersComponent } from './suppliers/suppliers.component';
+import { PurchaseComponent } from './purchase/purchase.component';
+import { PurchaseReComponent } from './purchase-re/purchase-re.component';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+    canActivate: [SigninGuard],
+  },
+  {
+    path: 'purchasere',
+    component: PurchaseReComponent,
+    canActivate: [SigninGuard],
+  },
+  {
+    path: 'purchase',
+    component: PurchaseComponent,
+    canActivate: [SigninGuard],
+  },
+  {
+    path: 'suppliers',
+    component: SuppliersComponent,
     canActivate: [SigninGuard],
   },
   {

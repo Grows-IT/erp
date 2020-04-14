@@ -147,6 +147,8 @@ export class SalesComponent implements OnInit, OnDestroy {
       autoFocus: false,
       data: item
     });
+    console.log(item);
+
     dialogRef.afterClosed().pipe(
       switchMap(() => {
         return this.salesService.getQuotation();

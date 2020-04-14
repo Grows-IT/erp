@@ -1,0 +1,53 @@
+<mat-toolbar class="sticky" class="allbg">
+  <span style="color: white;">Supplier</span>
+  <span class="space"></span>
+  <button mat-button (click)="close()" style="color: white;" >
+    <i class="material-icons"> close </i>
+  </button>
+</mat-toolbar>
+<br>
+
+<form [formGroup] = "supplierGroup" novalidate>
+<mat-grid-list cols="8" rowHeight="55px">
+  <mat-grid-tile colspan="2" rowspan="10"></mat-grid-tile>
+  <mat-grid-tile colspan="4" rowspan="2">
+    <mat-form-field appearance="outline">
+      <mat-label>Type</mat-label>
+      <textarea matInput rows="2" formControlName="type"></textarea>
+    </mat-form-field>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="4" rowspan="2">
+    <mat-form-field appearance="outline">
+      <mat-label>Supplier's name</mat-label>
+      <textarea matInput rows="2" formControlName="name"></textarea>
+    </mat-form-field>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="4" rowspan="2">
+    <mat-form-field appearance="outline">
+      <mat-label>Contact person</mat-label>
+      <textarea matInput rows="2" formControlName="contactPerson"></textarea>
+    </mat-form-field>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="4" rowspan="2">
+    <mat-form-field appearance="outline">
+      <mat-label>Address</mat-label>
+      <textarea matInput rows="2" formControlName="address"></textarea>
+    </mat-form-field>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="4" rowspan="2">
+    <mat-form-field appearance="outline">
+      <mat-label>Tax id</mat-label>
+      <textarea matInput rows="2" formControlName="taxId"></textarea>
+    </mat-form-field>
+  </mat-grid-tile>
+</mat-grid-list>
+
+<mat-dialog-actions align="center">
+  <button *ngIf="!data" mat-raised-button color="primary" (click)="onConfirmClick(0)" tabindex="1"
+    [disabled]="!supplierGroup.valid">Create</button>
+  <button *ngIf="data" mat-raised-button color="primary" (click)="onConfirmClick(1)" tabindex="1"
+    [disabled]="!supplierGroup.valid">Update</button>
+  <button mat-raised-button mat-dialog-close tabindex="-1" color="warn">cancel</button>
+</mat-dialog-actions>
+
+</form>

@@ -1,0 +1,53 @@
+<mat-toolbar class="sticky" class="allbg">
+  <span style="color: white;">Add Supplier's item</span>
+  <span class="space"></span>
+  <button mat-button (click)="close()" style="color: white;" >
+    <i class="material-icons"> close </i>
+  </button>
+</mat-toolbar>
+<br>
+
+<form [formGroup]="supplierG" novalidate>
+<mat-grid-list cols="4" rowHeight="15vh">
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="1"><mat-form-field appearance="outline">
+    <mat-label>Type</mat-label>
+    <textarea matInput rows="2" formControlName="type"></textarea>
+  </mat-form-field></mat-grid-tile>
+  <!-- <mat-grid-tile colspan="2" rowspan="1"><mat-form-field appearance="outline">
+    <mat-label>Supplier's name</mat-label>
+    <textarea matInput rows="2"></textarea>
+  </mat-form-field></mat-grid-tile> -->
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+</mat-grid-list>
+
+<mat-grid-list cols="6" rowHeight="15vh">
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="1"><mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <textarea matInput rows="2" formControlName="name"></textarea>
+  </mat-form-field></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="1"><mat-form-field appearance="outline">
+    <mat-label>Price</mat-label>
+    <textarea matInput rows="2" formControlName="price"></textarea>
+  </mat-form-field></mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+</mat-grid-list>
+
+<mat-grid-list cols="6" rowHeight="20vh">
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+  <mat-grid-tile colspan="4" rowspan="1"><mat-form-field appearance="outline">
+    <mat-label>Description</mat-label>
+    <textarea matInput rows="3" formControlName="description"></textarea>
+  </mat-form-field></mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+</mat-grid-list>
+
+<mat-dialog-actions align="center">
+  <button *ngIf="!data" mat-raised-button color="primary" (click)="onConfirmClick(0)" tabindex="1"
+    [disabled]="!supplierG.valid">Create</button>
+  <button *ngIf="data" mat-raised-button color="primary" (click)="onConfirmClick(1)" tabindex="1"
+    [disabled]="!supplierG.valid">Update</button>
+  <button mat-raised-button mat-dialog-close tabindex="-1" color="warn">cancel</button>
+</mat-dialog-actions>
+</form>

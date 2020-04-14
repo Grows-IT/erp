@@ -65,6 +65,14 @@ import { DepartmentmanagementComponent } from './departmentmanagement/department
 import { DepartmentdialogComponent } from './departmentmanagement/departmentdialog/departmentdialog.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { InventoryDialogComponent } from './inventory/inventory-dialog/inventory-dialog.component';
+import { SuppliersComponent } from './suppliers/suppliers.component';
+import { SuppliersdialogComponent } from './suppliers/suppliersdialog/suppliersdialog.component';
+import { PurchaseComponent } from './purchase/purchase.component';
+import { PurchaseReComponent } from './purchase-re/purchase-re.component';
+import { PurchaseRedialogComponent } from './purchase-re/purchase-redialog/purchase-redialog.component';
+import { PurchaseRenextdialogComponent } from './purchase-re/purchase-renextdialog/purchase-renextdialog.component';
+import { SupplieritemsComponent } from './suppliers/supplieritems/supplieritems.component';
+import { SupplieritemsdialogComponent } from './suppliers/supplieritems/supplieritemsdialog/supplieritemsdialog.component';
 
 const materialComponent = [
   MatGridListModule,
@@ -126,6 +134,14 @@ const materialComponent = [
     DepartmentdialogComponent,
     InventoryComponent,
     InventoryDialogComponent,
+    SuppliersComponent,
+    SuppliersdialogComponent,
+    PurchaseComponent,
+    PurchaseReComponent,
+    PurchaseRedialogComponent,
+    PurchaseRenextdialogComponent,
+    SupplieritemsComponent,
+    SupplieritemsdialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -150,7 +166,12 @@ const materialComponent = [
     EmployeeprofileComponent,
     EmployeedialogComponent,
     DepartmentdialogComponent,
-    InventoryDialogComponent
+    InventoryDialogComponent,
+    SuppliersdialogComponent,
+    PurchaseRedialogComponent,
+    PurchaseRenextdialogComponent,
+    SupplieritemsComponent,
+    SupplieritemsdialogComponent
   ]
 })
 export class AppModule { }
