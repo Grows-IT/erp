@@ -129,7 +129,7 @@ export class PurchaseRedialogComponent implements OnInit {
 
   private addMoreItems() {
     return this.fb.group({
-      type: ["", [Validators.required]],
+      // type: ["", [Validators.required]],
       itName: ["", [Validators.required]],
       quantity: ["", [Validators.required]],
     });

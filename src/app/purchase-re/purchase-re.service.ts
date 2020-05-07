@@ -6,6 +6,7 @@ import { map, tap, switchMap } from "rxjs/operators";
 import { PurchaseRe, PurchaseItem, PurchaseItemOnly } from "./purchase-re.model";
 import { AuthService } from "../signin/auth.service";
 import { SupplierItemService } from "../suppliers/supplieritems/supplieritems.service";
+import { identifierModuleUrl } from '@angular/compiler';
 
 interface PurchaseReResData {
   prName: string;
@@ -82,6 +83,8 @@ export class PRService {
           shippingCost: data.shipCost,
           // totalPrice: data.allPRItem.totalPrice
         };
+        console.log(alldata);
+
 
         return this.http.post(environment.erpUrl + "/pr", alldata);
       })
@@ -97,18 +100,18 @@ export class PRService {
         for (const key in resItem) {
           if (resItem.hasOwnProperty(key)) {
             const purRe = new PurchaseRe(
-              resItem[key].PRid,
-              resItem[key].POid,
+              resItem[key].PRId,
+              resItem[key].POId,
               resItem[key].PiId,
               resItem[key].PRName,
-              resItem[key].supplierId,
+              resItem[key].SId,
               resItem[key].CreatedDate,
               resItem[key].ApprovedDate,
               resItem[key].DeliveryAddress,
               resItem[key].Status,
               resItem[key].AdditionalNotePR,
-              resItem[key].createdBy,
-              resItem[key].approvedBy
+              resItem[key].CreatedBy,
+              resItem[key].ApprovedBy
             );
             purchasere.push(purRe);
           }
@@ -132,8 +135,8 @@ export class PRService {
             const purIt = new PurchaseItem(
               resItem[key].PiId,
               resItem[key].SiId,
-              resItem[key].POid,
-              resItem[key].PRid,
+              resItem[key].POId,
+              resItem[key].PRId,
               resItem[key].quantity,
               resItem[key].discount,
               resItem[key].shippingCost,
@@ -159,6 +162,16 @@ export class PRService {
     console.log(data);
 
     return this.http.patch(environment.erpUrl + "/updatestatuspr", data);
+  }
+
+  createPO(data: any){
+    const alldata = {
+      PRid : data.id,
+      SId: data.spId,
+      prName: data.prName,
+      status: "contacting vendor",
+    }
+    return this.http.post(environment.erpUrl + "/createpo", alldata);
   }
 
   updatePR(data: any, id: string, PiId: string) {

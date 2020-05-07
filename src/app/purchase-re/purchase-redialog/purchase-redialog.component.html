@@ -82,7 +82,7 @@
     <mat-card formArrayName="allPRItem">
       <table>
         <tr *ngFor="let allPRItem of prInfo['controls'].allPRItem['controls']; let i = index">
-          <td>
+          <!-- <td>
             <mat-form-field appearance="outline">
               <mat-label>Type</mat-label>
               <input type="text" matInput [formControl]="allPRItem.get('type')" [matAutocomplete]="auto">
@@ -92,11 +92,17 @@
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
-          </td>
+          </td> -->
           <td>
             <mat-form-field appearance="outline">
               <mat-label>Item's Name</mat-label>
-              <input type="text" matInput [formControl]="allPRItem.get('itName')">
+              <input type="text" matInput [formControl]="allPRItem.get('itName')" [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let item of supplierItem; let i = index" [value]="item.name">
+                  {{item.name}}
+                </mat-option>
+              </mat-autocomplete>
+              <!-- <input type="text" matInput [formControl]="allPRItem.get('itName')"> -->
             </mat-form-field>
           </td>
           <td>

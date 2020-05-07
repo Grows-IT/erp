@@ -47,7 +47,7 @@ export class SupplierService {
         for (const key in resItem) {
           if (resItem.hasOwnProperty(key)) {
             const supplier = new Supplier(
-              resItem[key].supplierId,
+              resItem[key].SId,
               resItem[key].type,
               resItem[key].name,
               resItem[key].address,

@@ -19,6 +19,7 @@ import { InventoryComponent } from './inventory/inventory.component';
 import { SuppliersComponent } from './suppliers/suppliers.component';
 import { PurchaseComponent } from './purchase/purchase.component';
 import { PurchaseReComponent } from './purchase-re/purchase-re.component';
+import { PurchaseOrComponent } from './purchase-or/purchase-or.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,11 @@ const routes: Routes = [
   {
     path: 'purchasere',
     component: PurchaseReComponent,
+    canActivate: [SigninGuard],
+  },
+  {
+    path: 'purchaseor',
+    component: PurchaseOrComponent,
     canActivate: [SigninGuard],
   },
   {

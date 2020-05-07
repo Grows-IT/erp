@@ -1,0 +1,50 @@
+<h1 align="center">Purchase Order <img src="assets\icons\order.svg" style="width: 50px; padding-top: 30px;"></h1>
+<table mat-table *ngIf = "purchaseOr" [dataSource]="purchaseOr"  matSort class="mat-elevation-z8"
+style="width: 80%;" align="center">
+
+<ng-container matColumnDef="no">
+  <th mat-header-cell *matHeaderCellDef> No. </th>
+  <td mat-cell *matCellDef="let element">
+      {{element.id}}</td>
+</ng-container>
+
+<ng-container matColumnDef="Name">
+  <th mat-header-cell *matHeaderCellDef>PR's Name</th>
+  <td mat-cell *matCellDef="let element"> {{element.PRName}}  </td>
+</ng-container>
+
+<ng-container matColumnDef="CreatedDate">
+  <th mat-header-cell *matHeaderCellDef> CreatedDate </th>
+  <td mat-cell *matCellDef="let element"> {{element.createdDate}} </td>
+</ng-container>
+
+<ng-container matColumnDef="FinishedDate">
+  <th mat-header-cell *matHeaderCellDef> FinishedDate </th>
+  <td mat-cell *matCellDef="let element"> {{element.finishedDate}} </td>
+</ng-container>
+
+<ng-container matColumnDef="Status">
+  <th mat-header-cell *matHeaderCellDef> Status </th>
+  <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+</ng-container>
+
+
+<ng-container matColumnDef="manage">
+  <th mat-header-cell *matHeaderCellDef> Manage </th>
+  <td mat-cell *matCellDef="let element">
+    <div *ngIf = "element.status === 'contacting vendor'">
+      <button mat-button (click)="done(element.id)">
+        <img src="assets\icons\correct.svg" style="width: 30px;">
+      </button>
+      <button mat-button (click)="canceled(element.id)">
+        <img src="assets\icons\cancel.svg" style="width: 30px;">
+      </button></div>
+    <!-- <div *ngIf = "element.status !== 'contacting vendor'">
+      {{element.status}}
+    </div> -->
+  </td>
+</ng-container>
+
+<tr mat-header-row *matHeaderRowDef="poCol"></tr>
+<tr mat-row *matRowDef="let row; columns: poCol;"></tr>
+</table>

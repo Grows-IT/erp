@@ -72,6 +72,7 @@ import { PurchaseRedialogComponent } from './purchase-re/purchase-redialog/purch
 import { PurchaseRenextdialogComponent } from './purchase-re/purchase-renextdialog/purchase-renextdialog.component';
 import { SupplieritemsComponent } from './suppliers/supplieritems/supplieritems.component';
 import { SupplieritemsdialogComponent } from './suppliers/supplieritems/supplieritemsdialog/supplieritemsdialog.component';
+import { PurchaseOrComponent } from './purchase-or/purchase-or.component';
 
 const materialComponent = [
   MatGridListModule,
@@ -140,6 +141,7 @@ const materialComponent = [
     PurchaseRenextdialogComponent,
     SupplieritemsComponent,
     SupplieritemsdialogComponent,
+    PurchaseOrComponent,
   ],
   imports: [
     BrowserModule,
