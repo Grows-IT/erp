@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject } from "rxjs";
-import { environment } from "src/environments/environment";
-import { map, tap, switchMap } from "rxjs/operators";
-import { PurchaseRe, PurchaseItem, PurchaseItemOnly } from "./purchase-re.model";
-import { AuthService } from "../signin/auth.service";
-import { SupplierItemService } from "../suppliers/supplieritems/supplieritems.service";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { map, tap, switchMap } from 'rxjs/operators';
+import { PurchaseRe, PurchaseItem, PurchaseItemOnly } from './purchase-re.model';
+import { AuthService } from '../signin/auth.service';
+import { SupplierItemService } from '../suppliers/supplieritems/supplieritems.service';
 import { identifierModuleUrl } from '@angular/compiler';
 
 interface PurchaseReResData {
@@ -20,7 +20,7 @@ interface PurchaseReResData {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class PRService {
   private _purchasere = new BehaviorSubject<PurchaseRe[]>(null);
@@ -65,34 +65,34 @@ export class PRService {
         // console.log(sellItemsId);
 
         const purchaseItems: PurchaseItemOnly = new PurchaseItemOnly(
-          JSON.stringify(ItemsId).replace(/[\[\]']+/g, ""),
-          JSON.stringify(ItemsQuantity).replace(/[\[\]']+/g, "")
+          JSON.stringify(ItemsId).replace(/[\[\]']+/g, ''),
+          JSON.stringify(ItemsQuantity).replace(/[\[\]']+/g, '')
         );
         const alldata = {
-          POid: "",
+          POid: '',
           items: purchaseItems,
           prName: data.prName,
           spName: data.spName,
-          createdDate: "", //timestamp
-          approvedDate: "",
+          createdDate: '', //timestamp
+          approvedDate: '',
           DeliveryAddress: data.desAddress,
-          status: "waiting for approved",
+          status: 'waiting for approved',
           addiNote: data.addiNote,
           createdBy: createdEmail,
-          approvedBy: "",
+          approvedBy: '',
           shippingCost: data.shipCost,
           // totalPrice: data.allPRItem.totalPrice
         };
         console.log(alldata);
 
 
-        return this.http.post(environment.erpUrl + "/pr", alldata);
+        return this.http.post(environment.erpUrl + '/pr', alldata);
       })
     );
   }
 
   getPR() {
-    return this.http.get(environment.erpUrl + "/pr").pipe(
+    return this.http.get(environment.erpUrl + '/pr').pipe(
       map(resItem => {
         // console.log(resItem);
         const purchasere: PurchaseRe[] = [];
@@ -109,6 +109,7 @@ export class PRService {
               resItem[key].ApprovedDate,
               resItem[key].DeliveryAddress,
               resItem[key].Status,
+              resItem[key].AdditionalNotePR,
               resItem[key].CreatedBy,
               resItem[key].ApprovedBy
             );
@@ -124,7 +125,7 @@ export class PRService {
   }
 
   getPurchaseItem(){
-    return this.http.get(environment.erpUrl + "/purchaseitem").pipe(
+    return this.http.get(environment.erpUrl + '/purchaseitem').pipe(
       map(resItem => {
         // console.log(resItem);
         const purchaseitem: PurchaseItem[] = [];
@@ -160,7 +161,7 @@ export class PRService {
     };
     console.log(data);
 
-    return this.http.patch(environment.erpUrl + "/updatestatuspr", data);
+    return this.http.patch(environment.erpUrl + '/updatestatuspr', data);
   }
 
   createPO(data: any){
@@ -168,9 +169,9 @@ export class PRService {
       PRid : data.id,
       SId: data.spId,
       prName: data.prName,
-      status: "contacting vendor",
+      status: 'contacting vendor',
     }
-    return this.http.post(environment.erpUrl + "/createpo", alldata);
+    return this.http.post(environment.erpUrl + '/createpo', alldata);
   }
 
   updatePR(data: any, id: string, PiId: string) {
@@ -189,8 +190,8 @@ export class PRService {
           purchaseItemsQuantity.push(itemInput.quantity);
         });
         const purchaseItems: PurchaseItemOnly = new PurchaseItemOnly(
-          JSON.stringify(purchaseItemsId).replace(/[\[\]']+/g, ""),
-          JSON.stringify(purchaseItemsQuantity).replace(/[\[\]']+/g, "")
+          JSON.stringify(purchaseItemsId).replace(/[\[\]']+/g, ''),
+          JSON.stringify(purchaseItemsQuantity).replace(/[\[\]']+/g, '')
         );
         const alldata = {
           PRid: id,
@@ -202,7 +203,7 @@ export class PRService {
           shippingCost: data.allPRItem.shippingCost,
           totalPrice: data.allPRItem.totalPrice
         };
-        return this.http.patch(environment.erpUrl + "/pr", alldata);
+        return this.http.patch(environment.erpUrl + '/pr', alldata);
       })
     );
   }
@@ -211,6 +212,6 @@ export class PRService {
     const data = {
       prId: id
     };
-    return this.http.post(environment.erpUrl + "/deletepr", data);
+    return this.http.post(environment.erpUrl + '/deletepr', data);
   }
 }
