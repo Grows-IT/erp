@@ -9,16 +9,17 @@ export class PurchaseRe {
     public approvedDate: string,
     public DeliveryAddress: string,
     public status: string,
+    public addiNote: string,
     public CreatedBy: string,
     public approvedBy: string
-  ) {}
+  ) { }
 }
 
 export class PurchaseItemOnly {
   constructor(
     public SiId: string,
     public quantity: string
-    ) {}
+  ) { }
 }
 
 export class PurchaseItem {
@@ -31,5 +32,5 @@ export class PurchaseItem {
     public discount: string,
     public shippingCost: string,
     public totalPrice: string
-  ) {}
+  ) { }
 }

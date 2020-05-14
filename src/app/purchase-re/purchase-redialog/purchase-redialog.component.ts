@@ -1,31 +1,31 @@
-import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { PurchaseRenextdialogComponent } from "../purchase-renextdialog/purchase-renextdialog.component";
-import { Validators, FormGroup, FormBuilder, FormArray } from "@angular/forms";
-import { PRService } from "../purchase-re.service";
-import { Subscription, Observable } from "rxjs";
-import { PurchaseRe, PurchaseItem } from "../purchase-re.model";
-import { switchMap, startWith, map } from "rxjs/operators";
-import { SupplierService } from "src/app/suppliers/supplier.service";
-import { Supplier } from "src/app/suppliers/supplier.model";
-import { SupplierItemService } from "src/app/suppliers/supplieritems/supplieritems.service";
-import { SupplierItems } from "src/app/suppliers/supplieritems/supplieritems.model";
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { PurchaseRenextdialogComponent } from '../purchase-renextdialog/purchase-renextdialog.component';
+import { Validators, FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { PRService } from '../purchase-re.service';
+import { Subscription, Observable } from 'rxjs';
+import { PurchaseRe, PurchaseItem } from '../purchase-re.model';
+import { switchMap, startWith, map } from 'rxjs/operators';
+import { SupplierService } from 'src/app/suppliers/supplier.service';
+import { Supplier } from 'src/app/suppliers/supplier.model';
+import { SupplierItemService } from 'src/app/suppliers/supplieritems/supplieritems.service';
+import { SupplierItems } from 'src/app/suppliers/supplieritems/supplieritems.model';
 
 @Component({
-  selector: "app-purchase-redialog",
-  templateUrl: "./purchase-redialog.component.html",
-  styleUrls: ["./purchase-redialog.component.scss"],
+  selector: 'app-purchase-redialog',
+  templateUrl: './purchase-redialog.component.html',
+  styleUrls: ['./purchase-redialog.component.scss'],
 })
-export class PurchaseRedialogComponent implements OnInit {
+export class PurchaseRedialogComponent implements OnInit, OnDestroy {
   prInfo: FormGroup;
   prSubscription: Subscription;
-  purRe: PurchaseRe[];
   spSubscription: Subscription;
-  supplier: Supplier[];
   spiSubscription: Subscription;
+  piSubscription: Subscription;
+  purRe: PurchaseRe[];
+  supplier: Supplier[];
   supplierItem: SupplierItems[];
   purchaseItem: PurchaseItem[];
-  piSubscription: Subscription;
   filteredType: Observable<string[]>;
 
   constructor(
@@ -63,8 +63,7 @@ export class PurchaseRedialogComponent implements OnInit {
           this.prInfo = this.fb.group({
             prName: [this.data.prName, [Validators.required]],
             spName: [this.getSupInfo(this.data.spId).name, [Validators.required]],
-            spAddress: [this.getSupInfo(this.data.spId).address, [Validators.required],
-            ],
+            spAddress: [this.getSupInfo(this.data.spId).address, [Validators.required]],
             desAddress: [this.data.DeliveryAddress, [Validators.required]],
             addiNote: [this.data.addiNote, [Validators.required]],
             shipCost: [this.getShipCost(this.data.PIid), [Validators.required]],
@@ -105,7 +104,7 @@ export class PurchaseRedialogComponent implements OnInit {
     //     allPRItem: this.fb.array([this.addMoreItems()]),
     //   });
     //   // for (let i = 0; i < this.getItems().length; i++) {
-    //   //   const control = <FormArray>this.prInfo.controls["allPRItem"];
+    //   //   const control = <FormArray>this.prInfo.controls['allPRItem'];
     //   //   control.push(this.viewItemFormGroup(i));
     //   // }
     // } else {
@@ -119,6 +118,13 @@ export class PurchaseRedialogComponent implements OnInit {
     //     allPRItem: this.fb.array([this.addMoreItems()]),
     //   });
     // }
+  }
+
+  ngOnDestroy() {
+    this.spiSubscription.unsubscribe();
+    this.prSubscription.unsubscribe();
+    this.spSubscription.unsubscribe();
+    this.piSubscription.unsubscribe();
   }
 
   getSupInfo(spId: any) {
@@ -181,12 +187,12 @@ export class PurchaseRedialogComponent implements OnInit {
   }
 
   onAddRow() {
-    const control = <FormArray>this.prInfo.controls["allPRItem"];
+    const control = <FormArray>this.prInfo.controls['allPRItem'];
     control.push(this.addMoreItems());
   }
 
   removeUnit(i: number) {
-    const control = <FormArray>this.prInfo.controls["allPRItem"];
+    const control = <FormArray>this.prInfo.controls['allPRItem'];
     control.removeAt(i);
   }
 
