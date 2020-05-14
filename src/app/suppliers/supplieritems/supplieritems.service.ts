@@ -23,9 +23,9 @@ export class SupplierItemService {
     return this._supplieritems.asObservable();
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  addSupItem(values: any){
+  addSupItem(values: any) {
     const value = {
       type: values.type,
       name: values.name,
@@ -34,7 +34,7 @@ export class SupplierItemService {
     };
     return this.http.post(environment.erpUrl + '/supplieritem', value);
   }
-  getSupItem(){
+  getSupItem() {
     return this.http.get(environment.erpUrl + '/supplieritem').pipe(
       map(resItem => {
         // console.log(resItem);

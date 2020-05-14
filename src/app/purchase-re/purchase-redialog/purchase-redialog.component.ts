@@ -36,7 +36,7 @@ export class PurchaseRedialogComponent implements OnInit {
     private PRservice: PRService,
     private SPservice: SupplierService,
     private SPIservice: SupplierItemService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.prSubscription = this.PRservice.purchasere.subscribe((pr) => {
@@ -56,66 +56,102 @@ export class PurchaseRedialogComponent implements OnInit {
     this.spiSubscription = this.SPIservice.supplieritem.subscribe((spi) => {
       this.supplierItem = spi;
     });
-    this.SPIservice.getSupItem().subscribe();
+    this.SPIservice.getSupItem().subscribe(
+      () => {
+        if (this.data) {
+          console.log(this.data);
+          this.prInfo = this.fb.group({
+            prName: [this.data.prName, [Validators.required]],
+            spName: [this.getSupInfo(this.data.spId).name, [Validators.required]],
+            spAddress: [this.getSupInfo(this.data.spId).address, [Validators.required],
+            ],
+            desAddress: [this.data.DeliveryAddress, [Validators.required]],
+            addiNote: [this.data.addiNote, [Validators.required]],
+            shipCost: [this.getShipCost(this.data.PIid), [Validators.required]],
+            allPRItem: this.fb.array([this.addMoreItems()]),
+          });
+        } else {
+          this.prInfo = this.fb.group({
+            prName: ['', [Validators.required]],
+            spName: ['', [Validators.required]],
+            spAddress: ['', [Validators.required]],
+            desAddress: ['', [Validators.required]],
+            addiNote: ['', [Validators.required]],
+            shipCost: ['', [Validators.required]],
+            allPRItem: this.fb.array([this.addMoreItems()]),
+          });
+        }
+      }
+    );
 
-    console.log(this.data);
-    console.log(this.purchaseItem);
+    // console.log(this.purchaseItem);
 
-    if (this.data !== null && this.data !== undefined) {
-      this.prInfo = this.fb.group({
-        prName: [this.data.prName, [Validators.required]],
-        // spName: ["", [Validators.required]],
-        spName: [this.getSupInfo(this.data.spId).name, [Validators.required]],
-        spAddress: [
-          this.getSupInfo(this.data.spId).address,
-          [Validators.required],
-        ],
-        // spAddress: ["", [Validators.required]],
-        desAddress: [this.data.DeliveryAddress, [Validators.required]],
-        addiNote: [this.data.addiNote, [Validators.required]],
-        // shipCost: ["", [Validators.required]],
-        shipCost: [this.getShipCost(this.data.PIid), [Validators.required]],
-        allPRItem: this.fb.array([this.addMoreItems()]),
-      });
-      // for (let i = 0; i < this.getItems().length; i++) {
-      //   const control = <FormArray>this.prInfo.controls["allPRItem"];
-      //   control.push(this.viewItemFormGroup(i));
-      // }
-    } else {
-      this.prInfo = this.fb.group({
-        prName: ["", [Validators.required]],
-        spName: ["", [Validators.required]],
-        spAddress: ["", [Validators.required]],
-        desAddress: ["", [Validators.required]],
-        addiNote: ["", [Validators.required]],
-        shipCost: ["", [Validators.required]],
-        allPRItem: this.fb.array([this.addMoreItems()]),
-      });
-    }
+    // if (this.data) {
+    //   console.log(this.data);
+    //   const a = this.getSupInfo(this.data.spId);
+    //   console.log(a);
+
+    //   this.prInfo = this.fb.group({
+    //     prName: [this.data.prName, [Validators.required]],
+    //     // spName: ['', [Validators.required]],
+    //     spName: [a.name, [Validators.required]],
+    //     spAddress: [a.address, [Validators.required],
+    //     ],
+    //     // spAddress: ['', [Validators.required]],
+    //     desAddress: [this.data.DeliveryAddress, [Validators.required]],
+    //     addiNote: [this.data.addiNote, [Validators.required]],
+    //     // shipCost: ['', [Validators.required]],
+    //     shipCost: [this.getShipCost(this.data.PIid), [Validators.required]],
+    //     allPRItem: this.fb.array([this.addMoreItems()]),
+    //   });
+    //   // for (let i = 0; i < this.getItems().length; i++) {
+    //   //   const control = <FormArray>this.prInfo.controls["allPRItem"];
+    //   //   control.push(this.viewItemFormGroup(i));
+    //   // }
+    // } else {
+    //   this.prInfo = this.fb.group({
+    //     prName: ['', [Validators.required]],
+    //     spName: ['', [Validators.required]],
+    //     spAddress: ['', [Validators.required]],
+    //     desAddress: ['', [Validators.required]],
+    //     addiNote: ['', [Validators.required]],
+    //     shipCost: ['', [Validators.required]],
+    //     allPRItem: this.fb.array([this.addMoreItems()]),
+    //   });
+    // }
   }
 
   getSupInfo(spId: any) {
-    const supinfo = this.supplier.find((sp) => sp.id === spId);
-    if (!supinfo) {
+    if (!this.supplier) {
       return;
     }
+    const supinfo = this.supplier.find((sp) => sp.id === spId);
+    console.log(supinfo);
+    // if (!supinfo) {
+    //   return;
+    // }
     return supinfo;
   }
 
   getShipCost(PIid: any) {
-    const shipcost = this.purchaseItem.find((pi) => pi.id === PIid);
-    if (!shipcost) {
+    if (!this.purchaseItem) {
       return;
     }
+    const shipcost = this.purchaseItem.find((pi) => pi.id === PIid);
+    console.log(shipcost);
+
+    // if (!shipcost) {
+    //   return;
+    // }
     return shipcost.shippingCost;
   }
 
   getItems() {
     this.data = this.dialogRef.componentInstance.data;
 
-    const prod = this.data.PIid.split(",");
+    const prod = this.data.PIid.split(',');
 
-    let items = [];
+    const items = [];
     for (let i = 0; i < prod.length; i++) {
       const product2 = this.purchaseItem.find((pro2) => pro2.id == prod[i]);
       items.push(product2);
@@ -129,9 +165,9 @@ export class PurchaseRedialogComponent implements OnInit {
 
   private addMoreItems() {
     return this.fb.group({
-      // type: ["", [Validators.required]],
-      itName: ["", [Validators.required]],
-      quantity: ["", [Validators.required]],
+      // type: ['', [Validators.required]],
+      itName: ['', [Validators.required]],
+      quantity: ['', [Validators.required]],
     });
   }
 

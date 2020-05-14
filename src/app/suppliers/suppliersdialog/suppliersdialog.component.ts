@@ -1,6 +1,6 @@
-import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { Supplier } from '../supplier.model';
 import { SupplierService } from '../supplier.service';
@@ -8,9 +8,9 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: "app-suppliersdialog",
-  templateUrl: "./suppliersdialog.component.html",
-  styleUrls: ["./suppliersdialog.component.scss"]
+  selector: 'app-suppliersdialog',
+  templateUrl: './suppliersdialog.component.html',
+  styleUrls: ['./suppliersdialog.component.scss']
 })
 export class SuppliersdialogComponent implements OnInit {
 
@@ -24,7 +24,7 @@ export class SuppliersdialogComponent implements OnInit {
     public dialog: MatDialog,
     public dialogRef: MatDialogRef<SuppliersdialogComponent>,
     private sService: SupplierService
-  ) {}
+  ) { }
 
   ngOnInit() {
 
@@ -35,7 +35,6 @@ export class SuppliersdialogComponent implements OnInit {
 
     if (this.data !== null && this.data !== undefined) {
       this.supplierGroup = this.fb.group({
-        type: [this.data.type, [Validators.required]],
         name: [this.data.name, [Validators.required]],
         address: [this.data.address, [Validators.required]],
         contactPerson: [this.data.contactPerson, [Validators.required]],
@@ -43,7 +42,6 @@ export class SuppliersdialogComponent implements OnInit {
       });
     } else {
       this.supplierGroup = this.fb.group({
-        type: ['', [Validators.required]],
         name: ['', [Validators.required]],
         address: ['', [Validators.required]],
         contactPerson: ['', [Validators.required]],

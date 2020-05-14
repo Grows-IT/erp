@@ -15,7 +15,7 @@ import { SupplieritemsdialogComponent } from './supplieritems/supplieritemsdialo
 })
 export class SuppliersComponent implements OnInit {
 
-  supplierCol: string[] = ['no', 'type', 'name', 'items', 'edit', 'delete'];
+  supplierCol: string[] = ['no', 'name', 'items', 'edit', 'delete'];
   supplierSubscription: Subscription;
   supplier: Supplier[];
 

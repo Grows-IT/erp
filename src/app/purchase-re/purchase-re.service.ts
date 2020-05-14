@@ -109,7 +109,6 @@ export class PRService {
               resItem[key].ApprovedDate,
               resItem[key].DeliveryAddress,
               resItem[key].Status,
-              resItem[key].AdditionalNotePR,
               resItem[key].CreatedBy,
               resItem[key].ApprovedBy
             );

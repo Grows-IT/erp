@@ -6,78 +6,60 @@
   </button>
 </mat-toolbar>
 <br />
-
-<form [formGroup]="prInfo" novalidate>
-<mat-grid-list cols="3" rowHeight="20vh">
-  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
-  <mat-grid-tile colspan="1" rowspan="1"
-    ><mat-form-field appearance="outline">
-      <mat-label>PR's Name</mat-label>
-      <textarea
-        matInput
-        rows="2"
-        formControlName="prName"
-      ></textarea> </mat-form-field
-  ></mat-grid-tile>
-  <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
-</mat-grid-list>
+<form *ngIf="prInfo" [formGroup]="prInfo" novalidate>
+  <mat-grid-list cols="3" rowHeight="20vh">
+    <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+    <mat-grid-tile colspan="1" rowspan="1">
+      <mat-form-field appearance="outline">
+        <mat-label>PR's Name</mat-label>
+        <textarea matInput rows="2" formControlName="prName"></textarea>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+  </mat-grid-list>
 
 
-<mat-grid-list cols="8" rowHeight="20vh">
-  <mat-grid-tile colspan="1" rowspan="2"></mat-grid-tile>
-  <mat-grid-tile colspan="3" rowspan="1"><mat-form-field appearance="outline">
-    <mat-label>Supplier's Name</mat-label>
-    <textarea matInput rows="2" formControlName="spName" type="text" [matAutocomplete]="auto1"
-          required></textarea>
+  <mat-grid-list cols="8" rowHeight="20vh">
+    <mat-grid-tile colspan="1" rowspan="2"></mat-grid-tile>
+    <mat-grid-tile colspan="3" rowspan="1">
+      <mat-form-field appearance="outline">
+        <mat-label>Supplier's Name </mat-label>
+        <textarea matInput rows="2" formControlName="spName" type="text" [matAutocomplete]="auto1" required></textarea>
         <mat-autocomplete #auto1="matAutocomplete">
           <mat-option *ngFor="let sp of supplier; let i = index" [value]="sp.name">
             {{sp.name}}
           </mat-option>
         </mat-autocomplete>
-   </mat-form-field
->
-</mat-grid-tile>
-<mat-grid-tile colspan="3" rowspan="1"><mat-form-field appearance="outline">
-  <mat-label>Supplier's address</mat-label>
-  <textarea
-    matInput
-    rows="2"
-    formControlName="spAddress"
-  ></textarea> </mat-form-field
->
-</mat-grid-tile>
-<mat-grid-tile colspan="1" rowspan="2"></mat-grid-tile>
-  <mat-grid-tile colspan="3" rowspan="1"><mat-form-field appearance="outline">
-    <mat-label>Destination address</mat-label>
-    <textarea
-      matInput
-      rows="4"
-      formControlName="desAddress"
-    ></textarea> </mat-form-field
->
-</mat-grid-tile>
-<mat-grid-tile colspan="3" rowspan="1"><mat-form-field appearance="outline">
-  <mat-label>Additional Note</mat-label>
-  <textarea
-    matInput
-    rows="4"
-    formControlName="addiNote"
-  ></textarea> </mat-form-field
->
-</mat-grid-tile>
-</mat-grid-list>
-<div align="center">
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="3" rowspan="1">
+      <mat-form-field appearance="outline">
+        <mat-label>Supplier's address</mat-label>
+        <textarea matInput rows="2" formControlName="spAddress"></textarea>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="1" rowspan="2"></mat-grid-tile>
+    <mat-grid-tile colspan="3" rowspan="1">
+      <mat-form-field appearance="outline">
+        <mat-label>Destination address</mat-label>
+        <textarea matInput rows="4" formControlName="desAddress"></textarea>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="3" rowspan="1">
+      <mat-form-field appearance="outline">
+        <mat-label>Additional Note</mat-label>
+        <textarea matInput rows="4" formControlName="addiNote"></textarea>
+      </mat-form-field>
+    </mat-grid-tile>
+  </mat-grid-list>
+  <div align="center">
     <mat-form-field appearance="outline">
       <mat-label>Shipping Cost</mat-label>
-      <textarea
-        matInput
-        rows="2"
-        formControlName="shipCost"
-      ></textarea> </mat-form-field
-    >
+      <textarea matInput rows="2" formControlName="shipCost"></textarea>
+    </mat-form-field>
   </div>
 
-<h1 align="center">Items</h1>
+  <h1 align="center">Items</h1>
   <div align="center">
     <mat-card formArrayName="allPRItem">
       <table>
@@ -94,7 +76,7 @@
             </mat-form-field>
           </td> -->
           <td>
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" *ngIf="allPRItem">
               <mat-label>Item's Name</mat-label>
               <input type="text" matInput [formControl]="allPRItem.get('itName')" [matAutocomplete]="auto">
               <mat-autocomplete #auto="matAutocomplete">
@@ -106,7 +88,7 @@
             </mat-form-field>
           </td>
           <td>
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" *ngIf="allPRItem">
               <mat-label>Quantity</mat-label>
               <input type="text" matInput [formControl]="allPRItem.get('quantity')">
             </mat-form-field>
@@ -122,14 +104,13 @@
         <button mat-button>
           <i class="material-icons md-48" (click)="onAddRow()">add_circle_outline</i>
         </button>
-      </div></mat-card>
+      </div>
+    </mat-card>
   </div>
 
-
-
-
-<div align="center">
-  <h2>Total Price : </h2></div>
+  <div align="center">
+    <h2>Total Price : </h2>
+  </div>
 
   <mat-dialog-actions align="center">
     <button *ngIf="!data" mat-raised-button color="primary" (click)="onConfirmClick(0)" tabindex="1"
