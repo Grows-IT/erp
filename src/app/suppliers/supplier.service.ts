@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject } from "rxjs";
-import { environment } from "src/environments/environment";
-import { map, tap } from "rxjs/operators";
-import { Supplier } from "./supplier.model";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { map, tap } from 'rxjs/operators';
+import { Supplier } from './supplier.model';
 
 interface SupplierResData {
   type: string;
@@ -14,7 +14,7 @@ interface SupplierResData {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class SupplierService {
   private _supplier = new BehaviorSubject<Supplier[]>(null);
@@ -29,7 +29,6 @@ export class SupplierService {
     console.log(value);
 
     const values = {
-      type: value.type,
       name: value.name,
       address: value.address,
       contactPerson: value.contactPerson,
@@ -48,7 +47,6 @@ export class SupplierService {
           if (resItem.hasOwnProperty(key)) {
             const supplier = new Supplier(
               resItem[key].SId,
-              resItem[key].type,
               resItem[key].name,
               resItem[key].address,
               resItem[key].contactPerson,
@@ -67,7 +65,6 @@ export class SupplierService {
 
   updateSupplier(value: any, id: string) {
     const data = {
-      type: value.type,
       name: value.name,
       address: value.address,
       contactPerson: value.contactPerson,
@@ -82,6 +79,6 @@ export class SupplierService {
       supplierId: id
     };
     console.log(data);
-    return this.http.post(environment.erpUrl + "/deletesupplier/", data);
+    return this.http.post(environment.erpUrl + '/deletesupplier/', data);
   }
 }

@@ -1,26 +1,26 @@
-import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { Subscription } from "rxjs";
-import { SupplierItems } from "../supplieritems.model";
-import { SupplierItemService } from "../supplieritems.service";
-import { switchMap, map } from "rxjs/operators";
-import { SupplieritemsComponent } from "../supplieritems.component";
-import { ConfirmDialogComponent } from "src/app/shared/confirm-dialog/confirm-dialog.component";
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { SupplierItems } from '../supplieritems.model';
+import { SupplierItemService } from '../supplieritems.service';
+import { switchMap, map } from 'rxjs/operators';
+import { SupplieritemsComponent } from '../supplieritems.component';
+import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: "app-supplieritemsdialog",
-  templateUrl: "./supplieritemsdialog.component.html",
-  styleUrls: ["./supplieritemsdialog.component.scss"]
+  selector: 'app-supplieritemsdialog',
+  templateUrl: './supplieritemsdialog.component.html',
+  styleUrls: ['./supplieritemsdialog.component.scss']
 })
 export class SupplieritemsdialogComponent implements OnInit {
   supplierItemCol: string[] = [
-    "no",
-    "type",
-    "name",
-    "price",
-    "description",
-    "edit",
-    "delete"
+    'no',
+    'type',
+    'name',
+    'price',
+    'description',
+    'edit',
+    'delete'
   ];
   supplierItemSubscription: Subscription;
   supplierItem: SupplierItems[];
@@ -34,7 +34,7 @@ export class SupplieritemsdialogComponent implements OnInit {
     public dialog: MatDialog,
     public dialogRef: MatDialogRef<SupplieritemsdialogComponent>,
     private SiService: SupplierItemService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.supplierItemSubscription = this.SiService.supplieritem.subscribe(sup => {
@@ -45,9 +45,9 @@ export class SupplieritemsdialogComponent implements OnInit {
 
   addItem() {
     const dialogRef = this.dialog.open(SupplieritemsComponent, {
-      panelClass: "nopadding-dialog",
-      width: "60vw",
-      height: "80vh",
+      panelClass: 'nopadding-dialog',
+      width: '60vw',
+      height: '80vh',
       disableClose: false,
       autoFocus: false,
     });
@@ -55,9 +55,9 @@ export class SupplieritemsdialogComponent implements OnInit {
 
   editItem(item) {
     const dialogRef = this.dialog.open(SupplieritemsComponent, {
-      panelClass: "nopadding-dialog",
-      width: "60vw",
-      height: "80vh",
+      panelClass: 'nopadding-dialog',
+      width: '60vw',
+      height: '80vh',
       disableClose: false,
       autoFocus: false,
       data: item
@@ -74,12 +74,12 @@ export class SupplieritemsdialogComponent implements OnInit {
 
   delete(id: string) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      panelClass: "nopadding-dialog",
-      width: "400px",
-      height: "200px",
+      panelClass: 'nopadding-dialog',
+      width: '400px',
+      height: '200px',
       disableClose: true,
       autoFocus: false,
-      data: { id, from: "supplieritems" }
+      data: { id, from: 'supplieritems' }
     });
     dialogRef.beforeClosed();
     // this.itemsService.deleteItem(id).pipe(
