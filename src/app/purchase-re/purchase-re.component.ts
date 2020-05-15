@@ -47,14 +47,18 @@ export class PurchaseReComponent implements OnInit {
       disableClose: false,
       autoFocus: false
     });
-    dialogRef
-      .afterClosed()
-      .pipe(
-        switchMap(() => {
-          return this.prService.getPR();
-        })
-      )
-      .subscribe();
+    dialogRef.afterClosed().subscribe(() => {
+      const sub = this.prService.getPR().subscribe(() => {
+        sub.unsubscribe();
+      });
+    });
+    // .afterClosed()
+    // .pipe(
+    //   switchMap(() => {
+    //     return this.prService.getPR();
+    //   })
+    // )
+    // .subscribe();
   }
 
   edit(item) {
@@ -66,11 +70,16 @@ export class PurchaseReComponent implements OnInit {
       autoFocus: false,
       data: item
     });
-    dialogRef.afterClosed().pipe(
-      switchMap(() => {
-        return this.prService.getPR();
-      })
-    ).subscribe();
+    dialogRef.afterClosed().subscribe(() => {
+      const sub = this.prService.getPR().subscribe(() => {
+        sub.unsubscribe();
+      });
+    });
+    // dialogRef.afterClosed().pipe(
+    //   switchMap(() => {
+    //     return this.prService.getPR();
+    //   })
+    // ).subscribe();
   }
 
   delete(id: string) {
@@ -82,14 +91,19 @@ export class PurchaseReComponent implements OnInit {
       autoFocus: false,
       data: { id, from: 'pr' }
     });
-    dialogRef
-      .afterClosed()
-      .pipe(
-        switchMap(() => {
-          return this.prService.getPR();
-        })
-      )
-      .subscribe();
+    dialogRef.afterClosed().subscribe(() => {
+      const sub = this.prService.getPR().subscribe(() => {
+        sub.unsubscribe();
+      });
+    });
+    // dialogRef
+    //   .afterClosed()
+    //   .pipe(
+    //     switchMap(() => {
+    //       return this.prService.getPR();
+    //     })
+    //   )
+    //   .subscribe();
   }
 
   approve(id, data) {
