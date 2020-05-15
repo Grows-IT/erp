@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs';
 import { PRService } from './purchase-re.service';
 import { switchMap } from 'rxjs/operators';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { SupplierService } from '../suppliers/supplier.service';
+import { Supplier } from '../suppliers/supplier.model';
 // import { POService } from '../purchase-or/purchase-or.service';
 
 @Component({
@@ -15,6 +17,7 @@ import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.
 })
 export class PurchaseReComponent implements OnInit {
   purchasreRe: PurchaseRe[];
+  supplier: Supplier[];
   prCol: string[] = [
     'no',
     'Name',
@@ -27,14 +30,19 @@ export class PurchaseReComponent implements OnInit {
   ];
   PRsubscription: Subscription;
   POsubscription: Subscription;
+  SPsubscription: Subscription;
 
-  constructor(public dialog: MatDialog, private prService: PRService) { }
+  constructor(public dialog: MatDialog, private prService: PRService, private spService: SupplierService) {}
 
   ngOnInit() {
     this.PRsubscription = this.prService.purchasere.subscribe(pr => {
       this.purchasreRe = pr;
     });
     this.prService.getPR().subscribe();
+    this.SPsubscription = this.spService.supplier.subscribe(sp => {
+      this.supplier = sp;
+    });
+    this.spService.getAllSuppliers().subscribe();
 
     // this.POsubscription = this.poService.
   }
