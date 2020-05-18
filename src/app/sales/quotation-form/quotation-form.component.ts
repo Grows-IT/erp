@@ -47,7 +47,7 @@ export class QuotationFormComponent implements OnInit {
     private itemsService: ItemsService,
     private cService: CustomerService,
     private cdRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.customerSubscription = this.cService.customers.subscribe(customers => {
@@ -137,9 +137,9 @@ export class QuotationFormComponent implements OnInit {
     // for(let i)
   }
 
-  checkMax(max: number,i: number){
+  checkMax(max: number, i: number) {
     const allItem = this.quotation.get('allItem').value;
-    if(max < allItem[i].quantity){
+    if (max < allItem[i].quantity) {
       return max;
     }
 
@@ -154,6 +154,9 @@ export class QuotationFormComponent implements OnInit {
   // }
 
   getItems() {
+    if (!this.data.itemId) {
+      return null;
+    }
     this.data = this.dialogRef.componentInstance.data;
 
     const prod = this.data.itemId.split(',');
@@ -162,9 +165,6 @@ export class QuotationFormComponent implements OnInit {
     for (let i = 0; i < prod.length; i++) {
       const product2 = this.items.find(pro2 => pro2.id == prod[i]);
       items.push(product2);
-    }
-    if (!this.data.itemId) {
-      return null;
     }
 
     return items;

@@ -59,7 +59,6 @@ export class PurchaseRedialogComponent implements OnInit, OnDestroy {
     this.SPIservice.getSupItem().subscribe(
       () => {
         if (this.data) {
-          console.log(this.data);
           this.prInfo = this.fb.group({
             prName: [this.data.prName, [Validators.required]],
             spName: [this.getSupInfo(this.data.spId).name, [Validators.required]],
@@ -67,8 +66,13 @@ export class PurchaseRedialogComponent implements OnInit, OnDestroy {
             desAddress: [this.data.DeliveryAddress, [Validators.required]],
             addiNote: [this.data.addiNote, [Validators.required]],
             shipCost: [this.getShipCost(this.data.PIid), [Validators.required]],
-            allPRItem: this.fb.array([this.addMoreItems()]),
+            allPRItem: this.fb.array([]),
           });
+
+          for (let i = 0; i < this.getItems().length; i++) {
+            const control = <FormArray>this.prInfo.controls['allPRItem'];
+            control.push(this.viewItemFormGroup(i));
+          }
         } else {
           this.prInfo = this.fb.group({
             prName: ['', [Validators.required]],
@@ -132,10 +136,6 @@ export class PurchaseRedialogComponent implements OnInit, OnDestroy {
       return;
     }
     const supinfo = this.supplier.find((sp) => sp.id === spId);
-    console.log(supinfo);
-    // if (!supinfo) {
-    //   return;
-    // }
     return supinfo;
   }
 
@@ -144,34 +144,31 @@ export class PurchaseRedialogComponent implements OnInit, OnDestroy {
       return;
     }
     const shipcost = this.purchaseItem.find((pi) => pi.id === PIid);
-    console.log(shipcost);
-
-    // if (!shipcost) {
-    //   return;
-    // }
     return shipcost.shippingCost;
   }
 
   getItems() {
+    if (!this.purchaseItem) {
+      return;
+    }
     this.data = this.dialogRef.componentInstance.data;
+    const product1 = this.purchaseItem.find((pro2) => pro2.id === this.data.PIid);
 
-    const prod = this.data.PIid.split(',');
+    const siIdArr = product1.siId.split(',');
+    const quantityArr = product1.quantity.split(',');
+    const allPRItem = [];
 
-    const items = [];
-    for (let i = 0; i < prod.length; i++) {
-      const product2 = this.purchaseItem.find((pro2) => pro2.id == prod[i]);
-      items.push(product2);
+    for (let i = 0; i < siIdArr.length; i++) {
+      const product2 = this.supplierItem.find((pro2) => pro2.SiId == siIdArr[i].replace(/['"]+/g, ''));
+      product2['quantity'] = quantityArr[i].replace(/['"]+/g, '');
+      allPRItem.push(product2);
     }
-    if (!this.data.PIid) {
-      return null;
-    }
 
-    return items;
+    return allPRItem;
   }
 
   private addMoreItems() {
     return this.fb.group({
-      // type: ['', [Validators.required]],
       itName: ['', [Validators.required]],
       quantity: ['', [Validators.required]],
     });
@@ -181,7 +178,7 @@ export class PurchaseRedialogComponent implements OnInit, OnDestroy {
     this.data = this.dialogRef.componentInstance.data;
 
     return this.fb.group({
-      item: [this.getItems()[i].name, [Validators.required]],
+      itName: [this.getItems()[i].name, [Validators.required]],
       quantity: [this.getItems()[i].quantity, [Validators.required]],
     });
   }
@@ -201,9 +198,10 @@ export class PurchaseRedialogComponent implements OnInit, OnDestroy {
   }
 
   onConfirmClick(status) {
-    this.data = this.dialogRef.componentInstance.data;
+    // this.data = this.dialogRef.componentInstance.data;
 
     if (status === 0) {
+      console.log(this.prInfo.value);
       this.PRservice.addPR(this.prInfo.value)
         .pipe(switchMap(() => this.PRservice.getPR()))
         .subscribe()

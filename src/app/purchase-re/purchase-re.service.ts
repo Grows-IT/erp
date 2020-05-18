@@ -38,10 +38,35 @@ export class PRService {
     private http: HttpClient,
     private SiService: SupplierItemService,
     private auth: AuthService
-  ) {}
+  ) { }
 
   addPR(data: any) {
     let createdEmail;
+    // return this.auth.getCurrentEmail().pipe(
+    //   switchMap(res => {
+    //     createdEmail = res;
+
+    //     const alldata = {
+    //       POid: '',
+    //       items: JSON.stringify(data.allPRItem),
+    //       prName: data.prName,
+    //       spName: data.spName,
+    //       createdDate: '', // timestamp
+    //       checkedDate: '',
+    //       DeliveryAddress: data.desAddress,
+    //       status: 'waiting for approved',
+    //       addiNote: data.addiNote,
+    //       createdBy: createdEmail,
+    //       checkedBy: '',
+    //       shippingCost: data.shipCost,
+    //       // totalPrice: data.allPRItem.totalPrice
+    //     };
+    //     console.log(alldata);
+
+
+    //     return this.http.post(environment.erpUrl + '/pr', alldata);
+    //   })
+    // );
 
     return this.auth.getCurrentEmail().pipe(
       switchMap(res => {
@@ -56,7 +81,6 @@ export class PRService {
           const item = supplieritem.find(it => it.name === itemInput.itName);
 
           console.log(item);
-
 
           ItemsId.push(item.SiId);
           ItemsQuantity.push(itemInput.quantity);
@@ -73,13 +97,13 @@ export class PRService {
           items: purchaseItems,
           prName: data.prName,
           spName: data.spName,
-          createdDate: '', //timestamp
-          approvedDate: '',
+          createdDate: '', // timestamp
+          checkedDate: '',
           DeliveryAddress: data.desAddress,
           status: 'waiting for approved',
           addiNote: data.addiNote,
           createdBy: createdEmail,
-          approvedBy: '',
+          checkedBy: '',
           shippingCost: data.shipCost,
           // totalPrice: data.allPRItem.totalPrice
         };
@@ -124,7 +148,7 @@ export class PRService {
     );
   }
 
-  getPurchaseItem(){
+  getPurchaseItem() {
     return this.http.get(environment.erpUrl + '/purchaseitem').pipe(
       map(resItem => {
         // console.log(resItem);
@@ -154,7 +178,7 @@ export class PRService {
     );
   }
 
-  updateStatus(upstatus: any, id: any){
+  updateStatus(upstatus: any, id: any) {
     const data = {
       status: upstatus,
       PRid: id
@@ -164,9 +188,9 @@ export class PRService {
     return this.http.patch(environment.erpUrl + '/updatestatuspr', data);
   }
 
-  createPO(data: any){
+  createPO(data: any) {
     const alldata = {
-      PRid : data.id,
+      PRid: data.id,
       SId: data.spId,
       prName: data.prName,
       status: 'contacting vendor',

@@ -6,12 +6,12 @@ export class PurchaseRe {
     public prName: string,
     public spId: string,
     public createdDate: string,
-    public approvedDate: string,
+    public checkedDate: string,
     public DeliveryAddress: string,
     public status: string,
     public addiNote: string,
     public CreatedBy: string,
-    public approvedBy: string
+    public checkedBy: string
   ) { }
 }
 
