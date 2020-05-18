@@ -1,32 +1,32 @@
-import { Component, OnInit } from "@angular/core";
-import { MatDialog } from "@angular/material";
-import { PurchaseRedialogComponent } from "./purchase-redialog/purchase-redialog.component";
-import { PurchaseRe } from "./purchase-re.model";
-import { Subscription } from "rxjs";
-import { PRService } from "./purchase-re.service";
-import { switchMap } from "rxjs/operators";
-import { ConfirmDialogComponent } from "../shared/confirm-dialog/confirm-dialog.component";
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { PurchaseRedialogComponent } from './purchase-redialog/purchase-redialog.component';
+import { PurchaseRe } from './purchase-re.model';
+import { Subscription } from 'rxjs';
+import { PRService } from './purchase-re.service';
+import { switchMap } from 'rxjs/operators';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 import { SupplierService } from '../suppliers/supplier.service';
 import { Supplier } from '../suppliers/supplier.model';
 // import { POService } from '../purchase-or/purchase-or.service';
 
 @Component({
-  selector: "app-purchase-re",
-  templateUrl: "./purchase-re.component.html",
-  styleUrls: ["./purchase-re.component.scss"]
+  selector: 'app-purchase-re',
+  templateUrl: './purchase-re.component.html',
+  styleUrls: ['./purchase-re.component.scss']
 })
 export class PurchaseReComponent implements OnInit {
   purchasreRe: PurchaseRe[];
   supplier: Supplier[];
   prCol: string[] = [
-    "no",
-    "Name",
-    "CreatedDate",
-    "CreatedBy",
-    "Status",
-    "edit",
-    "delete",
-    "manage"
+    'no',
+    'Name',
+    'CreatedDate',
+    'CreatedBy',
+    'Status',
+    'edit',
+    'delete',
+    'manage'
   ];
   PRsubscription: Subscription;
   POsubscription: Subscription;
@@ -49,62 +49,73 @@ export class PurchaseReComponent implements OnInit {
 
   openPR() {
     const dialogRef = this.dialog.open(PurchaseRedialogComponent, {
-      panelClass: "nopadding-dialog",
-      width: "70vw",
-      height: "90vh",
+      panelClass: 'nopadding-dialog',
+      width: '70vw',
+      height: '90vh',
       disableClose: false,
       autoFocus: false
     });
-    dialogRef
-      .afterClosed()
-      .pipe(
-        switchMap(() => {
-          return this.prService.getPR();
-        })
-      )
-      .subscribe();
+    dialogRef.afterClosed().subscribe(() => {
+      const sub = this.prService.getPR().subscribe(() => {
+        sub.unsubscribe();
+      });
+    });
+    // .afterClosed()
+    // .pipe(
+    //   switchMap(() => {
+    //     return this.prService.getPR();
+    //   })
+    // )
+    // .subscribe();
   }
 
   edit(item) {
     const dialogRef = this.dialog.open(PurchaseRedialogComponent, {
-      panelClass: "nopadding-dialog",
-      width: "70vw",
-      height: "90vh",
+      panelClass: 'nopadding-dialog',
+      width: '70vw',
+      height: '90vh',
       disableClose: false,
       autoFocus: false,
       data: item
     });
-    dialogRef
-    .afterClosed()
-    .pipe(
-      switchMap(() => {
-        return this.prService.getPR();
-      })
-    )
-    .subscribe();
-}
+    dialogRef.afterClosed().subscribe(() => {
+      const sub = this.prService.getPR().subscribe(() => {
+        sub.unsubscribe();
+      });
+    });
+    // dialogRef.afterClosed().pipe(
+    //   switchMap(() => {
+    //     return this.prService.getPR();
+    //   })
+    // ).subscribe();
+  }
 
   delete(id: string) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      panelClass: "nopadding-dialog",
-      width: "400px",
-      height: "200px",
+      panelClass: 'nopadding-dialog',
+      width: '400px',
+      height: '200px',
       disableClose: true,
       autoFocus: false,
-      data: { id, from: "pr" }
+      data: { id, from: 'pr' }
     });
-    dialogRef
-    .afterClosed()
-    .pipe(
-      switchMap(() => {
-        return this.prService.getPR();
-      })
-    )
-    .subscribe();
-}
+    dialogRef.afterClosed().subscribe(() => {
+      const sub = this.prService.getPR().subscribe(() => {
+        sub.unsubscribe();
+      });
+    });
+    // dialogRef
+    //   .afterClosed()
+    //   .pipe(
+    //     switchMap(() => {
+    //       return this.prService.getPR();
+    //     })
+    //   )
+    //   .subscribe();
+  }
 
   approve(id, data) {
-    status = "approved";
+    status = 'approved';
     this.prService
       .updateStatus(status, id)
       .pipe(switchMap(() => this.prService.getPR()), switchMap(() => this.prService.createPO(data)))
@@ -112,7 +123,7 @@ export class PurchaseReComponent implements OnInit {
   }
 
   reject(id) {
-    status = "rejected";
+    status = 'rejected';
     this.prService
       .updateStatus(status, id)
       .pipe(switchMap(() => this.prService.getPR()))
