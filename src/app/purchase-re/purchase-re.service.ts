@@ -130,12 +130,12 @@ export class PRService {
               resItem[key].PRName,
               resItem[key].SId,
               resItem[key].CreatedDate,
-              resItem[key].ApprovedDate,
+              resItem[key].CheckedDate,
               resItem[key].DeliveryAddress,
               resItem[key].Status,
               resItem[key].AdditionalNotePR,
-              resItem[key].CreatedBy,
-              resItem[key].ApprovedBy
+              resItem[key].createdBy,
+              resItem[key].checkedBy
             );
             purchasere.push(purRe);
           }
@@ -178,14 +178,28 @@ export class PRService {
     );
   }
 
-  updateStatus(upstatus: any, id: any) {
-    const data = {
-      status: upstatus,
-      PRid: id
-    };
-    console.log(data);
+  updateStatus(upstatus: any, id: any){
+    let checkedEmail;
 
-    return this.http.patch(environment.erpUrl + '/updatestatuspr', data);
+    return this.auth.getCurrentEmail().pipe(
+      map(res => {
+        checkedEmail = res;
+        const data = {
+          status: upstatus,
+          PRid: id,
+          checkedBy: checkedEmail
+        };
+        console.log(data);
+
+        return this.http.patch(environment.erpUrl + '/updatestatuspr', data);
+      }));
+    // const data = {
+    //   status: upstatus,
+    //   PRid: id
+    // };
+    // console.log(data);
+
+    // return this.http.patch(environment.erpUrl + '/updatestatuspr', data);
   }
 
   createPO(data: any) {
