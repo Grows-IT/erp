@@ -8,6 +8,7 @@ import { switchMap } from 'rxjs/operators';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 import { SupplierService } from '../suppliers/supplier.service';
 import { Supplier } from '../suppliers/supplier.model';
+import { POService } from '../purchase-or/purchase-or.service';
 // import { POService } from '../purchase-or/purchase-or.service';
 
 @Component({
@@ -32,7 +33,7 @@ export class PurchaseReComponent implements OnInit {
   POsubscription: Subscription;
   SPsubscription: Subscription;
 
-  constructor(public dialog: MatDialog, private prService: PRService, private spService: SupplierService) {}
+  constructor(public dialog: MatDialog, private prService: PRService, private poService: POService, private spService: SupplierService) { }
 
   ngOnInit() {
     this.PRsubscription = this.prService.purchasere.subscribe(pr => {
@@ -116,10 +117,13 @@ export class PurchaseReComponent implements OnInit {
 
   approve(id, data) {
     status = 'approved';
-    this.prService
-      .updateStatus(status, id)
-      .pipe(switchMap(() => this.prService.getPR()), switchMap(() => this.prService.createPO(data)))
-      .subscribe();
+    this.prService.updateStatus(status, id).pipe(
+      switchMap(() => {
+        return this.prService.getPR();
+      }),
+      switchMap(() => {
+        return this.poService.createPO(data);
+      })).subscribe();
   }
 
   reject(id) {

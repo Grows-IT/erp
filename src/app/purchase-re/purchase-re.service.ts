@@ -6,7 +6,8 @@ import { map, tap, switchMap } from 'rxjs/operators';
 import { PurchaseRe, PurchaseItem, PurchaseItemOnly } from './purchase-re.model';
 import { AuthService } from '../signin/auth.service';
 import { SupplierItemService } from '../suppliers/supplieritems/supplieritems.service';
-import { identifierModuleUrl } from '@angular/compiler';
+import { SupplierService } from '../suppliers/supplier.service';
+import { Supplier } from '../suppliers/supplier.model';
 
 interface PurchaseReResData {
   prName: string;
@@ -37,7 +38,8 @@ export class PRService {
   constructor(
     private http: HttpClient,
     private SiService: SupplierItemService,
-    private auth: AuthService
+    private auth: AuthService,
+    private supplierService: SupplierService
   ) { }
 
   addPR(data: any) {
@@ -77,16 +79,11 @@ export class PRService {
         const ItemsId: string[] = [];
         const ItemsQuantity: string[] = [];
         data.allPRItem.forEach(itemInput => {
-
           const item = supplieritem.find(it => it.name === itemInput.itName);
-
-          console.log(item);
 
           ItemsId.push(item.SiId);
           ItemsQuantity.push(itemInput.quantity);
         });
-        // console.log(sellItemsQuantity);
-        // console.log(sellItemsId);
 
         const purchaseItems: PurchaseItemOnly = new PurchaseItemOnly(
           JSON.stringify(ItemsId).replace(/[\[\]']+/g, ''),
@@ -105,7 +102,7 @@ export class PRService {
           createdBy: createdEmail,
           checkedBy: '',
           shippingCost: data.shipCost,
-          // totalPrice: data.allPRItem.totalPrice
+          // totalPrice: toltalPrice
         };
         console.log(alldata);
 
@@ -178,41 +175,21 @@ export class PRService {
     );
   }
 
-  updateStatus(upstatus: any, id: any){
-    let checkedEmail;
-
+  updateStatus(upstatus: any, id: number) {
     return this.auth.getCurrentEmail().pipe(
       map(res => {
-        checkedEmail = res;
+        const checkedEmail = res;
         const data = {
           status: upstatus,
           PRid: id,
           checkedBy: checkedEmail
         };
-        console.log(data);
 
-        return this.http.patch(environment.erpUrl + '/updatestatuspr', data);
+        return this.http.patch(environment.erpUrl + '/updateStatusPr', data).subscribe();
       }));
-    // const data = {
-    //   status: upstatus,
-    //   PRid: id
-    // };
-    // console.log(data);
-
-    // return this.http.patch(environment.erpUrl + '/updatestatuspr', data);
   }
 
-  createPO(data: any) {
-    const alldata = {
-      PRid: data.id,
-      SId: data.spId,
-      prName: data.prName,
-      status: 'contacting vendor',
-    }
-    return this.http.post(environment.erpUrl + '/createpo', alldata);
-  }
-
-  updatePR(data: any, id: string, PiId: string) {
+  updatePR(data: any, id: string, PiId: number) {
     let createdEmail;
     return this.auth.getCurrentEmail().pipe(
       switchMap(res => {
@@ -221,16 +198,29 @@ export class PRService {
       }),
       switchMap(items => {
         const purchaseItemsId: string[] = [];
-        const purchaseItemsQuantity: string[] = [];
+        const purchaseItemsQuantity: number[] = [];
+        let supplier: Supplier;
+
         data.allPRItem.forEach(itemInput => {
           const item = items.find(it => it.name === itemInput.itName);
           purchaseItemsId.push(item.SiId);
-          purchaseItemsQuantity.push(itemInput.quantity);
+          purchaseItemsQuantity.push(+itemInput.quantity);
         });
+
+        this.supplierService.supplier.forEach(sups => {
+          supplier = sups.find(sup => sup.name === data.spName);
+          console.log(supplier);
+
+          if (!supplier) {
+            return 'not found supplier';
+          }
+        });
+
         const purchaseItems: PurchaseItemOnly = new PurchaseItemOnly(
           JSON.stringify(purchaseItemsId).replace(/[\[\]']+/g, ''),
           JSON.stringify(purchaseItemsQuantity).replace(/[\[\]']+/g, '')
         );
+        // console.log(data);
         const alldata = {
           PRid: id,
           items: purchaseItems,
@@ -238,9 +228,12 @@ export class PRService {
           spName: data.spName,
           DeliveryAddress: data.desAddress,
           addiNote: data.addiNote,
-          shippingCost: data.allPRItem.shippingCost,
-          totalPrice: data.allPRItem.totalPrice
+          shippingCost: data.shipCost,
+          piId: PiId,
+          sId: supplier.id
         };
+        // console.log(alldata);
+
         return this.http.patch(environment.erpUrl + '/pr', alldata);
       })
     );

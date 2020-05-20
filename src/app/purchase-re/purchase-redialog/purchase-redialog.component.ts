@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { PurchaseRenextdialogComponent } from '../purchase-renextdialog/purchase-renextdialog.component';
 import { Validators, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { PRService } from '../purchase-re.service';
 import { Subscription, Observable } from 'rxjs';
@@ -27,6 +26,7 @@ export class PurchaseRedialogComponent implements OnInit, OnDestroy {
   supplierItem: SupplierItems[];
   purchaseItem: PurchaseItem[];
   filteredType: Observable<string[]>;
+  price: number;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -39,6 +39,8 @@ export class PurchaseRedialogComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.data = this.dialogRef.componentInstance.data;
+
     this.prSubscription = this.PRservice.purchasere.subscribe((pr) => {
       this.purRe = pr;
     });
@@ -83,45 +85,12 @@ export class PurchaseRedialogComponent implements OnInit, OnDestroy {
             shipCost: ['', [Validators.required]],
             allPRItem: this.fb.array([this.addMoreItems()]),
           });
+
+          console.log(this);
+
         }
       }
     );
-
-    // console.log(this.purchaseItem);
-
-    // if (this.data) {
-    //   console.log(this.data);
-    //   const a = this.getSupInfo(this.data.spId);
-    //   console.log(a);
-
-    //   this.prInfo = this.fb.group({
-    //     prName: [this.data.prName, [Validators.required]],
-    //     // spName: ['', [Validators.required]],
-    //     spName: [a.name, [Validators.required]],
-    //     spAddress: [a.address, [Validators.required],
-    //     ],
-    //     // spAddress: ['', [Validators.required]],
-    //     desAddress: [this.data.DeliveryAddress, [Validators.required]],
-    //     addiNote: [this.data.addiNote, [Validators.required]],
-    //     // shipCost: ['', [Validators.required]],
-    //     shipCost: [this.getShipCost(this.data.PIid), [Validators.required]],
-    //     allPRItem: this.fb.array([this.addMoreItems()]),
-    //   });
-    //   // for (let i = 0; i < this.getItems().length; i++) {
-    //   //   const control = <FormArray>this.prInfo.controls['allPRItem'];
-    //   //   control.push(this.viewItemFormGroup(i));
-    //   // }
-    // } else {
-    //   this.prInfo = this.fb.group({
-    //     prName: ['', [Validators.required]],
-    //     spName: ['', [Validators.required]],
-    //     spAddress: ['', [Validators.required]],
-    //     desAddress: ['', [Validators.required]],
-    //     addiNote: ['', [Validators.required]],
-    //     shipCost: ['', [Validators.required]],
-    //     allPRItem: this.fb.array([this.addMoreItems()]),
-    //   });
-    // }
   }
 
   ngOnDestroy() {
@@ -151,9 +120,7 @@ export class PurchaseRedialogComponent implements OnInit, OnDestroy {
     if (!this.purchaseItem) {
       return;
     }
-    this.data = this.dialogRef.componentInstance.data;
     const product1 = this.purchaseItem.find((pro2) => pro2.id === this.data.PIid);
-
     const siIdArr = product1.siId.split(',');
     const quantityArr = product1.quantity.split(',');
     const allPRItem = [];
@@ -161,25 +128,31 @@ export class PurchaseRedialogComponent implements OnInit, OnDestroy {
     for (let i = 0; i < siIdArr.length; i++) {
       const product2 = this.supplierItem.find((pro2) => pro2.SiId == siIdArr[i].replace(/['"]+/g, ''));
       product2['quantity'] = quantityArr[i].replace(/['"]+/g, '');
+      product2['price'] = product2.price;
       allPRItem.push(product2);
     }
-
     return allPRItem;
+  }
+
+  setPriceItem(item, i) {
+    const control = <FormArray>this.prInfo.controls.allPRItem['controls'];
+    control[i].controls['price'].setValue(item.price);
+    this.getTotalPrice();
   }
 
   private addMoreItems() {
     return this.fb.group({
       itName: ['', [Validators.required]],
       quantity: ['', [Validators.required]],
+      price: ['', [Validators.required]]
     });
   }
 
   private viewItemFormGroup(i) {
-    this.data = this.dialogRef.componentInstance.data;
-
     return this.fb.group({
       itName: [this.getItems()[i].name, [Validators.required]],
       quantity: [this.getItems()[i].quantity, [Validators.required]],
+      price: [this.getItems()[i].price, [Validators.required]],
     });
   }
 
@@ -197,11 +170,21 @@ export class PurchaseRedialogComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  onConfirmClick(status) {
-    // this.data = this.dialogRef.componentInstance.data;
+  getTotalPrice() {
+    let total: number = 0;
+    for (let i = 0; i < this.prInfo.controls.allPRItem['controls'].length; i++) {
+      // console.log(this.prInfo.controls.allPRItem['controls'][i].value);
+      total += +this.prInfo.controls.allPRItem['controls'][i].value.quantity * +this.prInfo.controls.allPRItem['controls'][i].value.price;
+    }
+    if (total === NaN) {
+      total = 0;
+    }
+    // console.log(total);
+    return total;
+  }
 
+  onConfirmClick(status) {
     if (status === 0) {
-      console.log(this.prInfo.value);
       this.PRservice.addPR(this.prInfo.value)
         .pipe(switchMap(() => this.PRservice.getPR()))
         .subscribe()
@@ -210,9 +193,8 @@ export class PurchaseRedialogComponent implements OnInit, OnDestroy {
       this.PRservice.updatePR(
         this.prInfo.value,
         this.data.id,
-        this.data.allPRItem
-      )
-        .pipe(switchMap(() => this.PRservice.getPR()))
+        this.data.PIid,
+      ).pipe(switchMap(() => this.PRservice.getPR()))
         .subscribe();
     }
     this.dialogRef.close();

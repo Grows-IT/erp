@@ -70,7 +70,7 @@ export class SupplierService {
       contactPerson: value.contactPerson,
       taxId: value.taxId,
       supplierId: id,
-    }
+    };
     return this.http.patch(environment.erpUrl + '/supplier', data);
   }
 

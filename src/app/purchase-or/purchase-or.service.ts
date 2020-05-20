@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject } from "rxjs";
-import { environment } from "src/environments/environment";
-import { map, tap, switchMap } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { map, tap, switchMap } from 'rxjs/operators';
 import { PurchaseOr } from './purchase-or.model';
 
 interface PurchaseOrResData {
@@ -11,7 +11,7 @@ interface PurchaseOrResData {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 
 export class POService {
@@ -23,20 +23,21 @@ export class POService {
 
   constructor(
     private http: HttpClient,
-  ) {}
+  ) { }
 
-  // createPO(data: any){
-  //   const alldata = {
-  //     PRid : data.id,
-  //     SId: data.spId,
-  //     prName: data.prName,
-  //     status: "contacting vendor",
-  //   }
-  //   return this.http.post(environment.erpUrl + "/createpo", alldata);
-  // }
+  createPO(data: any) {
+    const allData = {
+      PRid: data.id,
+      SId: data.spId,
+      prName: data.prName,
+      status: 'contacting vendor',
+    };
+
+    return this.http.post(environment.erpUrl + '/createpo', allData);
+  }
 
   getPO() {
-    return this.http.get(environment.erpUrl + "/po").pipe(
+    return this.http.get(environment.erpUrl + '/po').pipe(
       map(resItem => {
         // console.log(resItem);
         const purchaseor: PurchaseOr[] = [];
@@ -64,14 +65,14 @@ export class POService {
     );
   }
 
-  updateStatus(upstatus: any, id: any){
+  updateStatus(upstatus: any, id: any) {
     const data = {
       status: upstatus,
       POid: id
     };
     console.log(data);
 
-    return this.http.patch(environment.erpUrl + "/updatestatuspo", data);
+    return this.http.patch(environment.erpUrl + '/updatestatuspo', data);
   }
 
 }
