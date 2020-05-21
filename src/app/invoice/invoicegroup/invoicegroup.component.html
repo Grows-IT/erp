@@ -27,7 +27,7 @@
 <mat-list class="content" *ngFor="let item of listGroupName;">
   <!-- if active -->
   <mat-card *ngIf="item.invoiceGroupStatus === 'active'">
-    <button mat-button (click)="onClickOpenDetail(invoice)">
+    <button mat-button (click)="onClickOpenDetail(invoice, item)">
       <b class="statusActive">●</b> Group Name : {{item.groupName}}
     </button>
     <button mat-icon-button [matMenuTriggerFor]="more" aria-label="" style="float: right;">

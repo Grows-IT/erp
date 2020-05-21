@@ -174,7 +174,6 @@ export class QuotationdetailComponent implements OnInit, OnDestroy {
       autoFocus: false,
       data: { id, invoiceId, from: 'quotation' }
     });
-    // this.salesService.deleteQuotation(id, invoiceId).subscribe();
     this.dialogRef.close(() => {
       this.router.navigate(['/sales']);
     });

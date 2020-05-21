@@ -131,10 +131,6 @@ export class QuotationFormComponent implements OnInit {
       return it.availableQuantity;
     }
     return;
-    // return allItem[i].item;
-
-    // const length = allItem.length;
-    // for(let i)
   }
 
   checkMax(max: number, i: number) {

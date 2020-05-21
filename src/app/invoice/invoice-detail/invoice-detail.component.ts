@@ -5,7 +5,7 @@ import { FormGroup, FormArray, FormControl, Validators, FormBuilder } from '@ang
 import { CustomerService } from 'src/app/customer/customer.service';
 import { Subscription } from 'rxjs';
 import { Customer } from 'src/app/customer/customer.model';
-import { Invoice, SubInvoice, SellItem } from '../invoice.model';
+import { Invoice, SellItem } from '../invoice.model';
 import { ItemsService } from 'src/app/items/items.service';
 import { Item } from 'src/app/items/items.model';
 import { SharedService } from 'src/app/shared/shared.service';
@@ -13,7 +13,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { SalesService } from 'src/app/sales/sales.service';
 import { Quotation } from 'src/app/sales/sales.model';
-import { tap, map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -82,9 +82,6 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
       this.items = items;
     });
 
-    console.log(this.dataInvoiceGroup);
-
-
     this.cService.getAllCustomer().subscribe();
     this.invoiceService.getAllInvoice().subscribe();
     this.itemsService.getAllItems().subscribe();
@@ -117,7 +114,6 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     const items = [];
     for (let i = 0; i < prod.length; i++) {
       const product2 = this.items.find(pro2 => pro2.id == prod[i]);
-      console.log(product2);
       const item = {
         itemId: product2.id,
         name: product2.name,
@@ -211,9 +207,6 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   onAddRow() {
-    // console.log(this.rows);
-
-    // this.invoiceService.getListItem(this.invoice).subscribe(res => console.log(res));
     this.rows.push(this.createItemFormGroup());
   }
 

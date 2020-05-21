@@ -52,7 +52,6 @@ export class InvoicegroupComponent implements OnInit {
     this.invoiceService.getAllInvoice().subscribe();
     this.cService.getAllCustomer().subscribe();
     this.invoiceService.getGroupName(this.invoiceId).subscribe();
-
   }
 
   getCustomer(customerId: string) {
@@ -63,15 +62,14 @@ export class InvoicegroupComponent implements OnInit {
     return customer;
   }
 
-  onClickOpenDetail(invoice) {
-
+  onClickOpenDetail(invoice, item) {
     const dialogRef = this.dialog.open(InvoiceDetailComponent, {
       panelClass: 'nopadding-dialog',
       width: '60vw',
       height: '70vh',
       disableClose: true,
       autoFocus: false,
-      data: { invoice }
+      data: { invoice, item }
     });
 
     dialogRef.afterClosed().pipe(

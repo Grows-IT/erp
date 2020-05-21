@@ -23,25 +23,6 @@ import { User } from '../usersmanagement/user.model';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-// export interface QuotationList {
-//   addressTo: string;
-//   date: Date;
-//   expirationDate: Date;
-//   item: string;
-//   isInvoice: boolean;
-//   quantity: number;
-//   customer: {
-//     name: string,
-//     address: string
-//   };
-//   // Name: string;
-//   // date: Date;
-//   // TotalPrice: number;
-//   // By: string;
-//   // Status: string;
-//   // isInvoice: boolean;
-// }
-
 @Component({
   selector: 'app-sales',
   templateUrl: './sales.component.html',
@@ -49,7 +30,6 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 })
 export class SalesComponent implements OnInit, OnDestroy {
   quotations: Quotation[];
-  // quotationCol: string[] = ['no', 'customerName', 'date', 'totalPrice', 'status', 'by', 'edit', 'pdf', 'createInvoice', 'delete'];
   quotationCol: string[] = ['no', 'customerName', 'date', 'email', 'edit', 'pdf', 'createInvoice', 'delete'];
   listItem = [];
   items: Item[];
@@ -235,12 +215,6 @@ export class SalesComponent implements OnInit, OnDestroy {
       this.total = (<any>this.getQuantity(itemQuantity)[i] * this.getItems(itemId)[i].price),
         this.listItem.push(product);
       this.subTotal += this.total;
-      // this.listItem = this.item;
-      // this.listItem.push(this.item);
-      // if (i === item.length - 1) {
-      //   this.listItem = [...this.listItem];
-      // console.log(this.listItem);
-      // }
     }
   }
 

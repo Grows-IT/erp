@@ -122,8 +122,7 @@ export class SalesService {
         return this.http.get<any>(environment.erpUrl + '/quotation');
       }),
       map((res) => {
-        console.log(res);
-
+        // console.log(res);
         for (let i = 0; i < res.length; i++) {
           // console.log(res);
           const quotation = new Quotation(
@@ -141,9 +140,9 @@ export class SalesService {
             // allItem,
             res[i].invoiceId
           );
-          console.log(res[i].email);
-          console.log(this.role);
-          console.log(this.email);
+          // console.log(res[i].email);
+          // console.log(this.role);
+          // console.log(this.email);
           if (this.role === 'admin' || (this.email === res[i].email && this.role === 'user')) {
             quotations.push(quotation);
           }
